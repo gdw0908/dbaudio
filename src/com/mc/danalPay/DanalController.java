@@ -39,8 +39,8 @@ public class DanalController {
 		 *  RETURNURL 	: CPCGI페이지의 Full URL을 넣어주세요
 		 *  CANCELURL 	: BackURL페이지의 Full URL을 넣어주세요
 		 ******************************************************/
-		String RETURNURL = "http://192.168.0.60:8085" + "/danal/CPCGI.do?SERVICETYPE="+SERVICETYPE;
-		String CANCELURL = "http://192.168.0.60:8085" + "/danal/Cancel.do";
+		String RETURNURL = "http://pairingpayments.co.kr" + "/danal/CPCGI.do?SERVICETYPE="+SERVICETYPE;
+		String CANCELURL = "http://pairingpayments.co.kr" + "/danal/Cancel.do";
 
 		/**************************************************
 		 * SubCP 정보
