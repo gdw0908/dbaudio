@@ -22,8 +22,8 @@
 <meta name="format-detection" content="telephone=no" />
 <meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=yes" name="viewport" />
 <meta name="author" content="31system" />
-<meta name="description" content="안녕하세요  페어링사운드  입니다." />
-<meta name="Keywords" content="페어링사운드 , 상품권, 백화점 상품권, 롯데 백화점, 롯데 상품권, 갤러리아 백화점, 갤러리아 상품권, 신세계 백화점, 신세계 상품권" />" />
+<meta name="description" content="안녕하세요  페어링사운드 입니다." />
+<meta name="Keywords" content="페어링사운드, 상품권, 백화점 상품권, 롯데 백화점, 롯데 상품권, 갤러리아 백화점, 갤러리아 상품권, 신세계 백화점, 신세계 상품권" />" />
 <title>주문/결제</title>
 
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
@@ -450,7 +450,7 @@ function goDanalPayPop(){
 		$("#username").val($("#m_member_nm").val());	
 	}
 	if($("#userid").val() == ""){
-		$("#userid").val($("#m_member_nm").val());	
+		$("#userid").val("");	
 	}
 		 
 	if(Number($("#totalQty").val()) > 1){
@@ -534,11 +534,15 @@ window.addEventListener('message', function(e) {
           </tr>
           </thead>
           <tbody>
+          <c:set var="user_price_l" 	value=""/>
+		  <c:set var="productNm" 		value=""/>
           <c:forEach var="item" items="${data.list }" varStatus="status">
           	<c:set var="user_price_l" value="${item.user_price * item.qty }"/>
 			<c:set var="prod_price" value="${prod_price + user_price_l }"/>
 			<c:set var="discount_price_l" value="0"/>
 			<c:set var="fee_price_l" value="0"/>
+			<c:set var="qty" 	value="${item.qty}"/>
+			<c:set var="productNm" value="${status.index == 0 ? item.PRODUCTNM : item.PRODUCTNM+'' }"/>
       		<%-- <c:if test="${item.discount_rate > 0}">
         		<c:set var="user_price" value="${user_price + (item.user_price * item.qty) }"/>
          		<c:set var="discount_price" value="${discount_price + ((item.user_price * item.qty) - (item.sale_price * item.qty)) }"/>
@@ -605,7 +609,7 @@ window.addEventListener('message', function(e) {
           </table>
           
           <ul class="sub_list_1">
-            <li><strong>페어링사운드 </strong>는 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서 <strong>페어링사운드 </strong>는 상품ㆍ거래정보 및 거래에 대하여 책임을 지지 않습니다.</li>
+            <li><strong>페어링사운드</strong>는 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서 <strong>페어링사운드</strong>는 상품ㆍ거래정보 및 거래에 대하여 책임을 지지 않습니다.</li>
           </ul>
           
           <h5 class="no_mem_type">2. 주문회원 정보<span>( <i>필수입력사항입니다.)</i></span></h5>
@@ -906,7 +910,20 @@ window.addEventListener('message', function(e) {
 <!-- 스크립트 및 플러그인에서 값을 설정하는 Hidden 필드  !!수정을 하시거나 삭제하지 마십시오-->
 
 </form>
-
+<form name="danalFrm"  id="danalFrm" method="post" action="/danal/Ready.do" >
+	<!-- 다날결제관련 form Start -->
+	 <input type="hidden" name="orderid"  id="orderid" 	value="<%=OrdNo%>" />
+	 <input type="hidden" name="amount"  id="amount" 	value="${user_price_l }" />
+	 <input type="hidden" name="itemname"  id="itemname" 	value="${productNm}" />		 
+	 <input type="hidden" name="useragent"  id="useragent" 	value="" />
+	 <input type="hidden" name="dt"  id="dt" 	value="" />
+	 <input type="hidden" name="username"  id="username" 	value="${memberInfo.member_nm }" />
+	 <input type="hidden" name="userid"  id="userid" 	value="${memberInfo.member_id }" />
+	 <input type="hidden" name="useremail"  id="useremail" 	value="${memberInfo.email }" />
+	 <input type="hidden" name="SERVICETYPE"  id="SERVICETYPE" 	value="DANALCARD" />
+	 <input type="hidden" name="totalQty"  id="totalQty" 	value="${qty }" />
+	 <!-- 다날결제관련 form End --> 
+</form>
 
 <%
 	String home_url = Util.getProperty("home.url");

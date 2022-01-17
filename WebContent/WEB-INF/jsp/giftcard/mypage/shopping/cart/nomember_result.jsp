@@ -190,7 +190,8 @@ function show_receipt() {
             		</tr>
 					<tr  class="border"> 
 						<th scope="row" rowspan="1">납부방식</th>
-              			<td>납부방식 : <%-- ${param.rCardNm } --%>가상계좌결제 계좌번호&nbsp;<b class="b_num">110-176-113-299</b></td>
+              			<%-- <td>납부방식 : ${param.rCardNm }가상계좌결제 계좌번호&nbsp;<b class="b_num">110-176-113-299</b></td> --%>
+              			<td>납부방식 : <b class="b_num">카드결제</b></td>
            			 </tr>
             	</tbody>
             </table>
