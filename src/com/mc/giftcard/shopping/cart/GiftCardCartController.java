@@ -66,6 +66,11 @@ public class GiftCardCartController {
 		if (member != null) {
 			params.put("session_member_id", member.get("member_id"));
 		}
+		if("Y".equals(StringUtil.nvl(	(String)params.get("agree"), ""))) {
+			session.setAttribute("agree", params.get("agree"));
+			session.setAttribute("use_chk", params.get("use_chk"));
+			session.setAttribute("ps_chk", params.get("ps_chk"));
+		}
 		model.addAttribute("data", cartService.list(params));
 		return "/giftcard/mypage/shopping/cart/list";
 	}
@@ -115,6 +120,11 @@ public class GiftCardCartController {
 		MCMap member = (MCMap) session.getAttribute("member");
 		params.put("sessionid", session.getId());// 비회원용 세션아이디
 
+		if (member != null) {
+			params.put("session_member_id", member.get("member_id"));
+			params.put("session_group_seq", member.get("group_seq"));
+			params.put("member_seq", member.get("member_seq"));
+		}
 		Map rstMap = cartService.direct_order(params);
 		if ("-1".equals(rstMap.get("rst"))) {
 			request.setAttribute("message", "상품의 재고수량을 확인하시기 바랍니다.");
@@ -125,26 +135,32 @@ public class GiftCardCartController {
 			request.setAttribute("message", rstMap.get("msg"));
 			return "message";
 		}
-		
-		if (params.containsKey("agree")) {
-			if (!("Y".equals(params.get("use_chk")) && "Y".equals(params.get("ps_chk")))) {
-				request.setAttribute("message", "약관에 동의해 주시기 바랍니다.");
+		if (member == null) { 
+			if ("Y".equals(StringUtil.nvl((String)session.getAttribute("agree"),""))) {
+				if (!("Y".equals(StringUtil.nvl((String)session.getAttribute("use_chk"),"")) && "Y".equals(StringUtil.nvl((String)session.getAttribute("ps_chk"),"")))) {
+					request.setAttribute("message", "약관에 동의해 주시기 바랍니다.");
+					request.setAttribute("params", params);
+					return "message";
+				} else {
+					returnurl = "/giftcard/mypage/shopping/cart/nomember";
+				}
+			} else if (params.containsKey("agree")) {
+				if (!("Y".equals(params.get("use_chk")) && "Y".equals(params.get("ps_chk")))) {
+					request.setAttribute("message", "약관에 동의해 주시기 바랍니다.");
+					request.setAttribute("params", params);
+					return "message";
+				} else {
+					session.setAttribute("agree", params.get("agree"));
+					session.setAttribute("use_chk", params.get("use_chk"));
+					session.setAttribute("ps_chk", params.get("ps_chk"));
+					returnurl = "/giftcard/mypage/shopping/cart/nomember";
+				}
+			} else if (member == null) {
 				request.setAttribute("params", params);
+				request.setAttribute("redirect", "/giftcard/login/login_2.do?mode=guest");
 				return "message";
-			} else {
-				returnurl = "/giftcard/mypage/shopping/cart/nomember";
 			}
-		} else if (member == null) {
-			request.setAttribute("params", params);
-			request.setAttribute("redirect", "/giftcard/login/login_2.do?mode=guest");
-			return "message";
 		}
-		if (member != null) {
-			params.put("session_member_id", member.get("member_id"));
-			params.put("session_group_seq", member.get("group_seq"));
-			params.put("member_seq", member.get("member_seq"));
-		}
-		
 		model.addAttribute("data", rstMap);
 		return returnurl;
 	}
@@ -169,21 +185,30 @@ public class GiftCardCartController {
 			request.setAttribute("redirect", "/giftcard/mypage/shopping/cart/index.do");
 			return "message";
 		}
-		if (params.containsKey("agree")) {
-			if (!("Y".equals(params.get("use_chk")) && "Y".equals(params.get("ps_chk")))) {
-				request.setAttribute("message", "약관에 동의해 주시기 바랍니다.");
+		if (member == null) {
+			if ("Y".equals(StringUtil.nvl((String)session.getAttribute("agree"),""))) {
+				if (!("Y".equals(StringUtil.nvl((String)session.getAttribute("use_chk"),"")) && "Y".equals(StringUtil.nvl((String)session.getAttribute("ps_chk"),"")))) {
+					request.setAttribute("message", "약관에 동의해 주시기 바랍니다.");
+					request.setAttribute("params", params);
+					request.setAttribute("redirect", "/giftcard/login/login_2.do?mode=guest");
+					return "message";
+				} else {
+					returnurl = "/giftcard/mypage/shopping/cart/nomember";
+				}
+			} else  if (params.containsKey("agree")) {
+				if (!("Y".equals(params.get("use_chk")) && "Y".equals(params.get("ps_chk")))) {
+					request.setAttribute("message", "약관에 동의해 주시기 바랍니다.");
+					request.setAttribute("params", params);
+					return "message";
+				} else {
+					returnurl = "/giftcard/mypage/shopping/cart/nomember";
+				}
+			} else if (member == null) {
 				request.setAttribute("params", params);
+				request.setAttribute("redirect", "/giftcard/login/login_2.do?mode=guest");
 				return "message";
-			} else {
-				returnurl = "/giftcard/mypage/shopping/cart/nomember";
 			}
-		} else if (member == null) {
-			request.setAttribute("params", params);
-			request.setAttribute("redirect", "/giftcard/login/login_2.do?mode=guest");
-			return "message";
-		}
-
-		if (member != null) {
+		}else if (member != null) {
 			params.put("session_member_id", member.get("member_id"));
 			params.put("member_seq", member.get("member_seq"));
 		}
