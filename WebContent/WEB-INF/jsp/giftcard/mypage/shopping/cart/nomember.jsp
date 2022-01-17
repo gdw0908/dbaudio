@@ -908,7 +908,10 @@ window.addEventListener('message', function(e) {
 <input type=hidden name=ICHEARS_HPNO value="">		<!-- 텔레뱅킹계좌이체 휴대폰번호 -->
 
 <!-- 스크립트 및 플러그인에서 값을 설정하는 Hidden 필드  !!수정을 하시거나 삭제하지 마십시오-->
-
+<!-- 다날결제결과같이 보낼데이터 form Start -->
+<input type="hidden" name="rapprno"  id="rapprno" 	value="" />
+<input type="hidden" name="rdealno"  id="rdealno" 	value="" />
+<input type="hidden" name="rapprtm"  id="rapprtm" 	value="" />
 </form>
 <form name="danalFrm"  id="danalFrm" method="post" action="/danal/Ready.do" >
 	<!-- 다날결제관련 form Start -->
