@@ -68,9 +68,9 @@ public class GiftCardCartService {
 		rstMap.put("orderno", params.get("orderno"));
 		rstMap.put("list", list);
 		
-		params.put("code_group_seq", "47");
+		/*params.put("code_group_seq", "47");
 		params.put("use_yn", "Y");
-		rstMap.put("bankList", codeDAO.codeList(params));
+		rstMap.put("bankList", codeDAO.codeList(params));*/
 		
 		return rstMap;
 	}

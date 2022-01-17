@@ -1126,7 +1126,7 @@ window.addEventListener('message', function(e) {
 	<form name="danalFrm"  id="danalFrm" method="post" action="/danal/Ready.do" >
 		<!-- 다날결제관련 form Start -->
 		 <input type="hidden" name="orderid"  id="orderid" 	value="<%=OrdNo%>" />
-		 <input type="hidden" name="amount"  id="amount" 	value="${user_price_l }" />
+		 <input type="hidden" name="amount"  id="amount" 	value="${actual_price }" />
 		 <input type="hidden" name="itemname"  id="itemname" 	value="${productNm}" />		 
 		 <input type="hidden" name="useragent"  id="useragent" 	value="" />
 		 <input type="hidden" name="dt"  id="dt" 	value="" />
