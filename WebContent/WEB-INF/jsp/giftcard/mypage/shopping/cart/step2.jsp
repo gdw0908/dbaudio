@@ -557,7 +557,7 @@ window.addEventListener('message', function(e) {
 							<c:set var="discount_price_l" value="0" />
 							<c:set var="fee_price_l" value="0" />
 							<c:set var="qty" 	value="${item.qty}"/>
-							<c:set var="productNm" value="${status.index == 0 ? item.PRODUCTNM : item.PRODUCTNM+'' }"/>
+							<c:set var="productNm" value="${status.index == 0 ? item.PRODUCTNM : item.PRODUCTNM }"/>
 							<%-- <c:choose>
 					       		<c:when test="${(sessionScope.member.group_seq eq '3' or sessionScope.member.group_seq eq '9') && item.supplier_pricing_yn eq 'Y'}">
 					       			<c:set var="user_price" value="${user_price + (item.user_price * item.qty) }"/>
