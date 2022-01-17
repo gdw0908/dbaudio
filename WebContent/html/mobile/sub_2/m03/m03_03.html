@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//#allmenu
+$("#submenu_open").toggle(function(){
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_close.gif";
+}, function() {
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+	  <div class="sub_2_line">
+	  <h3><img src="/images/mobile/sub_2/sub_2_title_3.gif" alt="협력사 문의"></h3>
+	  </div>
+
+		<? include "../../../mobile/article/B/write.html"; ?>
+
+      </div>
+	  <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+<div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

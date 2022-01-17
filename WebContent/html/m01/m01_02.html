@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/common.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/article.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/sub.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+
+//allmenu
+
+$("#allmenu_open").toggle(function(){
+$("#all_menu").slideToggle(250);
+this.src = "/images/sub/sub_menu_close.gif";
+}, function() {
+$("#all_menu").slideToggle(250);
+this.src = "/images/sub/sub_menu_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../include/header.html"; ?>
+  <div id="container">
+    <div class="gnb_wrap">
+      <!-- gnb메뉴 -->
+      <div class="gnb"><img src="/images/sub/gnb1.gif" alt=""></div>
+      <!-- gnb메뉴 -->
+    </div>
+
+    <div class="sub_line_bg">
+      <div class="sub_line">
+        <div class="sl_wrap">
+          <div class="sl_l">
+            <h3><img src="/images/sub/body_title.gif" alt="바디 부품정보"></h3>
+            <p>
+            <span><strong>홈</strong></span> &gt; <span>바디</span> &gt; <span>라지에이터 그릴</span> &gt; <span><strong>총 부품 : <b>1,866</b> 개</strong></span>
+            </p>
+          </div>
+          <div class="sl_r">
+
+            <span><a href="#"><img src="/images/sub/sub_line_btn_2.gif" alt="PARTS MOA 추천상품"></a></span>
+            <span class="sr_3"><img id="allmenu_open" src="/images/sub/sub_menu_open.gif" alt="상세조건 검색버튼" style="cursor:pointer;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- all_menu on -->
+      <div class="sm_wrap" style="display:none;" id="all_menu">
+        <div class="sub_menu">
+
+          <div class="product_list">
+            <p class="pl_title">※ 검색조건과 함께 찾으시는 부품을 선택해 주세요</p>
+            <table>
+            <colgroup>
+            <col width="15.5%">
+            <col width="18%">
+            <col width="">
+            <col width="14.5%">
+            <col width="18%">
+            <col width="12%">
+            </colgroup>
+            <thead>
+            <tr>
+              <th scope="col">제조사</th>
+              <th scope="col">차량명</th>
+              <th scope="col">모델명</th>
+              <th scope="col">연식</th>
+              <th scope="col">부품</th>
+              <th scope="col">등급</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+
+              <td>
+                <ul>
+                  <li><a href="#">현대</a></li>
+                  <li><a href="#">기아</a></li>
+                  <li><a href="#">쉐보레(GM대우)</a></li>
+                  <li><a href="#">르노삼성</a></li>
+                  <li><a href="#">쌍용</a></li>
+                  <li><a href="#">기타 자동차(국내)</a></li>
+                  <li><a href="#">BMW</a></li>
+                </ul>
+              </td>
+
+              <td>
+                <ul>
+                  <li><a href="#">모닝</a></li>
+                  <li><a href="#">카니발</a></li>
+                  <li><a href="#">쏘렌토</a></li>
+                  <li><a href="#">K5</a></li>
+                  <li><a href="#">스포티지</a></li>
+                  <li><a href="#">K7</a></li>
+                  <li><a href="#">포르테</a></li>
+                  <li><a href="#">모닝</a></li>
+                  <li><a href="#">카니발</a></li>
+                  <li><a href="#">쏘렌토</a></li>
+                  <li><a href="#">K5</a></li>
+                  <li><a href="#">스포티지</a></li>
+                  <li><a href="#">K7</a></li>
+                  <li><a href="#">포르테</a></li>
+                </ul>
+              </td>
+
+              <td>
+                <ul>
+                  <li><a href="#">더뉴 K5</a></li>
+                  <li><a href="#">K5 (10년 ~ 13년)</a></li>
+                  <li><a href="#">쏘렌토</a></li>
+                  <li><a href="#">렉스턴 II (06년~08년)</a></li>
+                </ul>
+              </td>
+
+              <td>
+                <ul>
+                  <li><a href="#">2013년</a></li>
+                  <li><a href="#">2014년</a></li>
+                </ul>
+              </td>
+
+              <td>
+                <ul class="check_type">
+                  <li><label><input type="checkbox" id="" name="" class="check"> 라지에이터그릴</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 리어도어 (우)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 리어도어 (좌)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 사이드미러 (우)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 사이드미러 (좌)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 슬라이딩도어 (우)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 슬라이딩도어 (좌)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 라지에이터그릴</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 리어도어 (우)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 리어도어 (좌)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 사이드미러 (우)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 사이드미러 (좌)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 슬라이딩도어 (우)</label></li>
+                  <li><label><input type="checkbox" id="" name="" class="check"> 슬라이딩도어 (좌)</label></li>
+                </ul>
+              </td>
+
+              <td>
+                <ul>
+                  <li><a href="#">전체</a></li>
+                  <li><a href="#">A등급</a></li>
+                  <li><a href="#">B등급</a></li>
+                  <li><a href="#">C 등급</a></li>
+                </ul>
+              </td>
+
+            </tr>
+            </tbody>
+            </table>
+
+            <div class="pl_bottom">
+
+              <p class="plb_l">
+              <span class="cb_1">지역별</span>
+
+              <span>
+              <select id="" name="" class="select_1">
+              <option>시/도</option>
+              <option>서울</option>
+              <option>경기도</option>
+              </select>
+              </span>
+
+              <span>
+              <select id="" name="" class="select_1">
+              <option>시/군/구</option>
+              <option>강남구</option>
+              <option>팔달구</option>
+              </select>
+              </span>
+
+              <span>
+              <select id="" name="" class="select_1">
+              <option>읍/면/동</option>
+              <option>대치동</option>
+              <option>성내2동</option>
+              </select>
+              </span>
+
+              </p>
+
+              <p class="plb_r">
+              <span class="cb_1">조건 내 검색</span>
+
+              <span class="input_box"><input type="text" id="" name="" class="input_1"></span>
+
+              <span><a href="#"><img src="/images/container/pl_btn_1.gif" alt="초기화"></a></span>
+              <span><a href="#"><img src="/images/container/pl_btn_2.gif" alt="검색"></a></span>
+
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- all_menu on End -->
+
+    <div class="sub_wrap">
+      <div class="sub_contents">
+
+        <div class="sc_top">
+
+          <ul class="sc_tab">
+            <li class="first"><a href="#">신상품</a></li>
+            <li><a href="#">상품명</a></li>
+            <li><a href="#">낮은가격</a></li>
+            <li><a href="#">높은가격</a></li>
+            <li><a href="#">등급별</a></li>
+            <li class="last"><a href="#">상품후기</a></li>
+          </ul>
+
+          <div class="sc_type">
+            <span><a href="/html/m01/m01.html"><img src="/images/sub/sc_type_btn1_off.gif" alt=""></a></span>
+            <span><a href="/html/m01/m01_02.html"><img src="/images/sub/sc_type_btn2_on.gif" alt=""></a></span>
+            <span>
+            <select id="" name="" class="select_1">
+            <option>40개</option>
+            </select>
+            </span>
+          </div>
+
+        </div>
+
+        <div class="sub_list">
+
+          <ul class="sl_type_2">
+
+            <li>
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+			<li>
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+			<li>
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+			<li class="last">
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+			<li>
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+			<li>
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+			<li>
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+			<li class="last">
+            <div>
+              <a href="/html/m01/m01_03.html">
+              <span class="img"><img src="/images/sub/sub_list2_img1.gif" alt=""></span>
+              <span class="f_type1">제네시스쿠페 (2012) / 컴비네이션램프 후미등(좌) / A등급 <span class="f_style_1">30%↓</span></span>
+              </a>
+            </div>
+            <div class="text">
+              <p class="f_type2">최고자동차공급사 / <b class="phone">경기도 수원시</b></p>
+              <p class="f_type3"><strong>협력사가</strong> : <b class="c2">10,000,000 원<span class="price_un">90,000</span></b></p>
+              <p class="f_type4"><strong>판매가격</strong> : <b class="c1">10,000,000 원</b></p>
+            </div>
+            </li>
+
+          </ul>
+
+          <div class="con_more">
+            <span class="page">1page/106</span>
+            <div class="more"><a href="#"><strong class="arrow">더보기</strong><span class="arrow"></span></a></div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <? include "../include/footer.html"; ?>
+</div>
+</body>
+</html>

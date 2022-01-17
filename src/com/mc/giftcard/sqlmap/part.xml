@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="part">
+	
+	<select id="cooperationList" parameterType="Map" resultType="mcmap">
+        SELECT
+            *
+        FROM NSH_COOPERATION A
+        WHERE A.DEL_YN='N'
+	</select>
+	
+	<sql id="listWhere">
+		WHERE a.DEL_YN='N'
+		
+        <if test="!(keyword == null or keyword == '')" >
+        	AND (INSTR(lower(a.PRODUCTNM),lower(#{keyword})) > 0 
+        	OR INSTR(lower(${condition}),lower(#{keyword})) > 0 
+        	OR INSTR(lower(d.MAKERNM),lower(#{keyword})) > 0
+        	OR INSTR(lower(f.CARMODELNM),lower(#{keyword})) > 0
+        	OR INSTR(lower(f.CARMODELALIAS),lower(#{keyword})) > 0
+        </if>        
+        <if test="!(carmakerseq == null or carmakerseq == '')" >
+        	AND a.CARMAKERSEQ = #{carmakerseq} 
+        </if>
+        <if test="!(carmodelseq == null or carmodelseq == '')" >
+        	AND a.CARMODELSEQ = #{carmodelseq} 
+        </if>
+        <if test="!(item_code == null or item_code == '')" >
+        	AND a.ITEM_CODE = #{item_code} 
+        </if>
+        <choose>
+        	<when test="approval_yn == 'N'.toString()">
+        		AND (a.APPROVAL = #{approval_yn} or a.APPROVAL IS NULL)
+        	</when>
+	        <when test="!(approval_yn == null or approval_yn == '')" >
+	        	AND a.APPROVAL = #{approval_yn} 
+	        </when>
+        </choose>
+        <choose>
+        	<when test='picture_yn=="Y"'>
+        		AND b.UUID IS NOT NULL
+        	</when>
+        	<when test='picture_yn=="N"'>
+        		AND b.UUID IS NULL
+        	</when>
+        </choose>
+        <choose>
+        	<when test='acount_yn=="Y"'>
+        		AND nvl(a.USER_PRICE, 0) > 0
+        	</when>
+        	<when test='acount_yn=="N"'>
+        		AND nvl(a.USER_PRICE, 0) = 0
+        	</when>
+        </choose>
+        <if test="search_all_text_arr != null and search_all_text_arr != ''">
+			<foreach index="index" collection="search_all_text_arr">
+				AND (
+				lower(a.SEARCH_TAG) LIKE lower('%${search_all_text_arr[index]}%')
+				OR lower(d.MAKERNM) LIKE lower('%${search_all_text_arr[index]}%')
+				OR lower(a.PRODUCTNM) LIKE lower('%${search_all_text_arr[index]}%')
+				OR lower(f.CARMODELNM) LIKE lower('%${search_all_text_arr[index]}%')
+				OR lower(f.CARMODELALIAS) LIKE lower('%${search_all_text_arr[index]}%')
+				OR a.ITEM_CODE = '${search_all_text_arr[index]}'
+				)
+			</foreach>
+	 	</if>
+        <if test="sdate != null and sdate != '' and edate != null and edate != ''" >
+        	AND a.REG_DT BETWEEN TO_DATE(#{sdate} || '000000', 'YYYY-MM-DDHH24MISS') AND TO_DATE(#{edate} || '235959', 'YYYY-MM-DDHH24MISS')
+        </if>
+        <if test="!(session_member_id == null or session_member_id == '')" >
+			AND	a.REG_ID = #{session_member_id}
+		</if>
+	</sql>
+	
+	<select id="list" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+			SELECT 
+				PT_SUB.*,
+            	(SELECT MAKERNM FROM IS_CARMAKER WHERE PT_SUB.CARMAKERSEQ=CARMAKERSEQ) AS DISTRIBNM,
+            	('/upload/board/'||PT_SUB.YYYY||'/'||PT_SUB.MM||'/'||PT_SUB.UUID||'_thumb') AS THUMB,
+				<choose>
+            		<when test="(sort == 'row')">
+	                ROW_NUMBER() OVER(ORDER BY PT_SUB.USER_PRICE ASC,PT_SUB.ITEM_SEQ ASC) RN
+            		</when>
+            		<when test="(sort == 'high')">
+	                ROW_NUMBER() OVER(ORDER BY PT_SUB.USER_PRICE DESC,PT_SUB.ITEM_SEQ DESC) RN
+            		</when>
+            		<otherwise>
+                	ROW_NUMBER() OVER(ORDER BY PT_SUB.ITEM_SEQ DESC) RN
+            		</otherwise>
+            	</choose>
+			FROM(
+            SELECT
+                a.ITEM_SEQ, a.ITEM_CODE, a.PRODUCTNM,NVL(a.USER_PRICE, 0) AS USER_PRICE, 
+	            a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN, 
+	            a.CARMAKERSEQ, a.CARMODELSEQ, a.REG_DT, a.STOCK_YN, a.STOCK_NUM ,       
+	            d.MAKERNM, f.CARMODELNM,
+	            a.APPROVAL, DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL_NM,
+	            b.ATTACH_NM, b.YYYY, b.MM, b.UUID
+        FROM GC_GOODS a LEFT OUTER JOIN NSH_ATTACH b
+        	ON b.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ AND b.ORDER_SEQ=1
+            LEFT OUTER JOIN V_IS_CARMAKER d ON a.CARMAKERSEQ=d.CARMAKERSEQ
+            LEFT OUTER JOIN V_IS_CARMODEL f ON a.CARMODELSEQ=f.CARMODELSEQ            
+			<include refid="listWhere"/>
+			) PT_SUB
+		) PT1
+		WHERE RN BETWEEN NVL(#{rows, jdbcType=INTEGER},10) * (NVL(#{cpage, jdbcType=INTEGER},1) - 1) + 1 AND NVL(#{rows, jdbcType=INTEGER},10) * NVL(#{cpage, jdbcType=INTEGER},1)				
+	</select>
+	
+	<select id="pagination" parameterType="Map" resultType="mcmap">
+		SELECT
+			CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+			COUNT(1) TOTALCOUNT
+        FROM GC_GOODS a LEFT OUTER JOIN NSH_ATTACH b
+            ON b.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ AND b.ORDER_SEQ=1
+            LEFT OUTER JOIN V_IS_CARMAKER d ON a.CARMAKERSEQ=d.CARMAKERSEQ
+            LEFT OUTER JOIN V_IS_CARMODEL f ON a.CARMODELSEQ=f.CARMODELSEQ
+		<include refid="listWhere"/>
+	</select>
+	
+	<select id="other_list" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY TO_CHAR(a.ORDERDATE, 'yyyyMMddHHmm') DESC, a.ORDERNO, a.ORDERDATE DESC) RN,
+                a.USERID, a.ORDERNO, a.ORDERDATE, a.RECEIVER,
+                b.CART_NO, b.STATUS, b.AMT, b.QTY, b.FEE_AMT, b.COD_YN,
+                c.ITEM_SEQ, c.PRODUCTNM, a.REG_DT, c.USER_PRICE,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '39' AND a.PAYTYP=CODE) AS PAYTYP_NM,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '40' AND b.STATUS=CODE) AS STATUS_NM,
+                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE c.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE c.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                ('/upload/board/'||e.YYYY||'/'||e.MM||'/'||e.UUID||'_thumb') AS THUMB
+            FROM NSH_ORDERMST a JOIN NSH_CART b
+            ON a.ORDERNO=b.ORDERNO
+            AND b.STATUS!='0'
+            JOIN GC_GOODS c
+            ON b.ITEM_SEQ = c.ITEM_SEQ
+            LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH WHERE TABLE_NM='GC_GOODS' GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) e
+            ON c.ITEM_SEQ = e.TABLE_SEQ  
+		) PT1
+		WHERE RN &lt; 5
+	</select>
+	
+	<select id="other_pagination" parameterType="Map" resultType="mcmap">
+		SELECT
+			CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+			COUNT(1) TOTALCOUNT
+        FROM GC_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+        ON b.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+        LEFT OUTER JOIN NSH_COOPERATION c
+        ON a.COM_SEQ = c.SEQ
+        LEFT OUTER JOIN V_IS_CARMAKER d
+        ON a.CARMAKERSEQ=d.CARMAKERSEQ
+        WHERE a.COM_SEQ = (SELECT COM_SEQ FROM GC_GOODS WHERE DEL_YN='N' AND ITEM_SEQ = #{seq})
+        	AND a.DEL_YN='N'
+			AND a.APPROVAL = 'Y'
+			AND b.UUID IS NOT NULL
+	</select>
+	
+	<update id="modify" parameterType="Map">
+		update GC_GOODS set
+			 CARMAKERSEQ = #{carmakerseq} 
+			, CARMODELSEQ = #{carmodelseq} 
+			, PRODUCTNM = #{productnm} 
+			, FEE_YN = #{fee_yn} 
+			, FEE_AMOUNT = #{fee_amount}
+			, USER_PRICING_YN = 'Y'
+			, USER_PRICE = #{user_price}
+			, CONTS = #{conts}
+			, APPROVAL = #{approval}
+			, MOD_ID = #{session_member_id}
+			, MOD_DT = sysdate						
+			, SEARCH_TAG = #{search_tag} 
+			, BESTYN = #{bestyn} 
+			, EVENTYN = #{eventyn} 
+			, NEWYN = #{newyn} 
+			, PUBLICYN = #{publicyn} 
+			, RECOMMYN = #{recommyn} 
+			, SALEYN = #{saleyn} 
+			, PLANYN = #{planyn}
+			, STOCK_YN = 'Y'
+			, STOCK_NUM = #{stock_num}
+		WHERE ITEM_SEQ = #{item_seq}
+	</update>
+	
+	<update id="write" parameterType="Map" useGeneratedKeys="true" keyColumn="item_seq" keyProperty="parent_seq">
+		INSERT INTO GC_GOODS(
+			ITEM_SEQ, ITEM_CODE,CARMAKERSEQ, CARMODELSEQ, PRODUCTNM, 
+			USER_PRICING_YN, USER_PRICE, FEE_YN, FEE_AMOUNT, SEARCH_TAG, BESTYN, EVENTYN, NEWYN, PUBLICYN, RECOMMYN, 
+			SALEYN, PLANYN, APPROVAL, CONTS, REG_ID, REG_DT, STOCK_YN, STOCK_NUM
+		)VALUES(
+			SEQ_GC_GOODS.NEXTVAL, 'P' || TO_CHAR(SYSDATE, 'YYMMDD') || to_char(10000000+SEQ_GC_GOODS.nextval), #{carmakerseq}, #{carmodelseq}, #{productnm}, 
+			'Y', #{user_price},#{fee_yn}, #{fee_amount},#{search_tag}, #{bestyn}, #{eventyn}, #{newyn}, #{publicyn}, #{recommyn}, 
+			#{saleyn}, #{planyn}, #{approval}, #{conts},#{session_member_id}, SYSDATE, 'Y', #{stock_num}
+		)
+	</update>
+	
+	<select id="view" parameterType="Map" resultType="mcmap">
+		SELECT
+            a.ITEM_SEQ, a.CARMAKERSEQ, a.CARMODELSEQ, 
+			a.PRODUCTNM, a.USER_PRICING_YN, a.USER_PRICE, 
+			a.FEE_YN, a.FEE_AMOUNT, 
+			a.SEARCH_TAG, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN,
+			a.RECOMMYN, a.SALEYN, a.PLANYN, a.APPROVAL, a.CONTS, a.REG_ID, a.REG_DT, a.MOD_ID, a.MOD_DT, a.DEL_ID,
+			a.DEL_DT, a.DEL_YN, a.ITEM_CODE, a.STOCK_YN, a.STOCK_NUM,
+            (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+            (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM
+		FROM GC_GOODS a 
+		WHERE a.ITEM_SEQ = #{seq} 
+	</select>
+	
+	<select id="photo" parameterType="Map" resultType="mcmap">
+        SELECT
+            ROW_NUMBER() OVER(ORDER BY b.ORDER_SEQ DESC) RN,
+            b.*
+        FROM GC_GOODS a LEFT OUTER JOIN NSH_ATTACH b
+        ON b.TABLE_NM='GC_GOODS' 
+            AND a.ITEM_SEQ = b.TABLE_SEQ
+        WHERE a.ERP_CODE=#{erp_code}
+	</select>
+	
+	<select id="photoList" parameterType="Map" resultType="mcmap">
+        SELECT
+            ROW_NUMBER() OVER(ORDER BY b.ORDER_SEQ DESC) RN,
+            b.*
+        FROM GC_GOODS a JOIN NSH_ATTACH b
+        ON b.TABLE_NM='GC_GOODS' 
+            AND a.ITEM_SEQ = b.TABLE_SEQ
+        WHERE a.ITEM_SEQ=#{item_seq}
+	</select>
+	
+	<update id="del" parameterType="Map">
+		UPDATE GC_GOODS SET
+			DEL_YN = 'Y'
+			,DEL_ID = #{session_member_id}
+			,DEL_DT = sysdate
+		WHERE ITEM_SEQ = #{item_seq}
+	</update>
+	
+</mapper>

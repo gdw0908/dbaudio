@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/common.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/article.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/sub_2.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+  <? include "../../include/header.html"; ?>
+  <div id="container">
+    <div class="c_wrap">
+      <? include "../../include/left.html"; ?>
+      <div id="sub">
+        <div class="strapline">
+          <h3><img src="/images/sub_2/h3_img_5_1.gif" alt="회원정보변경"></h3>
+          <div class="state"> <span>홈</span> &gt; <span>고객센터</span> &gt; <span><strong>회원정보</strong></span> </div>
+        </div>
+        <div class="contents">
+
+          <h4 class="hs_1">회원정보 <span>[ <b class="star">*</b>표시된 항목은 필수사항입니다. ]</span></h4>
+
+          <div class="user_info_box">
+            <table class="user_table_1">
+            <colgroup>
+            <col width="20%">
+            <col width="">
+            </colgroup>
+            <tbody>
+
+            <tr>
+              <th scope="row"><b>*</b> 아이디</th>
+              <td class="fs_style_1">MEMBERID</td>
+            </tr>
+
+            <tr>
+              <th scope="row"><b>*</b> 기존 비밀번호</th>
+              <td><input type="password" id="" name="" class="input_3 ws_1" placeholder="현재 비밀번호를 입력해 주세요"></td>
+            </tr>
+
+            <tr>
+              <th scope="row">새 비밀번호</th>
+              <td><input type="password" id="" name="" class="input_3 ws_1" placeholder="새 비밀번호를 입력해 주세요"> <span class="c1">※ 6~15글자 이내, 영문 대/소문자,  숫자 및 특수문자 사용가능</span></td>
+            </tr>
+
+            <tr>
+              <th scope="row">새 비밀번호확인</th>
+              <td><input type="password" id="" name="" class="input_3 ws_1" placeholder="새 비밀번호를 다시한번 입력해 주세요"></td>
+            </tr>
+            <tr>
+              <th scope="row">업체명</th>
+              <td class="fs_style_1"><input type="text" id="" name="" class="input_3 ws_2" style="width: 150px;"></td>
+            </tr>
+            <tr>
+              <th scope="row">사업자번호</th>
+              <td class="fs_style_1">
+                <input type="text" id="" name="" class="input_3 ws_2"> 
+                - <input type="text" id="" name="" class="input_3 ws_2" style="width: 100px;"> - <input type="text" id="" name="" class="input_3 ws_2">
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">업태</th>
+              <td class="fs_style_1"><input type="text" id="" name="" class="input_3 ws_2" style="width: 150px;"></td>
+            </tr>
+            <tr>
+              <th scope="row">종목</th>
+              <td class="fs_style_1"><input type="text" id="" name="" class="input_3 ws_2" style="width: 150px;"></td>
+            </tr>
+            <tr>
+              <th scope="row">대표자명 (실명)</th>
+              <td class="fs_style_1">홍길동</td>
+            </tr>
+            <tr>
+              <th scope="row">담당자명</th>
+              <td class="fs_style_1"><input type="text" id="" name="" class="input_3 ws_2" style="width: 150px;"></td>
+            </tr>
+            <tr>
+              <th scope="row">전화번호</th>
+              <td>
+                <select id="" name="" class="select_u1">
+                <option>010</option>
+                </select>
+                - <input type="text" id="" name="" class="input_3 ws_2"> - <input type="text" id="" name="" class="input_3 ws_2">
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row"><b>*</b>담당자번화번호</th>
+              <td>
+			  <select id="" name="" class="select_u1">
+                <option>010</option>
+                </select>
+                - <input type="text" id="" name="" class="input_3 ws_2"> - <input type="text" id="" name="" class="input_3 ws_2">
+			  </td>
+            </tr>
+
+            <tr>
+              <th scope="row" class="fs_1">알림 설정</th>
+              <td><label><input type="checkbox" id="" name="" class="check"> 휴대폰 알림문자를 받겠습니다.</label></td>
+            </tr>
+
+            <tr>
+              <th scope="row"><b>*</b> 이메일</th>
+              <td>
+                <input type="text" id="" name="" class="input_3"> @ <input type="text" id="" name="" class="input_3">
+                <select id="" name="" class>
+                <option>직접입력</option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row" class="fs_1">광고성 메일 수신</th>
+              <td><label><input type="checkbox" id="" name="" class="check"> 수신함</label> <label style="margin-left:15px;"><input type="checkbox" id="" name="" class="check"> 수신안함</label> <span class="c2">※ 주요 공지사항 및 알림 등은 설정에 관계 없이 발송됩니다.</span></td>
+            </tr>
+
+            <tr>
+              <th scope="row"><b>*</b> 주소</th>
+              <td class="adress">
+                <p><input type="text" id="" name="" class="input_3 ws_2"> - <input type="text" id="" name="" class="input_3 ws_2">
+                <a href="#"><img src="/images/sub_2/address_btn1.gif" alt="주소검색"></a> </p>
+                <p><input type="text" id="" name="" class="input_3 ws_3"></p>
+                <p class="last"><input type="text" id="" name="" class="input_3 ws_3"></p>
+              </td>
+            </tr>
+
+            </tbody>
+            </table>
+          </div>
+
+		  <div class="btn_bottom_1">
+		  <a href="#"><img src="/images/sub_2/btn_mod.gif" alt="정보수정"></a>
+		  </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <? include "../../include/footer.html"; ?>
+</div>
+</body>
+</html>

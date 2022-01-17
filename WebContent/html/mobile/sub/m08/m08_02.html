@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb.html"; ?>
+    <div class="sub">
+
+      <div class="product_tab">
+        <ul>
+          <li><a href="/html/mobile/sub/m08/m08.html"><img src="/images/mobile/sub/product_tab1_off.gif" alt="상품관리"></a></li>
+          <li class="right"><a href="/html/mobile/sub/m08/m08_02.html"><img src="/images/mobile/sub/product_tab2_on.gif" alt="주문현황"></a></li>
+        </ul>
+      </div>
+
+      <div class="sub_wrap">
+
+	  <div class="p_o_line">
+
+        <span>
+		<img src="/images/mobile/sub/calendar.gif" alt="달력">
+		<input type="text" id="" name="" class="input_m1"> ~ 
+		<img src="/images/mobile/sub/calendar.gif" alt="달력">
+		<input type="text" id="" name="" class="input_m1">
+		</span>
+
+        <span class="btn"><a href="#"><img src="/images/mobile/sub/product_btn1.gif" alt="주문조회"></a></span>
+
+      </div>
+
+        <div class="sub_line">
+          <h3><img src="/images/mobile/sub/sub_title_b_1.gif" alt="주문상품"></h3>
+          <p><a href="#"><img src="/images/mobile/sub/counsel.gif" alt=""></a></p>
+        </div>
+
+        <div class="sc_top">
+
+          <ul class="sc_tab">
+            <li class="first"><a class="on" href="#">전체</a></li>
+            <li><a href="#">일반가상품</a></li>
+            <li class="last"><a href="#">협력가상품</a></li>
+          </ul>
+
+          <div class="sc_type">
+            <select id="" name="" class="select_1">
+            <option>40개</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="sub_list">
+
+          <ul>
+
+            <li>
+
+            <div>
+              
+			  <span class="img_box">
+			  <span class="img_b1"><a href="#"><img src="/images/mobile/sub/sub_list_img1.gif" alt=""></a></span>
+			  <span class="img_btn a_type"><a href="#"><img src="/images/mobile/sub/btn_view_a1.gif" alt="자세히보기"></a></span>
+			  </span>
+
+			  <a href="/html/mobile/sub/m08/m08_04.html">
+
+              <span class="info">
+
+			  <span class="order_num"><strong>주문번호 : A123456789</strong></span>
+
+              <span class="in_t1">
+              <span class="first"><strong>제네시스쿠페 (2012)</strong></span>
+              <span><strong>컴비네이션램프 후미등</strong></span>
+              <span><strong>A등급</strong></span>
+              </span>
+
+              <span><strong>주문자 : 홍길동</strong></span>
+			  <span><strong>주문일 : </strong> 2015-06-06</span>
+			  <span><strong>주문상태 : <b class="c1">배송준비중</b></strong></span>
+			  <span><strong>주문수량 : </strong>1개</span>
+			  <span><strong>결제금액 : <b class="c2">20,000,000</b> 원</strong></span>
+
+              </span>
+
+			  </a>
+
+            </div>
+
+            </li>
+
+			<li>
+
+            <div>
+              
+			  <span class="img_box">
+			  <span class="img_b1"><a href="#"><img src="/images/mobile/sub/sub_list_img1.gif" alt=""></a></span>
+			  <span class="img_btn a_type"><a href="#"><img src="/images/mobile/sub/btn_view_a1.gif" alt="자세히보기"></a></span>
+			  </span>
+
+			  <a href="#">
+
+              <span class="info">
+
+			  <span class="order_num"><strong>주문번호 : A123456789</strong></span>
+
+              <span class="in_t1">
+              <span class="first"><strong>제네시스쿠페 (2012)</strong></span>
+              <span><strong>컴비네이션램프 후미등</strong></span>
+              <span><strong>A등급</strong></span>
+              </span>
+
+              <span><strong>주문자 : 홍길동</strong></span>
+			  <span><strong>주문일 : </strong> 2015-06-06</span>
+			  <span><strong>주문상태 : <b class="c1">배송준비중</b></strong></span>
+			  <span><strong>주문수량 : </strong>1개</span>
+			  <span><strong>결제금액 : <b class="c2">20,000,000</b> 원</strong></span>
+
+              </span>
+
+			  </a>
+
+            </div>
+
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="con_more">
+          <span class="page">1page/106</span>
+          <div class="more"><a href="#"><strong class="arrow">더보기</strong><span class="arrow"></span></a></div>
+        </div>
+
+        <? include "../../../article/paging/paging.html"; ?>
+
+      </div>
+	  <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+<div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

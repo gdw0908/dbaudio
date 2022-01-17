@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_5_2_3.gif" alt="취소신청"></h3>
+        </div>
+
+        <div class="address_pop">
+
+          <ul>
+            <li>※ 취소상품의 정보 및 환불예정금액을 확인해 주세요.</li>
+          </ul>
+
+          <h4 class="hs_1">취소요청 주문정보</h4>
+
+          <div class="sub_list sub_list_a1">
+            <p class="s_top_line">
+            <span class="st_l">2011-06-06</span>
+            <span class="st_r"><a href="#"><img src="/images/mobile/sub_2/s_top_btn1.gif" alt="주문/배송조회"></a></span>
+            </p>
+
+            <ul>
+
+              <li>
+
+              <div>
+
+                <span class="img_box">
+                <span class="img_b1"><a href="#"><img src="/images/mobile/sub/sub_list_img1.gif" alt=""></a></span>
+                </span>
+
+                <span class="info">
+
+                <span class="order_num"><strong>주문번호 : A123456789</strong></span>
+
+                <span class="in_t1">
+                <span class="first"><strong>제네시스쿠페 (2012)</strong></span>
+                <span><strong>컴비네이션램프 후미등</strong></span>
+                <span><strong>A등급</strong></span>
+                </span>
+
+                <span><strong>최고자동차공급사</strong> / 전라남도 광주시</span>
+                <span><strong>취소사유 : </strong><input type="text" id="" name="" class="input_m2"></span>
+                <span><strong>합계 : <b class="c2">20,000,000</b> 원</strong></span>
+
+                </span>
+
+              </div>
+
+              </li>
+
+            </ul>
+
+          </div>
+
+          <h4 class="hs_1">환불예정금액</h4>
+          <p class="c1" style="margin-bottom:10px;">※ 구매자 사유로 반품시 결제된 원배송비는 환불금액에서 제외됩니다.</p>
+
+          <table class="cart_style_1 t_top_style_1">
+          <colgroup>
+          <col width="31%">
+          <col width="">
+          <col width="31%">
+          </colgroup>
+
+          <thead>
+          <tr>
+            <th scope="col">취소상품<br>결제금액</th>
+            <th scope="col">환불금액<br>차감금액</th>
+            <th scope="col">환불예정액<br>합계</th>
+          </tr>
+          </thead>
+
+          <tbody>
+
+          <tr>
+            <td>11,000 원</td>
+            <td>0 원</td>
+            <td class="b_none">11,000 원</td>
+          </tr>
+
+          <tr>
+            <td class="tt_type1">
+              <p><strong>상품구매금액</strong></p>
+			  <p>11,000 원<br><br></p>
+              <p><strong>원배송비</strong></p>
+			  <p>0 원</p>
+            </td>
+            <td>&nbsp;</td>
+            <td class="b_none">&nbsp;</td>
+          </tr>
+
+          </tbody>
+
+          </table>
+
+          <div class="btn_bottom">
+            <a href="/html/mobile/sub_2/m05/m05_02_02.html#"><img src="/images/sub_2/btn_cancel_2.gif" alt="이전단계"></a>
+            <a href="/html/mobile/sub_2/m05/m05_02_04.html#"><img src="/images/sub_2/btn_cancel_1.gif" alt="취소신청"></a>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

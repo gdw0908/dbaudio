@@ -1,0 +1,43 @@
+    <div class="contents" data-ng-controller="templateCtrl" data-ng-init="board.go(1)" data-ng-cloak>
+     <form name="searchFrm" method="post" data-ng-submit="board.go(1)">
+      <div class="btn_bottom">
+        <div class="r_btn">
+          <select title="공지사항 검색조건 선택" data-ng-model="param.condition" data-ng-init="param.condition='title'">
+            <option value="title">제목</option>
+            <option value="reg_nm">작성자</option>
+          </select>
+          <input type="text" class="input_1" data-ng-model="param.keyword"/>
+          <span><a data-ng-click="board.go(1)"><img src="/images/admin/contents/s_btn_search.gif" alt="검색" /></a></span>
+        </div>
+      </div>
+    </form>
+      <div class="btn_bottom">
+        <div class="r_btn"  style="margin-top: 5px;">
+          <span class="board_listing">총 <span>{{board.totalCount}}</span> 건</span>
+        </div>
+      </div>
+      <table class="style_3">
+        <colgroup>
+          <col width="7%" />
+          <col width="*" />
+          <col width="12%" />
+          <col width="10%" />
+        </colgroup>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>등록일</th>
+          <th>선택</th>
+        </tr>
+        <tr data-ng-if="board.list.length==0"><td colspan="4">결과가 없습니다.</td></tr>
+        <tr data-ng-repeat="item in board.list">
+          <td>{{(board.totalCount|num) + 1 - (item.rn|num)}}</td>
+          <td class="left">{{item.title}}</td>
+          <td>{{item.reg_dt}}</td>
+          <td>
+             <span class="bt_alls"><span><input type="button" value="선택" data-ng-click="templateSelect(item.tp_seq,item.title)" class="btalls"/></span></span>          
+          </td>
+        </tr>
+      </table>
+      <pagination total-page="board.totalPage" current-page="board.currentPage" on-select-page="board.go(page)"></pagination>
+    </div>

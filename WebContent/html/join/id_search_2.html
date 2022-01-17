@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/common.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/article.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/join.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/lib/js/common_sc.js"></script>
+</head>
+
+<body>
+
+<div class="wrap">
+  <? include "../include/header.html"; ?>
+  <div id="container">
+
+    <div class="title_rocation">
+      <div class="tr_wrap">
+        <h3><img src="/images/join/id_search_title.gif" alt="아이디찾기"></h3>
+      </div>
+    </div>
+
+    <div class="j_wrap">
+
+      <div class="j_visual"><img src="/images/join/jm_img1.gif" alt="국내최대 자동차 중고부품 쇼핑몰 PARTS MOA에 오신 것을 환영합니다"></div>
+
+      <div id="tabNav_j1" class="join_tab search_tab">
+        <h4 id="tabNavTitle0101" class="on"><a href="#" onclick="shwoTabNav('01', 2, 1); return false;" onfocus="this.onclick();">사업자회원</a></h4>
+        <div id="tabNav0101" style="display: block;">
+
+          <div class="licensee_3">
+
+            <dl class="type_2">
+            <dt>찾으시는 아이디는 다음과 같습니다.</dt>
+            <dd><span class="standard">아이디</span><span>: PART****</span></dd>
+            <dd>
+            <span class="standard">등록일</span>
+            <span>: 2015년 10월 10일</span>
+            </dd>
+            <dd class="btn_2">
+			<a href="#"><img class="btn" src="/images/join/join4_btn_1.gif" alt=""></a>
+			<a href="#"><img class="btn" src="/images/join/join4_btn_2.gif" alt=""></a>
+			</dd>
+            </dl>
+
+          </div>
+
+          <div class="b_gui">
+            <p class="gui_l"><span class="text">아직 파츠모아 회원이 아니세요?</span><span><a href="#"><img class="btn" src="/images/join/btn_join.gif" alt=""></a></span></p>
+            <p class="gui_r"><span class="text">아직 파츠모아 회원이 아니세요?</span><span><a href="#"><img class="btn" src="/images/join/btn_pw_search.gif" alt=""></a></span></p>
+          </div>
+
+        </div>
+        <h4 id="tabNavTitle0102"><a href="#" onclick="shwoTabNav('01', 2, 2); return false;" onfocus="this.onclick();">개인회원</a></h4>
+        <div id="tabNav0102" style="display: none;">
+
+		<div class="licensee_3">
+
+            <dl class="type_2">
+            <dt>찾으시는 아이디는 다음과 같습니다.</dt>
+            <dd><span class="standard">아이디</span><span>: PART****</span></dd>
+            <dd>
+            <span class="standard">등록일</span>
+            <span>: 2015년 10월 10일</span>
+            </dd>
+            <dd class="btn_2">
+			<a href="#"><img class="btn" src="/images/join/join4_btn_1.gif" alt=""></a>
+			<a href="#"><img class="btn" src="/images/join/join4_btn_2.gif" alt=""></a>
+			</dd>
+            </dl>
+
+          </div>
+
+          <div class="b_gui">
+            <p class="gui_l"><span class="text">아직 파츠모아 회원이 아니세요?</span><span><a href="#"><img class="btn" src="/images/join/btn_join.gif" alt=""></a></span></p>
+            <p class="gui_r"><span class="text">아직 파츠모아 회원이 아니세요?</span><span><a href="#"><img class="btn" src="/images/join/btn_pw_search.gif" alt=""></a></span></p>
+          </div>
+
+        </div>
+      </div>
+      <script type="text/javascript">
+      function shwoTabNav(eName, totalNum, showNum) {
+      	for(i=1; i<=totalNum; i++){
+      		var zero = (i >= 10) ? "" : "0";
+      		var e = document.getElementById("tabNav" + eName + zero + i);
+      		var eTitle = document.getElementById("tabNavTitle" + eName + zero + i);
+      		e.style.display = "none";
+      		eTitle.className = "";
+      	}
+
+      	var zero = (showNum >= 10) ? "" : "0";
+      	var e = document.getElementById("tabNav" + eName + zero + showNum);
+      	var eTitle = document.getElementById("tabNavTitle" + eName + zero + showNum);
+      	e.style.display = "block";
+      	eTitle.className = "on";
+      }
+      </script>
+
+    </div>
+
+  </div>
+  <? include "../include/footer.html"; ?>
+</div>
+</body>
+</html>

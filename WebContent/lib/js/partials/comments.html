@@ -1,0 +1,23 @@
+<div class="comment">
+  <div class="comment_dv_tit">전체댓글수 <span>{{comments.length}}</span></div>
+  <ul>
+    <li data-ng-repeat="item in comments" data-ng-class="{reply : item.parent_seq != '0'}" data-ng-if="item.del_yn != 'Y'">
+      <div class="com_h"> 
+        <span>{{item.mod_nm||item.reg_nm}}</span> 
+        <span class="num">{{item.reg_dt}}</span> 
+        <a data-ng-click="reply(item, $event)"><img src="/images/article/comm_btn_1.gif" alt="답글" /></a>
+<!--         <a data-ng-click="modify(item, $event)"><img src="/admin/images/cms/contents/comm_btn_4.gif" alt="수정" /></a> -->
+        <a data-ng-click="del(item)"><img src="/images/article/comm_btn_3.gif" alt="삭제" /></a> 
+        <a data-ng-click="cancel()"><img src="/images/article/comm_btn_2.gif" alt="취소" /></a> 
+      </div>
+      <p class="comment_text"><span style="margin-right:0; color:#4ba7ba; font-weight: bold;">{{item.parent_reg_nm}}</span> {{item.conts}}</p>
+    </li>
+    <li>
+      <div class="area_box">
+        <form name="commentFrm2">
+        <textarea class="textarea_1" data-ng-model="form2.conts" required="required"></textarea>
+        <a class="comm_btn" data-ng-click="save2()"><img src="/images/article/btn_comment.gif" alt="덧글달기" /></a> 
+        </form>
+      </div>
+  </ul>
+</div>

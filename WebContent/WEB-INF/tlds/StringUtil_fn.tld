@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<description>JSTL 1.1 user functions library</description>
+	<display-name>JSTL user functions</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>suf</short-name>
+
+	<function>
+		<description>CutString</description>
+		<name>cutString</name>
+		<function-class>com.mc.common.util.StringUtil</function-class>
+		<function-signature>java.lang.String cutString(java.lang.String, int, java.lang.String)</function-signature>
+		<example>
+     		${suf:cutString('long string example', 10, '...')}
+    	</example>
+	</function>
+
+	<function>
+		<description>lpad</description>
+		<name>lpad</name>
+		<function-class>com.mc.common.util.StringUtil</function-class>
+		<function-signature>java.lang.String lpad(java.lang.String, int, java.lang.String)</function-signature>
+		<example>
+     		${suf:lpad('1', 2, '0')}
+    	</example>
+	</function>
+
+	<function>
+		<description>isNullDef</description>
+		<name>isNullDef</name>
+		<function-class>com.mc.common.util.StringUtil</function-class>
+		<function-signature>java.lang.String isNullDef(java.lang.String, java.lang.String)</function-signature>
+		<example>
+     		${suf:isNullDef('1', '2')}
+    	</example>
+	</function>
+	
+	<function>
+		<description>isChecked</description>
+		<name>isChecked</name>
+		<function-class>com.mc.common.util.StringUtil</function-class>
+		<function-signature>java.lang.String isChecked(java.lang.String, java.lang.String)</function-signature>
+		<example>
+     		${suf:isChecked('1', '2')}
+    	</example>
+	</function>
+	
+	<function>
+		<description>isChecked2</description>
+		<name>isChecked2</name>
+		<function-class>com.mc.common.util.StringUtil</function-class>
+		<function-signature>java.lang.String isChecked2(java.lang.String, java.lang.String)</function-signature>
+		<example>
+     		${suf:isChecked2('1', '2')}
+    	</example>
+	</function>
+	
+	<function>
+		<description>ceil</description>
+		<name>ceil</name>
+		<function-class>com.mc.common.util.StringUtil</function-class>
+		<function-signature>java.lang.double ceil(double)</function-signature>
+		<example>
+     		${suf:ceil('1')}
+    	</example>
+	</function>
+	
+	<function>
+		<description>getThousand</description>
+		<name>getThousand</name>
+		<function-class>com.mc.common.util.StringUtil</function-class>
+		<function-signature>java.lang.String getThousand(java.lang.String)</function-signature>
+		<example>
+     		${suf:getThousand('100000')}
+    	</example>
+	</function>
+
+</taglib>

@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>파츠모아 통합관리 시스템</title>
+<link href="/lib/css/cmsbase.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/cmsadmin.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/redmond/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div class="titlebar">
+    <h2>마감정산등록</h2>
+    <div> <span>통합관리</span> &gt; <span>정산관리</span> &gt; <span class="bar_tx">마감정산등록</span> </div>
+  </div>
+  <div class="container"> 
+    <!-- <div class="tab_menu">
+      <ul class="tab">
+        <li><a href="#">이달의 우수상점</a></li>
+        <li class="on"><a href="#">상점소개</a></li>
+      </ul>
+    </div>  -->
+    <div class="contents">
+      <table class="style_1">
+         <colgroup>
+          <col width="10%" />
+          <col width="*" />
+          </colgroup>
+        <tr>
+          <th>조회조건</th>
+          <td>
+            <select title="업체별/전체선" style="width: 100px;">
+                <option>전체선택</option>
+                <option>업체별선택</option>
+            </select>
+            <select title="업체개별선택"  style="width: 100px;">
+                <option>인선모터스</option>
+                <option>서원인계자동</option>
+            </select>
+          </td>
+        </tr> 
+        <tr>
+          <th>기간선택</th>
+          <td>
+            <input type="text" class="input_1 date" id="" name="" />
+              ~
+            <input type="text" class="input_1 date" id="" name="" />
+          </td>
+        </tr>
+      </table>
+      <div class="btn_bottom">
+        <div class="r_btn">
+          <span class="bt_all"><span><input type="button" value="조회 " onclick="" class="btall"/></span></span> 
+          </div>
+      </div>
+      <table class="style_6">
+        <colgroup>
+          <col width="5%" />
+          <col width="15%" />
+          <col width="12%" />
+          <col width="13%" />
+          <col width="5%" />
+          <col width="*" />
+        </colgroup>
+        <tr>
+          <th>번호</th>
+          <th>정산처리일시</th>
+          <th>정산코드</th>
+          <th>정산기간</th>
+          <th>정산일수</th>
+          <th>정산포함업체명</th>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>2015-03-30</td>
+          <td class="blue"><a href="#">1548798</a></td>
+          <td>2015-03-03 ~ 2015-03-10</td>
+          <td>7</td>
+          <td class="left" >
+            인선모터스, 수원정비소, 인천정비소, 서울정비소, 경기정비소, 광명정비소
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>2015-03-30</td>
+          <td class="blue"><a href="#">1548798</a></td>
+          <td>2015-03-03 ~ 2015-03-10</td>
+          <td>7</td>
+          <td class="left" >
+            인선모터스, 수원정비소, 인천정비소, 서울정비소, 경기정비소, 광명정비소
+          </td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>2015-03-30</td>
+          <td class="blue"><a href="#">1548798</a></td>
+          <td>2015-03-03 ~ 2015-03-10</td>
+          <td>7</td>
+          <td class="left" >
+            인선모터스, 수원정비소, 인천정비소, 서울정비소, 경기정비소, 광명정비소
+          </td>
+        </tr>
+        
+      </table>
+      <div class="paging"> <span id="pagingWrap"> <a class="p_first2" href="#">&lt;&lt;</a> <a class="p_first" href="#">&lt;</a> <a href="#" class="on">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a class="p_last" href="#">&gt;</a> <a class="p_last2" href="#">&gt;&gt;</a> </span> </div>
+      
+      
+      
+        
+        
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/lib/js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="/lib/js/jquery-ui-1.10.3.custom.min.js"></script> 
+<script>
+$("input.date").datepicker({
+		showOn: "button",      
+		buttonImage: "/images/admin/contents/calendar.png",
+});
+
+$( "#tabs" ).tabs();
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#dialog2" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link2" ).click(function( event ) {
+	$( "#dialog2" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+</script>
+</body>
+</html>

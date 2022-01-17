@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>파츠모아 통합관리 시스템</title>
+<link href="//lib/css/cmsbase.css" rel="stylesheet" type="text/css" />
+<link href="//lib/css/cmsadmin.css" rel="stylesheet" type="text/css" />
+<link href="//lib/css/redmond/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div class="titlebar">
+    <h2>매출관리</h2>
+    <div> <span>통합관리</span> &gt; <span>상품관리</span> &gt; <span>매출관리</span> &gt;<span class="bar_tx">통합관리</span> </div>
+  </div>
+  <div class="container"> 
+     <div class="tab_menu">
+      <ul class="tab">
+        <li class="on"><a href="#">통합관리</a></li>
+        <li><a href="#">상점별관리</a></li>
+        <li><a href="#">카드결제관리</a></li>
+        <li><a href="#">현금결제관리</a></li>
+      </ul>
+    </div>
+    <div class="contents">
+      <table class="style_1">
+        <colgroup>
+        <col width="10%" />
+        <col width="*" />
+        </colgroup>
+        <tr>
+          <th>상세검색</th>
+          <td style="padding-right:15px;">
+            <table class="style_4">
+                <colgroup>
+                <col width="10%" />
+                <col width="*" />
+                <col width="10%" />
+                <col width="*" />
+                </colgroup> 
+              <tr>
+                <th>부품명</th>
+                <td class="left">
+                  <label>
+                    <input type="text" class="input_1" id="" name="" />
+                  </label>
+                   <span><a href="#" id="dialog-link"><img src="//images/admin/contents/s_btn_search.gif" alt="검색" /></a></span> </span>
+                </td>
+                <th>매장명</th>
+                <td class="left">
+                  <label>
+                    <input type="text" class="input_1" id="" name="" />
+                  </label>
+                   <span><a href="#" id="dialog-link2"><img src="//images/admin/contents/s_btn_search.gif" alt="검색" /></a></span> </span>
+                </td>
+              </tr>
+              <tr>
+                <th>제조사</th>
+                <td class="left">
+                  <select title="제조사 선택">
+                    <option>전체</option>
+                    <option>현대</option>
+                    <option>기아</option>
+                    <option>기타</option>
+                  </select>
+                </td>
+                <th>차량명</th>
+                <td class="left">
+                  <select title="차량 선택">
+                    <option>전체</option>
+                  </select>
+                </td>
+              </tr>
+              
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <th>기간조회</th>
+          <td><div> <span class="bt_alls on"><span>
+              <input type="button" value="어제" onclick="" class="btalls"/>
+              </span></span> <span class="bt_alls"><span>
+              <input type="button" value="오늘" onclick="" class="btalls"/>
+              </span></span> <span class="bt_alls"><span>
+              <input type="button" value="일주" onclick="" class="btalls"/>
+              </span></span> <span class="bt_alls"><span>
+              <input type="button" value="한달" onclick="" class="btalls"/>
+              </span></span> <span class="bt_alls"><span>
+              <input type="button" value="당월" onclick="" class="btalls"/>
+              </span></span> <span class="bt_alls"><span>
+              <input type="button" value="전월" onclick="" class="btalls"/>
+              </span></span> <span class="bt_alls"><span>
+              <input type="button" value="전체" onclick="" class="btalls"/>
+              </span></span> </div>
+            <div style="margin-top:10px;">
+              <input type="text" class="input_1 date" id="" name="" />
+              ~
+              <input type="text" class="input_1 date" id="" name="" />
+            </div></td>
+        </tr>
+      </table>
+      <div class="btn_bottom">
+        <div class="r_btn"> <span class="bt_all"><span>
+          <input type="button" value="검색" onclick="" class="btall"/>
+          </span></span> <span class="bt_all"><span>
+          <input type="button" value="초기화" onclick="" class="btall"/>
+          </span></span> </div>
+      </div>
+      <div class="top_line" style="margin-top:20px;">
+        <div class="select_box"> <span><b>639</b> 건[1/64페이지]</span> </div>
+      </div>
+      <table class="style_3">
+        <colgroup>
+            <col width="5%" />
+            <col width="10%" />
+            <col width="6%" />
+            <col width="6%" />
+            <col width="6%" />
+            <col width="6%" />
+            <col width="6%" />
+            <col width="12%" />
+            <col width="*" />
+            <col width="5%" />
+            <col width="10%" />
+            <col width="10%" />
+        </colgroup>
+        <tr>
+          <th> <input type="checkbox" id="" name="" />
+          </th>
+          <th>일자</th>
+          <th>이름</th>
+          <th>회원구분</th>
+          <th>판매업체</th>
+          <th>제조사</th>
+          <th>차량명</th>
+          <th>부품명</th>
+          <th>상품명</th>
+          <th>수량</th>
+          <th>금액</th>
+          <th>주문상태</th>
+        </tr>
+        <tr>
+          <td><input type="checkbox" id="" name="" /></td>
+          <td>2015-11-11<br/>
+            14:40:21</td>
+          <td>홍길동김</td>
+          <td>일반회원</td>  
+          <td>인선</td>
+          <td>현대</td>
+          <td>소나타</td>
+          <td>헤드램프</td>
+          <td>카렌스 헤드 램프 RHIT201501160118</td>
+          <td>1</td>
+          <td>20,000 원</td>
+          <td>배송준비중</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" id="" name="" /></td>
+          <td>2015-11-11<br/>
+            14:40:21</td>
+          <td>홍길동김</td>
+          <td>일반회원</td>  
+          <td>인선</td>
+          <td>현대</td>
+          <td>소나타</td>
+          <td>헤드램프</td>
+          <td>카렌스 헤드 램프 RHIT201501160118</td>
+          <td>1</td>
+          <td>20,000 원</td>
+          <td>배송준비중</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" id="" name="" /></td>
+          <td>2015-11-11<br/>
+            14:40:21</td>
+          <td>홍길동김</td>
+          <td>일반회원</td>  
+          <td>인선</td>
+          <td>현대</td>
+          <td>소나타</td>
+          <td>헤드램프</td>
+          <td>카렌스 헤드 램프 RHIT201501160118</td>
+          <td>1</td>
+          <td>20,000 원</td>
+          <td>배송준비중</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" id="" name="" /></td>
+          <td>2015-11-11<br/>
+            14:40:21</td>
+          <td>홍길동김</td>
+          <td>일반회원</td>  
+          <td>인선</td>
+          <td>현대</td>
+          <td>소나타</td>
+          <td>헤드램프</td>
+          <td>카렌스 헤드 램프 RHIT201501160118</td>
+          <td>1</td>
+          <td>20,000 원</td>
+          <td>배송준비중</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" id="" name="" /></td>
+          <td>2015-11-11<br/>
+            14:40:21</td>
+          <td>홍길동김</td>
+          <td>일반회원</td>  
+          <td>인선</td>
+          <td>현대</td>
+          <td>소나타</td>
+          <td>헤드램프</td>
+          <td>카렌스 헤드 램프 RHIT201501160118</td>
+          <td>1</td>
+          <td>20,000 원</td>
+          <td>배송준비중</td>
+        </tr>
+      </table>
+      <div class="paging"> <span id="pagingWrap"> <a class="p_first2" href="#">&lt;&lt;</a> <a class="p_first" href="#">&lt;</a> <a href="#" class="on">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a href="#">6</a> <a href="#">7</a> <a href="#">8</a> <a href="#">9</a> <a href="#">10</a> <a class="p_last" href="#">&gt;</a> <a class="p_last2" href="#">&gt;&gt;</a> </span> </div>
+      <div class="btn_bottom">
+        <div class="r_btn"> <span class="bt_all"><span>
+          <input type="button" value="전체선택" onclick="" class="btall"/>
+          </span></span> 
+          <span class="bt_all"><span>
+          <input type="button" value="선택취소" onclick="" class="btall"/>
+          </span></span>
+          <span class="bt_all"><span>
+          <input type="button" value="엑셀다운로드" onclick="" class="btall"/>
+          </span></span> </div>
+      </div>
+       <!-- 부품 검색모달팝업 -->
+        <div id="dialog" title="부품검색" >
+          <div class="seldiv">
+            <select title="제조사 선택">
+                 <option>제조사</option>
+            </select>
+            <select title="차량 선택">
+                 <option>차량</option>
+            </select>
+            <select title="모델명 선택">
+                 <option>모델명</option>
+            </select>
+            <select title="연식 선택">
+                 <option>연식</option>
+            </select>
+            <select title="색상 선택">
+                 <option>색상</option>
+            </select>
+            <select title="등급 선택">
+                 <option>등급</option>
+            </select>
+            <select title="부품 대분류 선택">
+                 <option>부품분류(대분류)</option>
+            </select>
+            <select title="부품 소분류 선택">
+                 <option>부품분류(소분류)</option>
+            </select>
+            <select title="상세부품명 선택">
+                 <option>상세부품명</option>
+            </select>
+          </div>
+          <div class="btn_bottom">
+            <div class="r_btn">
+             <span><a href="#"><img src="//images/admin/contents/pop_search.gif" alt="검색" /></a></span>
+            </div> 
+          </div>
+          <table class="style_3">
+            <tr>
+              <th>제조사</th>
+              <th>차량명</th>
+              <th>모델명</th>
+              <th>연식</th>
+              <th>색상</th>
+              <th>등급</th>
+              <th>부품<br/><span style="font-weight:normal;">(대분류)</span></th>
+              <th>부품<br/><span style="font-weight:normal;">(소분류)</span></th>
+              <th>상세부품명</th>
+            </tr>
+            <tr>
+              <td>쉐보레</td>
+              <td>아스트로벤</td>
+              <td>프레스티지</td>
+              <td>2013</td>
+              <td>화이트</td>
+              <td>A</td>
+              <td>바디</td>
+              <td>프론트범퍼</td>
+              <td>프론트범퍼가드</td>
+            </tr>
+            <tr>
+              <td>쉐보레</td>
+              <td>아스트로벤</td>
+              <td>프레스티지</td>
+              <td>2013</td>
+              <td>화이트</td>
+              <td>A</td>
+              <td>바디</td>
+              <td>프론트범퍼</td>
+              <td>프론트범퍼가드</td>
+            </tr>
+            <tr>
+              <td>쉐보레</td>
+              <td>아스트로벤</td>
+              <td>프레스티지</td>
+              <td>2013</td>
+              <td>화이트</td>
+              <td>A</td>
+              <td>바디</td>
+              <td>프론트범퍼</td>
+              <td>프론트범퍼가드</td>
+            </tr>
+            <tr>
+              <td>쉐보레</td>
+              <td>아스트로벤</td>
+              <td>프레스티지</td>
+              <td>2013</td>
+              <td>화이트</td>
+              <td>A</td>
+              <td>바디</td>
+              <td>프론트범퍼</td>
+              <td>프론트범퍼가드</td>
+            </tr>
+            <tr>
+              <td>쉐보레</td>
+              <td>아스트로벤</td>
+              <td>프레스티지</td>
+              <td>2013</td>
+              <td>화이트</td>
+              <td>A</td>
+              <td>바디</td>
+              <td>프론트범퍼</td>
+              <td>프론트범퍼가드</td>
+            </tr>
+          </table>
+          <div class="paging"> <span id="pagingWrap"> <a class="p_first2" href="#">&lt;&lt;</a> <a class="p_first" href="#">&lt;</a> <a href="#" class="on">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a class="p_last" href="#">&gt;</a> <a class="p_last2" href="#">&gt;&gt;</a> </span> </div>
+          
+        </div>
+      <!-- 매장 검색모달팝업 -->
+      <div id="dialog2" title="매장검색" >
+        <table class="style_1">
+          <colgroup>
+          <col width="15%" />
+          <col width="*" />
+          </colgroup>
+          <tr>
+            <th>매장업체명</th>
+            <td><label>
+                <input type="text" class="input_1" id="" name="" />
+              </label>
+              <span><a href="#"><img src="//images/admin/contents/s_btn_search.gif" alt="검색" /></a></span></td>
+          </tr>
+        </table>
+        <table class="style_3">
+          <tr>
+            <th>매장업체명</th>
+            <th>사업자번호</th>
+          </tr>
+          <tr>
+            <td>인선모터스</td>
+            <td>123123123123</td>
+          </tr>
+          <tr>
+            <td>인선모터스</td>
+            <td>123123123123</td>
+          </tr>
+          <tr>
+            <td>인선모터스</td>
+            <td>123123123123</td>
+          </tr>
+          <tr>
+            <td>인선모터스</td>
+            <td>123123123123</td>
+          </tr>
+          <tr>
+            <td>인선모터스</td>
+            <td>123123123123</td>
+          </tr>
+        </table>
+        <div class="paging"> <span id="pagingWrap"> <a class="p_first2" href="#">&lt;&lt;</a> <a class="p_first" href="#">&lt;</a> <a href="#" class="on">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a class="p_last" href="#">&gt;</a> <a class="p_last2" href="#">&gt;&gt;</a> </span> </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="//lib/js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="//lib/js/jquery-ui-1.10.3.custom.min.js"></script> 
+<script>
+$("input.date").datepicker({
+		showOn: "button",      
+		buttonImage: "//images/admin/contents/calendar.png",
+});
+
+$( "#tabs" ).tabs();
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#dialog2" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link2" ).click(function( event ) {
+	$( "#dialog2" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+</script>
+</body>
+</html>

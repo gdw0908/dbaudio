@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="old_code">
+	
+	<select id="codeList" parameterType="Map" resultType="mcmap">
+		SELECT
+		    CODENO AS CODE, CODENM AS CODE_NM, UPCODENO, SORTNO, REF, USEYN
+		FROM V_IS_CODEMST
+		WHERE USEYN='Y'
+		    AND UPCODENO=#{upcodeno}
+		ORDER BY SORTNO ASC
+	</select>
+	
+	<select id="carpart" parameterType="Map" resultType="mcmap">
+        SELECT
+            CARPARTSEQ AS CODE, PARTNM AS CODE_NM
+        FROM V_IS_CARPART
+        WHERE DELYN='N'
+            AND PARTKIND=#{upcodeno}
+        ORDER BY CARPARTSEQ ASC
+	</select>
+	
+	<select id="carmaker" parameterType="Map" resultType="mcmap">
+        SELECT
+            *
+        FROM IS_CARMAKER
+        WHERE USEYN='Y'
+        <if test="!(nation == null or nation == '')" >
+        	AND NATION = #{nation}
+        </if>
+        ORDER BY ORDERNUM ASC
+	</select>
+	
+	<select id="carmodel" parameterType="Map" resultType="mcmap">
+        SELECT
+            *
+        FROM IS_CARMODEL
+        WHERE USEYN='Y'
+            AND CARMAKERSEQ=#{carmakerseq}
+        ORDER BY CARMODELNM ASC
+	</select>
+	
+	<select id="cargrade" parameterType="Map" resultType="mcmap">
+        SELECT
+            *
+        FROM V_IS_CARGRADE
+        WHERE USEYN='Y'
+            AND CARMAKERSEQ=#{carmakerseq}
+            AND CARMODELSEQ=#{carmodelseq}
+        ORDER BY CARGRADENM ASC
+	</select>
+    
+</mapper>

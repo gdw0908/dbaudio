@@ -1,0 +1,74 @@
+<div class="list_top">
+  <p class="hit"><b>999</b>개의 글이 등록되어 있습니다.</p>
+  <p class="select_box">
+  <select class="select_1">
+  <option>10건씩 보기</option>
+  <option>20건씩 보기</option>
+  <option>50건씩 보기</option>
+  </select>
+  </p>
+</div>
+
+<table class="list_style_1">
+<colgroup>
+<col width="8%" />
+<col width="" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr>
+  <th scope="col">번호</th>
+  <th scope="col">제목</th>
+  <th scope="col">작성자</th>
+  <th scope="col">작성일</th>
+</tr>
+</thead>
+<tbody>
+<tr class="lately">
+  <td>20</td>
+  <td class="title"><a href="#">국대최대 중고자동차 부품 소핑몰 파츠모아가 오픈하였습니다.</a></td>
+  <td>운영자</td>
+  <td>15-01-01</td>
+</tr>
+<tr class="lately">
+  <td>19</td>
+  <td class="title"><a href="#">파츠모아와 함께 빠르고 믿을 수 있는 중고차 부품을 가장가까운 장착점에서 저렴하게 이용하세요.</a></td>
+  <td>운영자</td>
+  <td>15-01-01</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td class="title"><a href="#">국대최대 중고자동차 부품 소핑몰 파츠모아가 오픈하였습니다.</a></td>
+  <td>운영자</td>
+  <td>15-01-01</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td class="title"><a href="#">파츠모아와 함께 빠르고 믿을 수 있는 중고차 부품을 가장가까운 장착점에서 저렴하게 이용하세요.</a></td>
+  <td>운영자</td>
+  <td>15-01-01</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td class="title"><a href="#">국대최대 중고자동차 부품 소핑몰 파츠모아가 오픈하였습니다.</a></td>
+  <td>운영자</td>
+  <td>15-01-01</td>
+</tr>
+</tbody>
+</table>
+
+<? include "../../article/paging/paging.html"; ?>
+
+<div class="bottom_search">
+  <form action="" name="" onsubmit="">
+  <select name="condition" class="select_1">
+  <option value="TITLE">제목</option>
+  <option value="REG_NM" >작성자</option>
+  <option value="CONTS" >내용</option>
+  </select>
+  <span class="bottom_search_add"><input type="text" class="input_2" name="keyword" value="" title="검색바" />
+  <span class="bottom_search_bt"><input type="image" class="search_vd"  src="/images/article/btn_bottom_search.gif" name="image" alt="검색버튼"></span>
+  </span>
+  </form>
+</div>

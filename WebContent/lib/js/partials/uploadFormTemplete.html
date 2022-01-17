@@ -1,0 +1,49 @@
+<div data-ng-controller="uploadCtrl" title="파일 업로드" class="filebox" data-ng-switch="model.image">
+  <div class="fileup" data-ng-switch-when="true"><!-- 이미지 파일인 경우  -->
+    <table class="style_2">
+      <colgroup>
+        <col width="25%" />
+        <col width="*" />
+      </colgroup>
+      <tr>
+        <th>업로드</th>
+        <td>
+          <form id="fileFrm" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" onchange="angular.element(this).scope().upload()" /> 
+            <input type="hidden" name="width" value="{{model.width}}"/> 
+            <input type="hidden" name="height" value="{{model.height}}" /> 
+            <input type="hidden" name="ratio" value="{{model.ratio}}" />
+          </form>
+        </td>
+      </tr>
+      <tr data-ng-if="rst.uuid">
+        <th>미리보기</th>
+        <td><img src="/upload/temp/{{rst.uuid}}" style="width:100%;"/></td>
+      </tr>
+      <tr data-ng-if="rst.uuid">
+        <th>사진설명</th>
+        <td><input type="text" data-ng-model="rst.etc" style="width: 90%" /></td>
+      </tr>
+    </table>
+    <button data-ng-click="saveClick()" data-ng-if="rst.uuid && rst.etc">저장</button>
+    <button data-ng-click="cancelClick()">취소</button>
+  </div>
+  <div class="fileup" data-ng-switch-default><!-- 그냥 파일 업로드 -->
+    <table class="style_2">
+      <colgroup>
+        <col width="25%" />
+        <col width="*" />
+      </colgroup>
+      <tr>
+        <th>업로드</th>
+        <td>
+          <form id="fileFrm" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" onchange="angular.element(this).scope().upload()" /> 
+          </form>
+        </td>
+      </tr>
+    </table>
+    <button data-ng-click="saveClick()" data-ng-if="rst.uuid">저장</button>
+    <button data-ng-click="cancelClick()">취소</button>
+  </div>
+</div>

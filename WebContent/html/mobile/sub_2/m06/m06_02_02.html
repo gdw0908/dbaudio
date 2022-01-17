@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_6_2.gif" alt="나의 배송지관리"></h3>
+        </div>
+
+        <div class="hs_line">
+          <h4 class="hs_1" style="margin:0;">배송지 등록 <span>[ <span class="s_icon">표시된 항목은 필수사항입니다. ]</span></span></h4>
+        </div>
+
+        <div class="sub_table_1">
+          <table>
+          <colgroup>
+          <col width="20%">
+          <col width="">
+          </colgroup>
+          <tbody>
+
+          <tr>
+            <th scope="row"><span>수취인<br>이름</span></th>
+            <td><input type="text" id="" name="" class="input_2 ws_3"></td>
+          </tr>
+
+          <tr>
+            <th scope="row"><span>배송지<br>주소</span></th>
+            <td>
+              <div class="input_box_1">
+                <input type="text" id="" name="" class="input_2 ws_1"> - <input type="text" id="" name="" class="input_2 ws_1">
+                <a href="#"><img src="/images/sub_2/pay_s_btn2.gif" alt="주소찾기"></a> <label><br><br><input type="checkbox" id="" name="" class="check"> 주소록에 기본배송지로 저장</label>
+              </div>
+              <div class="input_box_1">
+                <input type="text" id="" name="" class="input_2 ws_2">
+              </div>
+              <div class="last">
+                <input type="text" id="" name="" class="input_2 ws_2">
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row"><span>배송지명</span></th>
+            <td><input type="text" id="" name="" class="input_2 ws_3"> <label><br><br><input type="checkbox" id="" name="" class="check"> 수취인명과 동일하게 적용</label></td>
+          </tr>
+
+          <tr>
+            <th scope="row"><span>수취인<br>휴대폰</span></th>
+            <td>
+              <input type="text" id="" name="" class="input_2 ws_1">
+              -
+              <input type="text" id="" name="" class="input_2 ws_1">
+              -
+              <input type="text" id="" name="" class="input_2 ws_1">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><span>수취인<br>연락처</span></th>
+            <td>
+              <input type="text" id="" name="" class="input_2 ws_1">
+              -
+              <input type="text" id="" name="" class="input_2 ws_1">
+              -
+              <input type="text" id="" name="" class="input_2 ws_1">
+            </td>
+          </tr>
+
+          </tbody>
+          </table>
+        </div>
+
+		<div class="check_btn">
+		<p class="cb_l"><label><input type="checkbox" id="" name="" class="check"> 주소록에 기본배송지로 저장</label></p>
+		<p class="cb_r">
+          <a href="#"><img src="/images/mobile/sub_2/btn_type_d6.gif" alt=""></a>
+          <a href="/html/mobile/sub_2/m06/m06_02_03.html"><img src="/images/mobile/sub_2/btn_type_d7.gif" alt=""></a>
+        </p>
+
+		</div>
+
+        
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

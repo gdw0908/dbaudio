@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="transfer">
+	
+	<select id="insun_itemseqlist" parameterType="Map" resultType="mcmap">
+		SELECT b.item_seq, b.INSUN_ITEMSEQ FROM (
+		    SELECT ITEM_SEQ FROM NSH_GOODS WHERE REG_ID='insun' and INSUN_ITEMSEQ is not null
+		    MINUS
+		    SELECT * FROM(
+		        SELECT DISTINCT TABLE_SEQ FROM NSH_ATTACH WHERE TABLE_NM='NSH_GOODS'
+		    )
+		) a left outer join NSH_GOODS b
+		on a.ITEM_SEQ=b.ITEM_SEQ
+	</select>
+	
+	<select id="ready_insunitem" parameterType="Map" resultType="mcmap">
+	<![CDATA[
+        SELECT 
+            #{item_seq} as ITEM_SEQ, C.*
+        FROM SH_CLIENTSTOCK A LEFT OUTER JOIN SH_CLIENTSTOCKDETAIL B
+        ON A.ITEMSEQ=B.ITEMSEQ
+        LEFT OUTER JOIN (
+            SELECT 
+                ITEMSEQ, 
+                LISTAGG(ORGFILENM, ',') WITHIN GROUP (ORDER BY MULTISEQ) AS ORGFILENM,
+                LISTAGG(SAVEFILENM, ',') WITHIN GROUP (ORDER BY MULTISEQ) AS SAVEFILENM,
+                LISTAGG(REPLACE(FILEPATH, '/usr/local/apache-tomcat-6.0.36/webapps/insun_shop/client/common/upFiles/', ''), ',') WITHIN GROUP (ORDER BY MULTISEQ) AS FILEPATH
+            FROM  SH_CLIENTSTOCKPHOTO 
+            GROUP BY ITEMSEQ
+        ) C
+        ON A.ITEMSEQ = C.ITEMSEQ
+        WHERE CARKIND = '04010201'
+        AND A.ITEMSEQ = #{insun_itemseq}
+	]]>
+	</select>
+	<select id="list" parameterType="Map" resultType="mcmap">
+	<![CDATA[
+        SELECT 
+            '30' AS COM_SEQ, 
+            '1' AS GUBUN,
+            CARMAKERSEQ,CARMODELSEQ,CARGRADESEQ,CARYYYY,COLOR, 
+            nvl(PRODUCTNM, (SELECT CARMODELNM FROM IS_CARMODEL WHERE CARMODELSEQ=A.CARMODELSEQ) || ' ' || (SELECT PARTNM FROM IS_CARPART WHERE CARPARTSEQ=A.CARPARTSEQ)) || DECODE(CARYYYY, '', '', '(' || CARYYYY ||')') as PRODUCTNM,
+            (CASE WHEN GRADE='050201001' THEN 'A' WHEN GRADE='050201002' THEN 'B' WHEN GRADE='050201003' THEN 'C' END) AS GRADE,
+            STOCKPART AS PART1,
+            PARTKIND AS PART2,
+            CARPARTSEQ AS PART3,
+            'Y' AS USER_PRICING_YN,
+            SELLAMT AS USER_PRICE,
+            DECODE(SELLAMT, '', 'Y', 'N') AS INQUIRY_YN,
+            'N' AS SUPPLIER_PRICING_YN,
+            '' AS SUPPLIER_PRICE,
+            '' AS SALE_PRICE,
+            '' AS SALE_SDATE,
+            '' AS SALE_EDATE,
+            '' AS DISCOUNT_RATE,
+            'C' AS FEE_YN,
+            '' AS FEE_AMOUNT,
+            STOCKNUM AS STOCK_NUM,
+            STOCKYN AS STOCK_YN,
+            '' as SEARCH_TAG,
+            BESTYN,EVENTYN,NEWYN,PUBLICYN,RECOMMYN,SALEYN,PLANYN,
+            SELLYN AS APPROVAL,
+            CARPARTCODE,
+            CARPARTCODE AS ERP_CODE,
+            A.ITEMSEQ AS INSUN_ITEMSEQ,
+            B.CONTENTS AS CONTS,
+            'insun' AS REG_ID,
+            to_char(REGDATE, 'yyyy/MM/dd HH24:mi:ss') AS REG_DT,
+            C.*
+        FROM SH_CLIENTSTOCK A LEFT OUTER JOIN SH_CLIENTSTOCKDETAIL B
+        ON A.ITEMSEQ=B.ITEMSEQ
+        LEFT OUTER JOIN (
+            SELECT 
+                ITEMSEQ, 
+                LISTAGG(ORGFILENM, ',') WITHIN GROUP (ORDER BY MULTISEQ) AS ORGFILENM,
+                LISTAGG(SAVEFILENM, ',') WITHIN GROUP (ORDER BY MULTISEQ) AS SAVEFILENM,
+                LISTAGG(REPLACE(FILEPATH, '/usr/local/apache-tomcat-6.0.36/webapps/insun_shop/client/common/upFiles/', ''), ',') WITHIN GROUP (ORDER BY MULTISEQ) AS FILEPATH
+            FROM  SH_CLIENTSTOCKPHOTO 
+            GROUP BY ITEMSEQ
+        ) C
+        ON A.ITEMSEQ = C.ITEMSEQ
+        WHERE CARKIND = '04010201'
+        AND A.ITEMSEQ IN (SELECT ITEMSEQ FROM V_DATA_TRANSFER) 
+	]]>
+	</select>
+	
+	<update id="write" parameterType="Map" useGeneratedKeys="true" keyColumn="item_seq" keyProperty="item_seq">
+		INSERT INTO NSH_GOODS(
+			ITEM_SEQ, ITEM_CODE, GUBUN, COM_SEQ, CARMAKERSEQ, CARMODELSEQ, CARGRADESEQ, PRODUCTNM, CARYYYY, COLOR, GRADE, PART1, PART2, PART3, 
+			USER_PRICING_YN, USER_PRICE, SUPPLIER_PRICING_YN, SUPPLIER_PRICE, SALE_PRICE, DISCOUNT_RATE, 
+			FEE_YN, FEE_AMOUNT, STOCK_YN, STOCK_NUM, ERP_CODE, COMMISSION, SEARCH_TAG, BESTYN, EVENTYN, NEWYN, PUBLICYN, RECOMMYN, 
+			SALEYN, PLANYN, APPROVAL, CONTS, INQUIRY_YN, CARPARTCODE, INSUN_ITEMSEQ, 
+			REG_ID, REG_DT
+		)VALUES(
+			SEQ_NSH_GOODS.NEXTVAL, 'P' || TO_CHAR(SYSDATE, 'YYMMDD') || to_char(10000000+SEQ_NSH_GOODS.nextval), #{gubun}, #{com_seq}, #{carmakerseq}, #{carmodelseq}, #{cargradeseq}, #{productnm}, #{caryyyy}, #{color}, #{grade}, #{part1}, #{part2}, #{part3}, 
+			#{user_pricing_yn}, #{user_price}, #{supplier_pricing_yn}, #{supplier_price}, #{sale_price}, #{discount_rate}, 
+			#{fee_yn}, #{fee_amount}, #{stock_yn}, #{stock_num}, #{erp_code}, #{commission}, #{search_tag}, #{bestyn}, #{eventyn}, #{newyn}, #{publicyn}, #{recommyn}, 
+			#{saleyn}, #{planyn}, #{approval}, #{conts}, #{inquiry_yn}, #{carpartcode}, #{insun_itemseq}, 
+			#{reg_id}, to_date(#{reg_dt}, 'yyyy/MM/dd HH24:mi:ss')
+		)
+	</update>
+	
+	<select id="goods_image_list" parameterType="Map" resultType="mcmap">
+	<![CDATA[
+        SELECT a.* FROM 
+        NSH_ATTACH a, NSH_GOODS b
+        WHERE a.TABLE_SEQ = b.ITEM_SEQ
+        AND a.TABLE_NM = 'NSH_GOODS'
+	]]>
+	</select>
+	
+</mapper>

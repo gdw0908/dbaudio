@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/common.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/article.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/sub_2.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+  <? include "../../include/header.html"; ?>
+  <div id="container">
+    <div class="c_wrap">
+      <? include "../../include/left.html"; ?>
+      <div id="sub">
+        <div class="strapline">
+          <h3><img src="/images/sub_2/h3_img_4_2.gif" alt="주문/배송조회"></h3>
+          <div class="state"> <span>홈</span> &gt; <span>고객센터</span> &gt; <span><strong>나의쇼핑</strong></span> </div>
+        </div>
+        <div class="contents">
+
+          <p><a href="#" class="openMask">취소신청</a></p>
+
+          <div id="mask"></div>
+          <div class="window">
+            <div class="address_bg">
+              <div class="address_pop">
+
+				<div class="pop_strapline">
+                  <h3><img src="/images/sub_2/h3_img_4_pop_2_2.gif" alt="취소신청"></h3>
+                  <div class="state_2"> <span class="first"><strong>2015-06-06</strong></span> <span><strong>장바구니 No.</strong> 123456789</span> </div>
+                  <p class="pop_close"><a class="close" href="#"><img src="/images/header/popup_close.png" alt="닫기"></a></p>
+                </div>
+
+				<ul>
+                  <li>※ 취소상품의 정보 및 환불예정금액을 확인해 주세요.</li>
+                </ul>
+
+				<h4 class="hs_1">취소요청 주문정보</h4>
+
+				<table class="cart_style_1 t_top_style_1">
+                <colgroup>
+                <col width="16%">
+                <col width="">
+                <col width="16%">
+                </colgroup>
+
+                <thead>
+                <tr>
+                  <th scope="col">주문번호</th>
+                  <th scope="col">주문상품</th>
+                  <th scope="col">구매금액</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                  <td class="mid">A123456789</td>
+                  <td class="cart_main">
+                    <div class="product_box">
+                      <div class="pb_l"> <a href="#"><img src="/images/sub_2/cart_list_img1.gif" alt=""></a> </div>
+                      <div class="pb_r_2 ws_4">
+                        <p>
+                        <a href="#">
+                        <span><strong>컴비네이션램프 후미등 / 제네시스쿠페 (2012) / A급</strong><span class="f_style_1">30%↓</span></span>
+                        <span>최고자동차공급사 / 경기도 수원시</span>
+                        </a>
+                        </p>
+                        <p class="last_2"><span><strong>취소사유</strong></span> <span class="input_box"><input type="text" id="" name="" class=""> <a class="btn_x" href="#"><img src="/images/sub_2/c_input_cancel.gif" alt=""></a></span></p>
+
+                      </div>
+                    </div>
+                  </td>
+                  <td class="b_none">
+                    <p><b class="c1">60,000 원</b></p>
+                  </td>
+                </tr>
+
+                </tbody>
+
+                </table>
+
+				<h4 class="hs_1">환불예정금액 <span class="c1">※ 구매자 사유로 반품시 결제된 원배송비는 환불금액에서 제외됩니다.</span></h4>
+
+				<table class="cart_style_1 t_top_style_1">
+                <colgroup>
+                <col width="31%">
+                <col width="">
+                <col width="31%">
+                </colgroup>
+
+                <thead>
+                <tr>
+                  <th scope="col">취소상품 결제금액</th>
+                  <th scope="col">환불금액 차감금액</th>
+                  <th scope="col">환불예정액 합계</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr>
+                  <td>11,000 원</td>
+                  <td>0 원</td>
+                  <td class="b_none">11,000 원</td>
+                </tr>
+
+				<tr>
+                  <td class="tt_type1">
+				  <p><span class="tt_l">상품구매금액 :</span><span class="tt_r">11,000 원</span></p>
+				  <p class="last"><span class="tt_l">원배송비 : </span><span class="tt_r">0 원</span></p>
+				  </td>
+                  <td>&nbsp;</td>
+                  <td class="b_none">&nbsp;</td>
+                </tr>
+
+                </tbody>
+
+                </table>
+
+				<p class="type_2">※ 카드로 구매하신 경우 카드사에 따라 환불받는 방법이 다릅니다.</p>
+
+				<div class="btn_bottom">
+				<a href="#"><img src="/images/sub_2/btn_cancel_2.gif" alt=""></a>
+				<a href="#"><img src="/images/sub_2/btn_cancel_1.gif" alt=""></a>
+				</div>
+
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript">
+          //<![CDATA[
+          function wrapWindowByMask(){
+          	//화면의 높이와 너비
+          	var maskHeight = $(document).height();
+          	var maskWidth = $(window).width();
+
+          	$('#mask').css({'width':maskWidth,'height':maskHeight});
+          	//애니메이션 효과 - 0초동안 까맣게 됐다가 60% 불투명도
+          	$('#mask').fadeIn(0);
+          	$('#mask').fadeTo("slow",0.6);
+          	//윈도우 띄움.
+          	$('.window').show();
+          }
+          $(document).ready(function(){
+          //검은 막 띄우기
+          $('.openMask').click(function(e){
+          e.preventDefault();
+          wrapWindowByMask();
+          });
+          //닫기 버튼을 눌렀을 때
+          $('.window .close').click(function (e) {
+          //링크 기본동작은 작동하지 않도록 한다.
+          e.preventDefault();
+          $('#mask, .window').hide();
+          });
+          //검은 막을 눌렀을 때
+          //      $('#mask').click(function () {
+          //          $(this).hide();
+          //          $('.window').hide();
+          //      });
+          });
+          //]]>
+          </script>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <? include "../../include/footer.html"; ?>
+</div>
+</body>
+</html>

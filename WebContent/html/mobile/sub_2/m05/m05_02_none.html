@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "/mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "/mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_5_2.gif" alt="주문/배송조회"></h3>
+        </div>
+
+        <div class="p_o_line">
+
+          <span>
+          <select>
+          <option>기간선택</option>
+          </select>
+          </span>
+
+          <span>
+          <img src="/images/mobile/sub/calendar.gif" alt="달력">
+          <input type="text" id="" name="" class="input_m1"> ~
+          <img src="/images/mobile/sub/calendar.gif" alt="달력">
+          <input type="text" id="" name="" class="input_m1">
+          </span>
+
+        </div>
+        
+        <div class="address_pop">
+        <ul>
+        <li>※ 핸드폰으로 결제하실 경우 PC에서 결제취소가 불가능합니다.</li>
+        <li>※ 카드승인 취소 시 카드회사에 따라 다소 시간이 걸릴 수 있습니다.</li>
+        </ul>
+        </div>
+
+        <p class="important">장바구니에 담긴 상품은 최대 <b>7</b>일 간 보관됩니다.</p>
+
+        <div class="sub_list sub_list_a1">
+          <p class="s_top_line">
+          <span class="st_l">2011-06-06</span>
+          <span class="st_r"><a href="#"><img src="/images/mobile/sub_2/s_top_btn1.gif" alt="주문/배송조회"></a></span>
+          </p>
+
+          <ul>
+            <li>
+            <div>
+              <p class="none_img"><img src="/images/sub_2/none_cart.gif" alt="상품없음이미지"></p>
+              <p class="none_text">상품이 존재하지 않습니다.</p>
+            </div>
+            </li>
+          </ul>
+        </div>
+
+        <? include "/article/paging/paging.html"; ?>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <? include "/mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "/mobile/include/my_menu.html"; ?>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<div class="paging" data-ng-show="totalPage > 0">
+	<span id="pagingWrap">
+ 	<a class="p_first2" data-ng-click="startPage()" data-ng-hide="noPrevious()">&lt;&lt;</a>
+ 	<a class="p_first" data-ng-click="prevPage()" data-ng-hide="noPrevious()">&lt;</a> 
+ 	<a data-ng-class="{on:isActive(page)}" data-ng-repeat="page in pages" data-ng-click="selectPage(page)" style="cursor: pointer;">{{page}}</a>
+ 	<a class="p_last" data-ng-click="nextPage()" data-ng-hide="noNext()">&gt;</a> 
+ 	<a class="p_last2" data-ng-click="endPage()" data-ng-hide="noNext()">&gt;&gt;</a> 
+	</span>
+</div>

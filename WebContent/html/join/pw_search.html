@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/common.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/article.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/join.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/lib/js/common_sc.js"></script>
+</head>
+
+<body>
+
+<div class="wrap">
+  <? include "../include/header.html"; ?>
+  <div id="container">
+
+    <div class="title_rocation">
+      <div class="tr_wrap">
+        <h3><img src="/images/join/pw_search_title.gif" alt="비밀번호찾기"></h3>
+      </div>
+    </div>
+
+    <div class="j_wrap">
+
+      <div class="pw_visual">
+        파츠모아쇼핑몰 회원정보에 등록되어있는 정보 중 1가지를 택하여 입력해 주세요. <strong>등록정보로 ID의 비밀번호를 재발급 받으실 수 있습니다.<br>
+        이름, 상호명은 띄어쓰기 없이 입력해 주세요. (아이핀으로 회원가입을 하신경우, 아이핀 인증을 통해 아이디를 찾을 수 있습니다.)</strong>
+      </div>
+
+      <div id="tabNav_j1" class="join_tab pw_search_tab">
+        <h4 id="tabNavTitle0101" class="on"><a href="#" onclick="shwoTabNav('01', 2, 1); return false;" onfocus="this.onclick();">사업자회원</a></h4>
+        <div id="tabNav0101" style="display: block;">
+
+          <div class="t_box1">
+            <p><strong>개인회원이신경우</strong> :&nbsp;&nbsp;&nbsp;①휴대폰 또는 아이핀 또는 이메일 인증정보 기재&nbsp;&nbsp;&nbsp;② 본인인등 완료 후 비밀번호 재발급</p>
+            <p><strong>사업자회원이신경우</strong> :&nbsp;&nbsp;&nbsp;①사업자 인증정보 기재&nbsp;&nbsp;&nbsp;② 이메일 또는 휴대폰 인증 전송 방식 중에 하나를 선택&nbsp;&nbsp;&nbsp;③ 선택한 인증 방식으로 비밀번호 재발급</p>
+          </div>
+
+          <div class="authentication auth_2">
+
+            <div class="phone phone_3">
+
+              <dl class="type_2">
+              <dt>
+              휴대폰/아이핀 본인인증
+              <span>본인명의의 휴대폰 번호나 아이핀으로 가입 및 본인여부를 확인합니다.<br>
+              타인명의/법인휴대폰 회원님은 휴대폰 본인인증이 불가합니다.</span>
+              </dt>
+              <dd><span class="standard_ra">인증방식</span><span><label><input type="radio" id="" name="" class="radio"> 휴대폰</label></span><span><label><input type="radio" id="" name="" class="radio"> 아이핀</label></span></dd>
+              <dd><span class="standard">이름</span><span><input type="text" id="" name="" class="input_1"></span></dd>
+              <dd>
+              <span class="standard">아이디</span>
+              <span><input type="text" id="" name="" class="input_1 ws_2"></span>
+              </dd>
+              <dd class="btn"><a href="/html/join/pw_search_2.html"><img class="btn" src="/images/join/pw_auth_btn_off.gif" alt="확인"></a></dd>
+              </dl>
+
+            </div>
+
+            <div class="ipin ipin_3">
+
+              <dl class="type_2 type_2_2">
+              <dt>
+              이메일 본인인증
+              <span>회원님이 가입하신 이메일주소를 통해 비밀번호를 찾을 수 있습니다.</span>
+              </dt>
+              <dd><span class="standard">이름</span><span><input type="text" id="" name="" class="input_1"></span></dd>
+              <dd><span class="standard">아이디</span><span><input type="text" id="" name="" class="input_1 ws_2"></span></dd>
+              <dd>
+              <span class="standard">이메일</span>
+              <span><input type="text" id="" name="" class="input_1 ws_2"></span>
+              </dd>
+              <dd class="btn"><a href="/html/join/pw_search_2_2.html"><img class="btn" src="/images/join/pw_auth_btn_off.gif" alt="확인"></a></dd>
+              </dl>
+
+            </div>
+
+          </div>
+
+          <div class="b_gui_2">
+            <p><strong>위의 방법으로도 찾지 못했다면, 파츠모아쇼핑몰 고객센터로 문의주십시오</strong><br>
+            고객센터 전화문의 : 1566-6444 (상담가능시간: 평일 오전 9시~오후 6시)</p>
+          </div>
+
+        </div>
+        <h4 id="tabNavTitle0102"><a href="#" onclick="shwoTabNav('01', 2, 2); return false;" onfocus="this.onclick();">개인회원</a></h4>
+        <div id="tabNav0102" style="display: none;">
+
+          <div class="t_box1">
+            <p><strong>개인회원이신경우</strong> :&nbsp;&nbsp;&nbsp;①휴대폰 또는 아이핀 또는 이메일 인증정보 기재&nbsp;&nbsp;&nbsp;② 본인인등 완료 후 비밀번호 재발급</p>
+            <p><strong>사업자회원이신경우</strong> :&nbsp;&nbsp;&nbsp;①사업자 인증정보 기재&nbsp;&nbsp;&nbsp;② 이메일 또는 휴대폰 인증 전송 방식 중에 하나를 선택&nbsp;&nbsp;&nbsp;③ 선택한 인증 방식으로 비밀번호 재발급</p>
+          </div>
+
+          <div class="licensee_2 licensee_pw">
+
+            <dl class="type_2">
+            <dt>사업자 회원정보로 비밀번호찾기</dt>
+			<dd><span class="standard">아이디</span><span><input type="text" id="" name="" class="input_1 ws_2"></span></dd>
+            <dd><span class="standard">상호명</span><span><input type="text" id="" name="" class="input_1 ws_2"></span></dd>
+            <dd>
+            <span class="standard">사업자등록번호</span>
+            <span><input type="text" id="" name="" class="input_1 ws_1"> - <input type="text" id="" name="" class="input_1 ws_1"> - <input type="text" id="" name="" class="input_1 ws_1"></span>
+            </dd>
+            
+            </dl>
+
+          </div>
+
+		  <div class="pw_s_btn">
+			<a href="/html/join/pw_search_2_2.html"><img class="btn" src="/images/join/pw_btn1_off.gif" alt=""></a>
+			<a href="/html/join/pw_search_2.html"><img class="btn" src="/images/join/pw_btn2_off.gif" alt=""></a>
+			</div>
+
+          <div class="b_gui_2">
+            <p><strong>위의 방법으로도 찾지 못했다면, 파츠모아쇼핑몰 고객센터로 문의주십시오</strong><br>
+            고객센터 전화문의 : 1566-6444 (상담가능시간: 평일 오전 9시~오후 6시)</p>
+          </div>
+
+        </div>
+      </div>
+      <script type="text/javascript">
+      function shwoTabNav(eName, totalNum, showNum) {
+      	for(i=1; i<=totalNum; i++){
+      		var zero = (i >= 10) ? "" : "0";
+      		var e = document.getElementById("tabNav" + eName + zero + i);
+      		var eTitle = document.getElementById("tabNavTitle" + eName + zero + i);
+      		e.style.display = "none";
+      		eTitle.className = "";
+      	}
+
+      	var zero = (showNum >= 10) ? "" : "0";
+      	var e = document.getElementById("tabNav" + eName + zero + showNum);
+      	var eTitle = document.getElementById("tabNavTitle" + eName + zero + showNum);
+      	e.style.display = "block";
+      	eTitle.className = "on";
+      }
+      </script>
+
+    </div>
+
+  </div>
+  <? include "../include/footer.html"; ?>
+</div>
+</body>
+</html>

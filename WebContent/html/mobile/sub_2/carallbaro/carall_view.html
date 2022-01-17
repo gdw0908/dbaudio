@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상품검색</title>
+<link rel="shortcut icon" href="/images/favicon/favicon.ico">
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/lib/js/jcarousellite_1.0.1.js"></script>
+<script type="text/javascript" src="/lib/js/article.js"></script>
+<script type="text/javascript" src="/lib/js/mc.js"></script>
+<script type="text/javascript" src="/lib/js/gnb.js"></script>
+<script type="text/javascript" src="/lib/js/roll.js"></script>
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript" src="/lib/js/jcarousellite_1.0.1.js"></script>
+<script type="text/javascript" src="/lib/js/jquery.bxslider.js"></script>
+<script type="text/javascript" src="/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	other_listPage(1);
+	
+	$('#detail_image').bxSlider({
+	  nextSelector: '#detail_right',
+	  nextText: '<img class="detail_image" src="/images/mobile/sub/details_arrow_right.png" alt="다음">',
+	  prevSelector: '#detail_left',
+	  prevText:'<img class="detail_image" src="/images/mobile/sub/details_arrow_left.png" alt="이전">',
+	  pagerType: 'short',
+	  pagerSelector: '#detail_pager',
+	});
+	
+	Kakao.init('4abdd73b12ee3bc587ac809e92594733');
+
+	// 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+	Kakao.Link.createTalkLinkButton({
+	  container: '#kakao-link-btn',
+	  label: 'K5 즉시신청 요청합니다.',
+	  image: {
+	    src: "http://partsmoa.co.kr/" + jQuery("#detail_image_0").attr("src") + "_thumb",
+	    width: '300',
+	    height: '200'
+	  },
+	  webButton: {
+	    text: 'Parts Moa 바로가기',
+	    url: "http://partsmoa.co.kr/mobile/goods/view.do?menu=menu2&seq=56883" // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+	  }
+	});
+});
+
+//다른상품
+function other_listPage(page){
+	$("#d_con2").load("/mobile/popup/goods/other_list.do?seq=56883&rows=2&cpage="+page);
+}
+
+function changeCarmaker(){
+	$.getJSON("/json/list/old_code.carmodel.do", {carmakerseq : $("#carmakerseq").val()}, function(data){
+		$("#carmodelseq").empty();
+		$.each(data, function(i, o){
+			$("#carmodelseq").append("<option value='"+o.carmodelseq+"'>"+o.carmodelnm+"</option>");
+		});
+	});
+}
+
+function changeCarmodel(){
+	$.getJSON("/json/list/old_code.cargrade.do", {carmakerseq: $("#carmakerseq").val(),  carmodelseq: $("#carmodelseq").val()}, function(data){
+		$("#cargradeseq").empty();
+		$.each(data, function(i, o){
+			$("#cargradeseq").append("<option value='"+o.cargradeseq+"'>"+o.cargradenm+"</option>");
+		});
+	});
+}
+
+function changeSido(){
+	$.getJSON("/json/list/code.sigungu.do", {sido: $("#sido").val()}, function(data){
+		$("#sigungu").empty();
+		$("#sigungu").append("<option value=''>시/군/구</option>");
+		$.each(data, function(i, o){
+			$("#sigungu").append("<option value='"+o.sigungu+"'>"+o.dong_nm+"</option>");
+		});
+	});
+}
+
+function changeSigungu(){
+	$.getJSON("/json/list/code.dong.do", {sido: $("#sido").val(), sigungu: $("#sigungu").val()}, function(data){
+		$("#dong").empty();
+		$("#dong").append("<option value=''>읍/면/동</option>");
+		$.each(data, function(i, o){
+			$("#dong").append("<option value='"+o.dong+"'>"+o.dong_nm+"</option>");
+		});
+	});
+}
+
+function cart(seq){
+	
+		
+		
+			location.href="/mobile/mypage/shopping/cart/index.do?mode=m_add_cart&seq="+seq+"&qty="+$("#qty").val();
+		
+	
+}
+
+function goSubmit(){
+	$("#frm").submit();
+}
+
+function snsLink(gubun)
+{
+	var url = location.href;
+	$.ajax({
+		type : "POST",
+		url : "/shorturl.do",
+		data : {
+			fullurl : "http://openapi.naver.com/shorturl.xml?url="+encodeURIComponent(url)
+		},
+		dataType : "text",
+		success : function(transUrl){
+			var title = "촉매-컨버터 / 기아 봉고3 1톤 4X2 CRDI 초장축";
+
+			if(gubun == "twt"){
+				window.open("http://twitter.com/home?status=" + title + ":" + transUrl);
+			}else if(gubun == "face"){
+				window.open("http://www.facebook.com/sharer/sharer.php?u=" + transUrl + "?t=" +title);
+			}
+		}
+	});
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div id="header">
+    <div class="h_top">
+      <h1><a href="/mobile"><img src="/images/logo/logo.gif" alt="국내최대 자동차 중고부품 쇼핑몰 PARTSMOA"></a></h1>
+      <div class="search_box">
+        <form action="/mobile/goods/list.do" method="post" id="frmall" name="frmall">
+          <fieldset>
+            <legend>Parts MOA 통합검색</legend>
+            <div class="search_top"> <span class="search">
+              <input type="text" id="search_all_text" name="search_all_text" value="" class="main_search" title="Parts MOA 통합검색">
+              </span> <span class="btn_search"><a href="javascript:document.frmall.submit();"><img src="/images/header/search.gif" alt="검색"></a></span> </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <div class="total_product"> <span class="total_t">총 부품수량 : </span> <span class="total_n"><b>116,469</b> 개</span> </div>
+  </div>
+  <div id="container"> 
+    
+    <!-- gnb메뉴 --> 
+    
+    <script type="text/javascript">
+$(function(){
+	if('menu3' != ''){
+		$.each($(".gnb > ul > li"),function(){
+			if($(this).find("a").attr("href").indexOf('menu3') > -1){
+				$(this).find("a > img").attr("src", $(this).find("img").attr("src").replace("off","on"));
+				$(this).attr("class","on");
+			}
+		});
+	}
+});
+</script>
+    <div class="gnb">
+      <ul>
+        <li><a href="/mobile/goods/list.do?menu=menu1"><img src="/images/mobile/gnb/menu_1_off.gif" alt="바디"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu2"><img src="/images/mobile/gnb/menu_2_off.gif" alt="의장"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu3"><img src="/images/mobile/gnb/menu_3_off.gif" alt="엔진"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu4"><img src="/images/mobile/gnb/menu_4_off.gif" alt="샤시"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu5"><img src="/images/mobile/gnb/menu_5_off.gif" alt="국산차"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu6"><img src="/images/mobile/gnb/menu_6_off.gif" alt="수입차"></a></li>
+        <!-- <li ><a href="/mobile/cooperation/list.do?menu=menu7"><img src="/images/mobile/gnb/menu_7_off.gif" alt="지역별"></a></li> -->
+        <li ><a href="/mobile/goods/contents_list.do?menu=menu9&amp;part2=050901006003"><img src="/images/mobile/gnb/menu_9_off.gif" alt="재제조"></a></li>
+        <li class="last"><a href="/mobile/seller/seller_list.do?menu=menu8"><img src="/images/mobile/gnb/menu_8_off.gif" alt="상품관리"></a></li>
+      </ul>
+    </div>
+    <!-- //gnb메뉴 -->
+    
+    <div class="sub">
+      <div class="s_details"><img src="/images/mobile/sub/sub_title_a_1_3.gif" alt="상품상세정보"></div>
+      <div class="sub_wrap">
+        <div class="sd_pname">
+          <p class="details_title"><strong>K5</strong>즉시신청 요청합니다.</p>
+          <ul>
+            <li><strong>판매가격  : </strong><span class="c1"> 300,000 원 </span></li>
+            <!-- <li><strong>협력사가  : </strong> <span class="c2">270,000 원</span></li> -->
+          </ul>
+        </div>
+        <div class="d_big_box">
+          <div class="d_big_img" id="detail_image">
+            <div><img id = "detail_image_0" class="detail_image" src='/upload/board/2015/07/73c4d63a-25f2-4666-8d1e-06d4f88b2522'></div>
+            <div><img id = "detail_image_1" class="detail_image" src='/upload/board/2015/07/a3a412a5-8163-4c70-bf11-c2dce2f0641c'></div>
+          </div>
+          <div class="d_big_btn"> <span class="a_left" id="detail_left"></span> <span class="a_right" id="detail_right"></span> <span class="p_center" id="detail_pager"></span> </div>
+        </div>
+        <div class="details_info">
+          <p class="f_1"><strong>제품정보</strong></p>
+          <table class="details_style_1">
+            <colgroup>
+            <col width="30%">
+            <col width="">
+            </colgroup>
+            <tbody>
+
+              <tr>
+                <th>이름</th>
+                <td>파츠모아관리자</td>
+              </tr>
+              <tr>
+                <th>지역</th>
+                <td>서울특별시</td>
+              </tr>
+              <tr>
+                <th>브랜드</th>
+                <td>기아</td>
+              </tr>
+              <tr>
+                <th>차량명 /<br />연식</th>
+                <td>K5 / 2010</td>
+              </tr>
+              <tr>
+                <th>요청사항</th>
+                <td>대차</td>
+              </tr>
+              <tr>
+                <th>견인희망일 /<br />시간</th>
+                <td>2015-07-01 / 17시</td>
+              </tr>
+              <tr>
+                <th>문의내용</th>
+                <td>문의내용입니다. 문의내용입니다.문의내용입니다.</td>
+              </tr>
+
+            </tbody>
+          </table>
+          <div class="d_info_btn"> <a href="/mobile/mypage/shopping/cart/index.do?mode=m_direct_order&seq=56883&qty=1"><img src="/images/sub/details_btn1.gif" alt="구매하기"></a> <a href="javascript:cart('56883')"><img src="/images/sub/details_btn2.gif" alt="장바구니"></a> <a class="sns_type" href="javascript:snsLink('twt');"><img src="/images/sub/sns_twitter.png" alt="twitter"></a> <a class="sns_type" href="javascript:snsLink('face');"><img src="/images/sub/sns_facebook.png" alt="facebook"></a> <a class="sns_type" id = "kakao-link-btn" href="javascript:;"><img src="/images/sub/sns_kakaolink.png" alt="kakaolink"></a> 
+            <!-- <a href="#none"><img src="/images/sub/details_btn3.gif" alt="관심상품"></a> --> 
+            
+          </div>
+        </div>
+        
+        
+      </div>
+      
+      <!-- fixed_btn --> 
+      
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span> <span class="btn_regi"><a href="/mobile/seller/seller_insert.do"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span> <span class="btn_regi_2"><a href="/mobile/seller/resources_insert.do"><img src="/images/mobile/common/btn_resources.png" alt="자원등록"></a></span> 
+      
+      <!-- //fixed_btn --> 
+    </div>
+  </div>
+  <div id="footer">
+    <div class="f_top"><a href="#"><img src="/images/mobile/footer/f_top.gif" alt="top"></a></div>
+    <div class="f_util">
+      <ul>
+        <li class="first"><a href="/mobile/mypage/company/company.do">회사소개</a></li>
+        <li><a href="/mobile/mypage/annc/annc1.do">이용약관</a></li>
+        <li><a href="/mobile/mypage/annc/annc2.do">전자금융거래약관</a></li>
+        <li><a href="/mobile/mypage/annc/annc3.do">개인정보 취급방침</a></li>
+        <li><a href="/mobile/mypage/annc/annc4.do">E-mail 무단수집거부</a></li>
+        <!-- <li><a href="/mobile/mypage/mantoman/index.do">1:1문의</a></li> -->
+      </ul>
+      <p><strong>대표자</strong> : 박정호 ㅣ <strong>상호</strong> : 파츠모아 주식회사 ㅣ <strong>개인정보 관리책임자</strong> : 조성환 ㅣ <strong>사업자등록번호</strong> : 128-87-19389 ㅣ <strong>사업자주소</strong> : (410-821) 경기도 고양시 일산동구 동국로 286(식사동) ㅣ <strong>통신판매 신고번호</strong> : 제 2015-고양일산동-0394호</p>
+    </div>
+    <div class="copy">
+      <p><strong>TEL</strong> : 1544-6444 ㅣ <strong>FAX</strong> : 031-961-4699 ㅣ <strong>E-mail</strong> : partsmoa@insun.com</p>
+      <p>CopyrightⓒPARTSMOA.All Rights Reserved.</p>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

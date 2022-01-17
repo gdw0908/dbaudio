@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	
+	<select id="getMemberIdCnt" parameterType="Map" resultType="mcmap">
+		SELECT 
+            COUNT(1) AS CNT
+        FROM MC_MEMBER A
+        WHERE MEMBER_ID = #{member_id}
+	</select>
+	
+	<select id="superLogin" parameterType="Map" resultType="mcmap">
+        SELECT
+            *
+        FROM (
+            SELECT
+              MEMBER_SEQ, MEMBER_ID, MEMBER_PW, MEMBER_NM, GROUP_SEQ, 
+              0 AS COM_SEQ, '' AS COM_NM, LOGIN_YN, 'N' AS CARALL
+            FROM MC_MEMBER
+            WHERE DEL_YN='N'
+            UNION ALL            
+            SELECT
+                a.SEQ AS MEMBER_SEQ, a.MEMBER_ID, a.MEMBER_PW, b.COM_NM AS MEMBER_NM, 3 AS GROUP_SEQ,
+                b.SEQ AS COM_SEQ, b.COM_NM, a.LOGIN_YN, b.CARALL
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+        )
+	    WHERE MEMBER_ID = #{member_id}
+	</select>
+	
+	<!-- 관리자에서 로그인할때 사용 -->
+	<select id="getMemberByIdPw" parameterType="Map" resultType="mcmap">
+        SELECT
+            *
+        FROM (
+            SELECT
+              MEMBER_SEQ, MEMBER_ID, MEMBER_PW, MEMBER_NM, GROUP_SEQ, 
+              0 AS COM_SEQ, '' AS COM_NM, LOGIN_YN, 'Y' AS CARALL
+            FROM MC_MEMBER
+            WHERE GROUP_SEQ=1 
+                AND DEL_YN='N'
+            UNION ALL            
+            SELECT
+                a.SEQ AS MEMBER_SEQ, a.MEMBER_ID, a.MEMBER_PW, b.COM_NM AS MEMBER_NM, 3 AS GROUP_SEQ,
+                b.SEQ AS COM_SEQ, b.COM_NM, a.LOGIN_YN, b.CARALL
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+            UNION ALL            
+            SELECT
+                c.MEMBER_SEQ, c.MEMBER_ID, c.MEMBER_PW, c.MEMBER_NM, c.GROUP_SEQ,
+                0 as COM_SEQ, '' AS COM_NM, LOGIN_YN, 'N' AS CARALL
+            FROM MC_MEMBER c
+            WHERE
+              c.GROUP_SEQ = 8
+        )
+	    WHERE MEMBER_ID = #{member_id}
+	    	AND MEMBER_PW = #{member_pw}
+	</select>
+
+	<select id="duplicateCheckMemberId" parameterType="Map" resultType="mcmap">
+		SELECT
+            COUNT(0) CNT
+        FROM (
+            SELECT
+              MEMBER_SEQ, MEMBER_ID, MEMBER_PW, MEMBER_NM, GROUP_SEQ, 
+              0 AS COM_SEQ, '' AS COM_NM
+            FROM MC_MEMBER
+            WHERE DEL_YN='N'
+            UNION ALL            
+            SELECT
+                a.SEQ AS MEMBER_SEQ, a.MEMBER_ID, a.MEMBER_PW, b.COM_NM AS MEMBER_NM, 3 AS GROUP_SEQ,
+                b.SEQ AS COM_SEQ, b.COM_NM
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+        )
+	    WHERE MEMBER_ID = #{member_id}
+		
+	</select>
+	
+	<update id="updateMemberLastLogin" parameterType="Map">
+		update MC_MEMBER set LAST_LOGIN = sysdate
+		WHERE MEMBER_ID = #{member_id}
+	</update>
+	
+	<update id="modify" parameterType="Map">
+		update MC_MEMBER set
+			<if test="!(member_pw == null or member_pw == '')" >
+			MEMBER_PW = #{member_pw},
+			</if>
+			IPIN = #{ipin},
+			MEMBER_NM = #{member_nm},
+			MEMBER_BIRTH = #{member_birth},
+			MEMBER_SEX = #{member_sex},
+			CELL = #{cell},
+			EMAIL_YN = #{email_yn},
+			SMS_YN = #{sms_yn},
+			GROUP_SEQ = #{group_seq},
+			ORDER_SEQ = #{order_seq},
+			ZIP_CD = #{zip_cd},
+			ADDR1 = #{addr1},
+			ADDR2 = #{addr2},
+			MEMBER_TYPE = #{member_type},
+			VIRTUAL_NO = #{virtual_no},
+			CI = #{ci},
+			TEL = #{tel},
+			BUSI_NO = #{busi_no},
+			BUSI_NM = #{busi_nm},
+			EMAIL = #{email},
+			MOD_SEQ = #{session_member_seq},
+			MOD_NM = #{session_member_nm},
+			MOD_IP = #{ip},
+			MOD_DT = sysdate,
+			BK_YN = NVL(#{bk_yn}, 'N')
+		WHERE MEMBER_SEQ = #{member_seq}
+	</update>
+	
+	<update id="write" parameterType="Map" useGeneratedKeys="true" keyColumn="member_seq" keyProperty="member_seq">
+		INSERT INTO MC_MEMBER(
+			MEMBER_SEQ, MEMBER_ID, MEMBER_PW, IPIN, MEMBER_NM, MEMBER_BIRTH, MEMBER_SEX, CELL, 
+			EMAIL, EMAIL_YN, SMS_YN, GROUP_SEQ, ZIP_CD, ADDR1, ADDR2, MEMBER_TYPE, VIRTUAL_NO, 
+			CI, TEL, BUSI_NO, BUSI_NM, REG_DT, REG_IP
+		)VALUES(
+			SEQ_NSH_MEMBER.NEXTVAL, #{member_id}, #{member_pw}, #{ipin}, #{member_nm}, #{member_birth}, #{member_sex}, #{cell}, 
+			#{email}, #{email_yn}, #{sms_yn}, nvl(#{group_seq}, '2'), #{zip_cd}, #{addr1}, #{addr2}, #{member_type}, #{virtual_no}, 
+			#{ci}, #{tel}, #{busi_no}, #{busi_nm}, SYSDATE, #{ip}
+		)
+	</update>
+	
+	<update id="insertBasongji" parameterType="Map">
+		INSERT INTO MC_BASONGJI(
+			SEQ, MEMBER_SEQ, RECEIVER_NM, RECEIVER_TITLE, TEL, CELL, ZIP_CD, ADDR1, ADDR2, DEFAULT_YN, ORDER_SEQ, REG_SEQ, REG_NM, REG_IP
+		)VALUES(
+			SEQ_MC_BASONGJI.nextVal, #{member_seq}, #{receiver_nm}, #{receiver_title}, #{tel}, #{cell}, #{zip_cd}, #{addr1}, #{addr2}, #{default_yn}, #{order_seq}, #{reg_seq}, #{reg_nm}, #{ip}
+		)
+	</update>
+	
+	<sql id="listWhere">
+		WHERE DEL_YN='N' 
+			AND GROUP_SEQ = #{group_seq}
+        <if test="!(keyword == null or keyword == '')" >
+        	AND ${condition} like '%${keyword}%' 
+        </if>
+	</sql>
+	
+	<select id="list" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+		    SELECT
+		        ROW_NUMBER() OVER(ORDER BY a.MEMBER_SEQ DESC) RN,
+		        A.*
+		    FROM MC_MEMBER a
+		    <include refid="listWhere"/>
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+	</select>
+	
+	<select id="pagination" parameterType="Map" resultType="mcmap">
+		SELECT
+			CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+			COUNT(1) TOTALCOUNT
+		FROM MC_MEMBER
+		<include refid="listWhere"/>
+	</select>
+	
+	<select id="view" parameterType="Map" resultType="mcmap">
+		SELECT
+			MEMBER_SEQ, MEMBER_ID, IPIN, MEMBER_NM, MEMBER_BIRTH, MEMBER_SEX, 
+			CELL, EMAIL_YN, SMS_YN, LAST_LOGIN, GROUP_SEQ, ORDER_SEQ, ZIP_CD, ADDR1, MEMBER_TYPE, VIRTUAL_NO, CI, 
+			REG_DT, MOD_SEQ, MOD_DT, MOD_NM, DEL_YN, DEL_SEQ, DEL_DT, DEL_NM, TEL, BUSI_NO, BUSI_NM, ADDR2, 
+			EMAIL, MOD_IP, REG_IP, DEL_IP, COMPTYP1, COMPTYP2, CEO_NM, STAFF_NM, STAFF_TEL, BK_YN,
+			FN_GET_SPLIT(BUSI_NO, 1, '-', '') as BUSI_NO1,
+			FN_GET_SPLIT(BUSI_NO, 2, '-', '') as BUSI_NO2,
+			FN_GET_SPLIT(BUSI_NO, 3, '-', '') as BUSI_NO3,
+			FN_GET_SPLIT(ZIP_CD, 1, '-', '') as ZIP1, 
+			FN_GET_SPLIT(ZIP_CD, 2, '-', '') as ZIP2,
+			FN_GET_SPLIT(EMAIL, 1, '@', '') as EMAIL1, 
+			FN_GET_SPLIT(EMAIL, 2, '@', '') as EMAIL2,
+			FN_GET_SPLIT(TEL, 1, '-', '') as TEL1,
+			FN_GET_SPLIT(TEL, 2, '-', '') as TEL2,
+			FN_GET_SPLIT(TEL, 3, '-', '') as TEL3,
+			FN_GET_SPLIT(CELL, 1, '-', '') as CELL1,
+			FN_GET_SPLIT(CELL, 2, '-', '') as CELL2,
+			FN_GET_SPLIT(CELL, 3, '-', '') as CELL3
+		FROM MC_MEMBER 
+		WHERE MEMBER_SEQ = #{member_seq} 
+	</select>
+	
+	<select id="basongjiList" parameterType="Map" resultType="mcmap">
+		SELECT
+			MEMBER_SEQ, RECEIVER_NM, RECEIVER_TITLE, TEL, CELL, ZIP_CD, ADDR1, ADDR2, 
+			DEFAULT_YN, ORDER_SEQ, REG_SEQ, REG_DT, REG_NM, REG_IP,
+			FN_GET_SPLIT(ZIP_CD, 1, '-', '') as ZIP1, 
+			FN_GET_SPLIT(ZIP_CD, 2, '-', '') as ZIP2,
+			FN_GET_SPLIT(TEL, 1, '-', '') as TEL1,
+			FN_GET_SPLIT(TEL, 2, '-', '') as TEL2,
+			FN_GET_SPLIT(TEL, 3, '-', '') as TEL3,
+			FN_GET_SPLIT(CELL, 1, '-', '') as CELL1,
+			FN_GET_SPLIT(CELL, 2, '-', '') as CELL2,
+			FN_GET_SPLIT(CELL, 3, '-', '') as CELL3
+		FROM MC_BASONGJI 
+		WHERE MEMBER_SEQ = #{member_seq}
+		ORDER BY ORDER_SEQ ASC
+	</select>
+	
+	<delete id="basongjiRemove" parameterType="Map">
+		DELETE FROM MC_BASONGJI WHERE MEMBER_SEQ = #{member_seq}
+	</delete>
+	
+	<select id="pwConfirm" parameterType="Map" resultType="mcmap">
+		SELECT
+			count(0) as CNT
+		FROM MC_MEMBER WHERE MEMBER_SEQ = #{member_seq} AND MEMBER_PW = #{member_pw_confirm}
+	</select>
+	
+	<update id="del" parameterType="Map">
+		UPDATE MC_MEMBER SET
+			DEL_YN = 'Y'
+			,DEL_ID = #{session_member_id}
+			,DEL_NM = #{session_member_nm}
+			,DEL_IP = #{ip}
+			,DEL_DT = sysdate
+		WHERE MEMBER_SEQ = #{member_seq}
+	</update>
+	
+	<update id="passwordInit" parameterType="Map">
+		UPDATE MC_MEMBER SET
+			MEMBER_PW = #{member_pw},
+			MOD_SEQ = #{session_member_seq},
+			MOD_NM = #{session_member_nm},
+			MOD_IP = #{ip},
+			MOD_DT = sysdate
+		WHERE MEMBER_SEQ = #{member_seq}
+	</update>
+	
+	<!-- 회원 가입 쿼리 관련 시작 -->
+	
+	<!-- 관리자에서 로그인할때 사용 -->
+	<select id="getMemberByIdPwUser" parameterType="Map" resultType="mcmap">
+        SELECT
+            *
+        FROM (
+            SELECT
+              MEMBER_SEQ, MEMBER_ID, MEMBER_PW, MEMBER_NM, GROUP_SEQ, 
+              0 AS COM_SEQ, '' AS COM_NM,
+            CASE
+            	WHEN GROUP_SEQ = '1' THEN 'Y'
+            	ELSE 'N'
+            END CARALL
+            FROM MC_MEMBER
+            WHERE DEL_YN='N'
+            UNION ALL            
+            SELECT
+                a.SEQ AS MEMBER_SEQ, a.MEMBER_ID, a.MEMBER_PW, b.COM_NM AS MEMBER_NM, 3 AS GROUP_SEQ,
+                b.SEQ AS COM_SEQ, b.COM_NM, b.CARALL
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+        )
+	    WHERE MEMBER_ID = #{member_id}
+	    	AND MEMBER_PW = #{member_pw}
+	</select>
+	
+	<select id="getMemberIdCheck" parameterType="Map" resultType="mcmap">
+        SELECT
+            MEMBER_ID
+        FROM (
+            SELECT
+              MEMBER_SEQ, MEMBER_ID, MEMBER_PW, MEMBER_NM, GROUP_SEQ, 
+              0 AS COM_SEQ, '' AS COM_NM, 'N' AS CARALL
+            FROM MC_MEMBER
+            WHERE  DEL_YN='N'
+            UNION ALL            
+            SELECT
+                a.SEQ AS MEMBER_SEQ, a.MEMBER_ID, a.MEMBER_PW, b.COM_NM AS MEMBER_NM, 3 AS GROUP_SEQ,
+                b.SEQ AS COM_SEQ, b.COM_NM, b.CARALL
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+        )
+	    WHERE MEMBER_ID = #{member_id}
+	</select>
+	
+	<!-- 휴대폰번호 중복확인 추가 -->
+    <select id="getMemberCellCheck" parameterType="Map" resultType="mcmap">
+           SELECT
+               CELL
+           FROM MC_MEMBER
+           WHERE  DEL_YN='N'
+           AND  CELL = #{cell1} || '-' || #{cell2} || '-' || #{cell3}
+    </select>
+	
+	<!-- 이메일 중복확인 추가 -->
+	<select id="getMemberEmailCheck" parameterType="Map" resultType="mcmap">
+           SELECT 
+			    EMAIL
+			FROM MC_MEMBER
+			WHERE DEL_YN = 'N'
+			AND EMAIL = #{email1} || '@' || #{email2}
+    </select>
+	
+	<insert id="insertMemberData" parameterType="Map">
+		INSERT INTO MC_MEMBER(
+			MEMBER_SEQ, MEMBER_ID, MEMBER_PW, IPIN, MEMBER_NM, MEMBER_BIRTH, MEMBER_SEX, CELL, 
+			EMAIL, EMAIL_YN, SMS_YN, GROUP_SEQ, ZIP_CD, ADDR1, ADDR2, MEMBER_TYPE, VIRTUAL_NO, 
+			CI, TEL, BUSI_NO, BUSI_NM, REG_DT, REG_IP, COMPTYP1, COMPTYP2, CEO_NM, STAFF_NM, STAFF_TEL
+		)VALUES(
+			SEQ_NSH_MEMBER.NEXTVAL, #{member_id}, #{member_pw}, #{ipin}, #{member_nm}, #{member_birth}, #{member_sex}, #{cell}, 
+			#{email}, nvl(#{email_yn}, 'N'), nvl(#{sms_yn}, 'N'), nvl(#{group_seq}, '2'), #{zip_cd}, #{addr1}, #{addr2}, nvl(#{member_type}, '2'), #{virtual_no}, 
+			#{ci}, #{tel}, #{busi_no}, #{busi_nm}, SYSDATE, #{ip}, #{comptyp1}, #{comptyp2}, #{ceo_nm}, #{staff_nm}, #{staff_tel}
+		)
+	</insert>
+	
+	<select id="findIDPasswdList" parameterType="Map" resultType="mcmap">
+        SELECT
+        	*
+        FROM
+        	MC_MEMBER
+        	
+       <if test="!(cell1 == null or cell1 == '')" >
+        WHERE 
+			MEMBER_NM = #{member_nm}
+		AND
+			CELL = #{cell1} || '-' || #{cell2} || '-' || #{cell3}
+        </if>
+        
+         <if test="!(email == null or email == '')" >
+        WHERE 
+			MEMBER_NM = #{member_nm1}
+		AND
+			EMAIL = #{email}
+        </if>
+        
+         <if test="!(busi_nm == null or busi_nm == '')" >
+        WHERE 
+			BUSI_NM = #{busi_nm}
+		AND
+			BUSI_NO = #{busi_no1} || '-' || #{busi_no2} || '-' || #{busi_no3}
+        </if>
+	</select>
+	
+	<select id="findPwPasswdList" parameterType="Map" resultType="mcmap">
+        SELECT
+        	*
+        FROM
+        	MC_MEMBER
+        WHERE
+        	MEMBER_ID = #{member_id}
+        	
+         <if test="!(member_nm == null or member_nm == '')" >
+        AND
+        	MEMBER_NM = #{member_nm}
+         </if>	
+         
+         <if test="!(email == null or email == '')" >
+		AND
+			EMAIL = #{email}
+        </if>
+	</select>
+	
+	<select id="joined" parameterType="Map" resultType="mcmap">
+        SELECT
+        	MEMBER_NM
+        FROM
+        	MC_MEMBER
+        WHERE
+        	MEMBER_NM = #{member_nm}
+        AND
+        	IPIN = #{ipin}
+        
+	</select>
+	<!-- 회원 가입 쿼리 관련 끝 -->
+</mapper>

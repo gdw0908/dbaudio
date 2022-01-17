@@ -1,0 +1,1454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category">
+	
+	<!-- 공통코드 시작 -->
+	
+	<select id="menuTreeList" parameterType="Map" resultType="mcmap">
+	SELECT     
+		A.CODENO AS CODENO,
+		A.UPCODENO AS UPCODENO,
+		A.CODENM AS CODENM,
+		DECODE(A.MST_YN ,'I','인선','P','미디어') AS MST_YN,
+		LEVEL,
+		DECODE (B.UPCODECNT, '', 0, B.UPCODECNT) AS UPCODECNT
+	FROM 
+		V_IS_CODEMST A, 
+		(
+			SELECT
+				UPCODENO,
+				COUNT (CODENO) UPCODECNT
+			FROM
+				V_IS_CODEMST
+			GROUP BY
+				UPCODENO
+		) B                
+	WHERE
+		A.CODENO = B.UPCODENO(+)
+		
+    AND 
+    	A.USEYN = 'Y'
+        
+   	START WITH 
+   		A.CODENO IN ('0509')
+   		
+   	CONNECT BY 
+   		PRIOR A.CODENO = A.UPCODENO
+   		
+   	ORDER SIBLINGS BY
+   		A.SORTNO, A.CODENO
+			
+	</select>
+	
+	<select id="getViewList" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			V_IS_CODEMST
+		WHERE
+			CODENO = #{codeno}
+		ORDER BY
+			CODENO DESC		
+	</select>
+	
+	<select id="getChlidList" parameterType="Map" resultType="mcmap">
+	<!--
+		SELECT
+			*
+		FROM
+			V_IS_CODEMST
+		WHERE
+			UPCODENO = #{codeno}
+		AND
+			USEYN = 'Y'
+		
+		ORDER BY
+			CODENO DESC
+			
+	-->		
+		SELECT PT1.* FROM (        
+	        SELECT
+	          a.*,  
+	          ROW_NUMBER() OVER(ORDER BY CODENO DESC) RN
+	        FROM
+	            V_IS_CODEMST a
+	        WHERE
+	            UPCODENO = #{codeno}
+	        AND
+	            USEYN = 'Y'        
+	        ) PT1
+        WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+			
+			
+	</select>
+	
+	<select id="getPage_info" parameterType="Map" resultType="mcmap">
+	 	SELECT
+        	CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+        	COUNT(1) TOTALCOUNT
+        FROM 
+        	V_IS_CODEMST
+        WHERE 
+        	USEYN='Y'
+        AND
+        	UPCODENO = #{codeno}
+    </select>
+	
+	<select id="getUpCodeList" parameterType="Map" resultType="mcmap">
+		SELECT
+			CODENO
+		FROM
+			(
+				SELECT 
+					*
+				FROM
+					V_IS_CODEMST
+				WHERE
+					UPCODENO = #{codeno}
+				ORDER BY
+					CODENO DESC
+			)
+		WHERE ROWNUM = 1
+	</select>
+	
+	<select id="getCountList" parameterType="Map" resultType="mcmap">
+		SELECT
+			COUNT(*) as COUNT
+		FROM
+			V_IS_CODEMST
+		WHERE
+			UPCODENO = #{codeno}
+		ORDER BY
+			CODENO DESC
+	</select>
+	
+	<update id="getUpdateUSEData" parameterType="Map">
+		UPDATE
+			IS_CODEMST
+		SET
+			USEYN = 'N'
+		WHERE
+			CODENO = #{codeno}
+		OR
+			UPCODENO like #{codeno} 
+			
+	</update>
+
+	<insert id="getInsertRow" parameterType="Map">
+		INSERT INTO
+			IS_CODEMST
+			(
+				CODENO,
+				CODENM,
+				UPCODENO,
+				SORTNO,
+				REF,
+				USEYN,
+				MST_YN
+			)
+		VALUES
+			(
+				#{codeNo},
+				#{codeName},
+				#{upcodeNo},
+				#{orderCount},
+				#{codeRef},
+				'Y',
+				#{mst_yn}
+			)
+	</insert>
+	
+	
+	<insert id="getInsertQry" parameterType="Map">
+		INSERT INTO
+			IS_CODEMST
+			(
+				CODENO,
+				CODENM,
+				UPCODENO,
+				SORTNO,
+				REF,
+				USEYN,
+				MST_YN
+			)
+		VALUES
+			(
+				#{codeno},
+				#{codenm},
+				#{upcodeno},
+				#{sortno},
+				#{ref},
+				'Y',
+				#{mst_yn}
+			)
+	</insert>
+	
+	
+	<update id="getUpdateModifyData" parameterType="Map">
+		UPDATE
+			IS_CODEMST
+		SET
+			CODENM = #{codenm},
+			REF = #{ref},
+			SORTNO = #{sortno}
+		WHERE
+			CODENO = #{codeno}
+		
+	</update>
+	
+	<!-- 공통코드 끝 -->
+	
+	<!-- 제조사 시작 -->
+	<select id="getProduceViewList" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			IS_CARMAKER
+		WHERE
+			CARMAKERSEQ = #{seq}
+	 	
+		ORDER BY
+			CARMAKERSEQ DESC		
+	</select>
+	
+	
+	<select id="getProducePage_info" parameterType="Map" resultType="mcmap">
+	 	SELECT
+        	CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+        	COUNT(1) TOTALCOUNT
+        FROM 
+        	IS_CARMAKER
+        WHERE 
+        	USEYN='Y'
+    </select>
+    
+    <select id="getProduceList" parameterType="Map" resultType="mcmap">
+	<!--
+		SELECT
+			*
+		FROM
+			V_IS_CODEMST
+		WHERE
+			UPCODENO = #{codeno}
+		AND
+			USEYN = 'Y'
+		
+		ORDER BY
+			CODENO DESC
+			
+	-->		
+		SELECT PT1.* FROM (        
+	        SELECT
+	          a.*,  
+	          ROW_NUMBER() OVER(ORDER BY ORDERNUM ASC) RN
+	        FROM
+	            IS_CARMAKER a
+	        WHERE
+	            USEYN = 'Y'
+	        
+	        <if test="!(keyword == null or keyword == '')" >
+	        AND MAKERNM like '%${keyword}%' 
+	        </if>
+	        
+	        ) PT1
+        WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+
+	</select>
+	
+	<select id="getLastestOrderNum" parameterType="Map" resultType="mcmap">
+		SELECT
+            ORDERNUM
+        FROM
+            (
+                SELECT 
+                    *
+                FROM
+                    IS_CARMAKER
+                WHERE
+                    ORDERNUM IS NOT NULL
+                ORDER BY
+                    ORDERNUM DESC
+            )
+        WHERE ROWNUM = 1
+	</select>
+	
+	<insert id="getProduceInsertRow" parameterType="Map">
+		INSERT INTO
+			IS_CARMAKER
+			(
+				CARMAKERSEQ,
+				MAKERNM,
+				USEYN,
+				NATION,
+				ORDERNUM,
+				MAKER_YN
+			)
+		VALUES
+			(
+				#{lastest_seq, jdbcType=INTEGER},
+				#{makernm},
+				#{useyn},
+				#{nation},
+				#{ordernum, jdbcType=INTEGER},
+				#{maker_yn}
+			)
+	</insert>
+	
+	<insert id="getProduceInsertQry" parameterType="Map">
+		INSERT INTO
+			IS_CARMAKER
+			(
+				CARMAKERSEQ,
+				MAKERNM,
+				USEYN,
+				NATION,
+				ORDERNUM,
+				MAKER_YN
+			)
+		VALUES
+			(
+				#{carmakerseq},
+				#{makernm},
+				#{useyn},
+				#{nation},
+				#{ordernum, jdbcType=INTEGER},
+				#{maker_yn}
+			)
+	</insert>
+	
+	
+	<select id="getLastestIndex" parameterType="Map" resultType="mcmap">
+		SELECT
+            CARMAKERSEQ
+        FROM
+            (
+                SELECT 
+                    *
+                FROM
+                    IS_CARMAKER
+                WHERE
+                    CARMAKERSEQ IS NOT NULL
+                ORDER BY
+                    CARMAKERSEQ DESC
+            )
+        WHERE ROWNUM = 1
+	</select>
+	
+	<update id="getUpdateProduceData" parameterType="Map">
+		UPDATE
+			IS_CARMAKER
+		SET
+			MAKERNM = #{makernm},
+			USEYN = #{useyn},
+			NATION = #{nation}
+		WHERE
+			CARMAKERSEQ = #{carmakerseq}
+
+	</update>
+	
+	<update id="getDeleteProduceData" parameterType="Map">
+		UPDATE
+			IS_CARMAKER
+		SET
+			USEYN = 'N'
+		WHERE
+			CARMAKERSEQ = #{carmakerseq}
+
+	</update>
+	
+	<!-- 제조사 끝 -->
+	
+	<!-- 차량명 시작 -->
+	
+	<select id="getComInfoList" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			IS_CARMAKER
+		WHERE
+			USEYN = 'Y'
+		ORDER BY
+			ORDERNUM ASC
+	</select>
+	
+	<select id="getCarNameList" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM(
+			
+			SELECT
+				a.CARMODELSEQ as CARMODELSEQ,
+				a.CARMAKERSEQ as CARMAKERSEQ,
+				a.CARMODELNM as CARMODELNM,
+				a.USEYN as USEYN,
+				b.MAKERNM as MAKERNM,
+				ROW_NUMBER() OVER(ORDER BY CARMODELSEQ DESC) RN
+			FROM
+				IS_CARMODEL a, IS_CARMAKER b
+			WHERE
+				a.CARMAKERSEQ = b.CARMAKERSEQ
+			AND
+				a.USEYN = 'Y'
+			<if test="!(condition == null or condition == '')" >
+			AND
+				a.CARMAKERSEQ = #{condition, jdbcType=INTEGER}
+			</if>
+			<if test="!(keyword == null or keyword == '')" >
+	        AND a.CARMODELNM like '%${keyword}%' 
+	        </if>
+	     ) PT1   
+		WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+		
+	</select>
+	
+	<select id="getcarNamePageinfo" parameterType="Map" resultType="mcmap">
+	 	SELECT
+        	CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+        	COUNT(1) TOTALCOUNT
+        FROM 
+        	IS_CARMODEL
+        WHERE 
+        	USEYN='Y'
+        <if test="!(condition == null or condition == '')" >
+        AND
+			CARMAKERSEQ = #{condition, jdbcType=INTEGER}
+		</if>	
+		<if test="!(keyword == null or keyword == '')" >
+        AND CARMODELNM like '%${keyword}%' 
+        </if>
+    </select>
+    
+    <select id="getcarNameViewList" parameterType="Map" resultType="mcmap">
+	 	SELECT
+				a.CARMODELSEQ as CARMODELSEQ,
+				a.CARMAKERSEQ as CARMAKERSEQ,
+				a.CARMODELNM as CARMODELNM,
+				a.USEYN as USEYN,
+				b.MAKERNM as MAKERNM,
+				a.MODEL_YN as model_yn
+			FROM
+				IS_CARMODEL a, IS_CARMAKER b
+			WHERE
+				a.CARMAKERSEQ = b.CARMAKERSEQ
+			AND
+				a.USEYN = 'Y'
+			AND
+	 			a.CARMODELSEQ = #{seq}
+    </select>
+    
+    <update id="updateCarNameState" parameterType="Map">
+		UPDATE
+			IS_CARMODEL
+		SET
+			USEYN = 'N'
+		WHERE
+			CARMODELSEQ = #{condition}
+	</update>
+	
+	<update id="updateCarName" parameterType="Map">
+		
+	  UPDATE
+	  	IS_CARMODEL 
+	  SET
+	  	CARMODELNM = #{makernm},
+	  	USEYN = #{useyn}
+	  WHERE
+	  	CARMODELSEQ = #{carmodelseq}
+	  	
+	</update>
+	
+	
+	<select id="getCarNameLastestIndex" parameterType="Map" resultType="mcmap">
+		SELECT
+            CARMODELSEQ
+        FROM
+            (
+                SELECT 
+                    *
+                FROM
+                    IS_CARMODEL
+                WHERE
+                    CARMODELSEQ IS NOT NULL
+                ORDER BY
+                    CARMODELSEQ DESC
+            )
+        WHERE ROWNUM = 1
+	</select>
+	
+	
+	
+	<insert id="CarNameInsert" parameterType="Map">
+		INSERT INTO
+			IS_CARMODEL
+			(
+				CARMODELSEQ,
+				CARMAKERSEQ,
+				CARMODELNM,
+				USEYN,
+				MODEL_YN
+			)
+		VALUES
+			(
+				#{lastest_seq, jdbcType=INTEGER},
+				#{condition_insert},
+				#{carmodelnm_insert},
+				#{useyn_insert},
+				#{model_yn}
+			)
+	</insert>
+	
+	<insert id="CarNameInsertQry" parameterType="Map">
+		INSERT INTO
+			IS_CARMODEL
+			(
+				CARMODELSEQ,
+				CARMAKERSEQ,
+				CARMODELNM,
+				USEYN,
+				MODEL_YN
+			)
+		VALUES
+			(
+				#{carmodelseq},
+				#{carmakerseq},
+				#{makernm},
+				#{useyn},
+				#{model_yn}
+			)
+	</insert>
+	
+	
+		<select id="getCarModelSubList" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			IS_CARMODEL
+		WHERE
+			USEYN = 'Y'
+		AND
+			CARMAKERSEQ = #{seq}
+		ORDER BY
+			CARMODELSEQ ASC
+	</select>
+	
+	<!-- 차량명 끝 -->
+	
+	<!-- 차량모델명 시작 -->
+	
+	
+	
+	<select id="getCarModelNameList" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM(
+			
+			SELECT 
+			    C.CARGRADESEQ AS CARGRADESEQ,
+			    A.MAKERNM AS MAKERNM,
+			    B.CARMODELNM AS CARMODELNM,
+			    C.CARGRADENM AS CARCRANDENM,
+			    ROW_NUMBER() OVER(ORDER BY A.MAKERNM DESC) RN
+			FROM
+			    IS_CARMAKER A, IS_CARMODEL B, V_IS_CARGRADE C
+			WHERE
+			    A.CARMAKERSEQ = C.CARMAKERSEQ
+			AND
+			    B.CARMODELSEQ = C.CARMODELSEQ
+			AND
+				C.USEYN = 'Y'
+			
+			<if test="!(keyword == null or keyword == '')" >
+	        AND A.MAKERNM like '%${keyword}%' 
+	        </if>
+	     ) PT1   
+		WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+		
+	</select>
+	
+	
+	<select id="getcarModelNamePageinfo" parameterType="Map" resultType="mcmap">
+	 	SELECT
+        	CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+        	COUNT(1) TOTALCOUNT
+        FROM 
+        	IS_CARMAKER A, V_IS_CARGRADE B
+        WHERE
+        	A.CARMAKERSEQ = B.CARMAKERSEQ
+ 		AND
+        	B.USEYN='Y'
+        	
+		<if test="!(keyword == null or keyword == '')" >
+        AND A.MAKERNM like '%${keyword}%' 
+        </if>
+    </select>
+	
+	<select id="getcarModelNameViewList" parameterType="Map" resultType="mcmap">
+	 	SELECT 
+	 			C.CARGRADESEQ AS CARGRADESEQ,
+	 			C.CARMODELSEQ AS CARMODELSEQ,
+	 			C.CARMAKERSEQ AS CARMAKERSEQ,
+			    A.MAKERNM AS MAKERNM,
+			    B.CARMODELNM AS CARMODELNM,
+			    C.CARGRADENM AS CARCRANDENM,
+			    C.USEYN AS USEYN,
+			    C.GRADE_YN AS GRADE_YN
+			FROM
+			    IS_CARMAKER A, IS_CARMODEL B, V_IS_CARGRADE C
+			WHERE
+			    A.CARMAKERSEQ = C.CARMAKERSEQ
+			AND
+			    B.CARMODELSEQ = C.CARMODELSEQ
+			AND
+				C.USEYN = 'Y'
+			AND
+				C.CARGRADESEQ = #{seq}
+    </select>
+    
+    
+	<select id="getCarModelNameLastestIndex" parameterType="Map" resultType="mcmap">
+		SELECT
+            CARGRADESEQ
+        FROM
+            (
+                SELECT 
+                    *
+                FROM
+                    V_IS_CARGRADE
+                WHERE
+                    CARGRADESEQ IS NOT NULL
+                ORDER BY
+                    CARGRADESEQ DESC
+            )
+        WHERE ROWNUM = 1
+	</select>
+    
+	
+    <update id="updateCarModelNameState" parameterType="Map">
+		UPDATE
+			IS_CARGRADE
+		SET
+			USEYN = 'N'
+		WHERE
+			CARGRADESEQ = #{seq}
+	</update>
+	
+	<select id="getcarInfoList" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			IS_CARMODEL
+		WHERE
+			USEYN = 'Y'
+	</select>
+	
+	<update id="getUpdateCarModelName" parameterType="Map">
+		
+	  UPDATE
+	  	IS_CARGRADE
+	  SET
+	  	CARMODELSEQ = #{carmodelseq},
+	  	CARMAKERSEQ = #{carmakerseq},
+	  	CARGRADENM = #{cargradenm},
+	  	USEYN = #{useyn}
+	  WHERE
+	  	CARGRADESEQ = #{cargradeseq}
+	</update>
+	
+	<insert id="CarModelNameInsert" parameterType="Map">
+		INSERT INTO
+			IS_CARGRADE
+			(
+				CARGRADESEQ,
+				CARMODELSEQ,
+				CARMAKERSEQ,
+				CARGRADENM,
+				USEYN,
+				GRADE_YN
+			)
+		VALUES
+			(
+				#{lastest_seq, jdbcType=INTEGER},
+				#{carmodelseq},
+				#{carmakerseq},
+				#{cargradenm},
+				#{useyn},
+				#{grade_yn}
+			)
+	</insert>
+	
+	<insert id="CarModelNameInsertQry" parameterType="Map">
+		INSERT INTO
+			IS_CARGRADE
+			(
+				CARGRADESEQ,
+				CARMODELSEQ,
+				CARMAKERSEQ,
+				CARGRADENM,
+				USEYN,
+				GRADE_YN
+			)
+		VALUES
+			(
+				#{cargradeseq},
+				#{carmodelseq},
+				#{carmakerseq},
+				#{cargradenm},
+				#{useyn},
+				#{grade_yn}
+			)
+	</insert>
+	
+	
+	
+	<!-- 차량모델명 끝 -->
+	
+	<!-- 부품정보 시작-->
+	
+	<select id="getCarPartsInfoList" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM(
+			
+			SELECT 
+			   	A.*,
+			    ROW_NUMBER() OVER(ORDER BY CARPARTSEQ DESC) RN
+			FROM
+			    V_IS_CARPART A
+			WHERE
+				CARPARTSEQ IS NOT NULL
+
+			<if test="!(delyn == '')">
+			AND
+				DELYN = #{delyn}
+			</if>
+			
+			<choose>
+				<when test="!(delyn == '')">
+				AND
+					DELYN = #{delyn}
+				</when>
+				<otherwise>
+				AND
+					DELYN = 'N'
+				</otherwise>
+			</choose>
+			
+			<if test="!(parttyp == '')">
+			AND
+				PARTTYP = #{parttyp}
+			</if>
+			
+			<if test="(sellinfo == 'onesale')" >
+	        AND 
+	        	ONESALEYN = 'Y'
+	        </if>
+	        
+	        <if test="(sellinfo == 'qtysale')" >
+	       	AND 
+	       		QTYSALEYN = 'Y'
+	        </if>
+	        
+	        <if test="(sellinfo == 'weightsale')" >
+	        AND 
+	        	WEIGHTSALEYN = 'Y'
+	        </if>
+	        
+	        <if test="!(keyword == '' || keyword == null)" >
+	        AND 
+	        	PARTNM like '%${keyword}%' 
+	        </if>
+	     ) PT1   
+		WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+		
+	</select>
+	
+	<select id="getCarPartsInfoPage" parameterType="Map" resultType="mcmap">
+	 	SELECT
+        	CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+        	COUNT(1) TOTALCOUNT
+        FROM 
+        	V_IS_CARPART
+        WHERE
+        	CARPARTSEQ IS NOT NULL
+				
+		<choose>
+			<when test="!(delyn == '')">
+			AND
+				DELYN = #{delyn}
+			</when>
+			<otherwise>
+			AND
+				DELYN = 'N'
+			</otherwise>
+		</choose>
+		
+		<if test="!(parttyp == '')">
+		AND
+			PARTTYP = #{parttyp}
+		</if>
+		
+		<if test="(sellinfo == 'onesale')" >
+        AND 
+        	ONESALEYN = 'Y'
+        </if>
+        <if test="(sellinfo == 'qtysale')" >
+       	AND 
+       		QTYSALEYN = 'Y'
+        </if>
+        <if test="(sellinfo == 'weightsale')" >
+        AND 
+        	WEIGHTSALEYN = 'Y'
+        </if>
+        
+        <if test="!(keyword == '' || keyword == null)" >
+        AND 
+        	PARTNM like '%${keyword}%' 
+        </if>
+        
+    </select>
+    
+    <select id="getCarPartsInfoViewList" parameterType="Map" resultType="mcmap">
+	 	SELECT 
+			A.CARPARTSEQ AS CARPARTSEQ, 
+			A.PARTNM AS PARTNM, 
+			A.WEIGHT AS WEIGHT,
+			A.WORKHOUR AS WORKHOUR,
+			A.PRICE AS PRICE,
+			A.DELYN, DECODE(A.DELYN, 'N','사용','Y','미사용','') AS DELYNNM,
+			A.PARTTYP, DECODE(A.PARTTYP, 'P','판매용','R','재활용','N','수량류','') AS PARTTYPNM,
+		    A.CARPART AS CARPART,
+			B.CODENM AS CODENM,
+			A.PROCESS AS PROCESS,
+			A.NEWPARTAMT AS NEWPARTAMT,
+			A.CO2 AS CO2,
+		    A.ORDERNUM AS ORDERNUM,
+			A.CARPARTCODE AS CARPARTCODE,
+			A.ONESALEYN, DECODE(A.ONESALEYN, 'Y','사용','N','미사용','') AS ONESALEYNNM,
+		    A.QTYSALEYN, DECODE(A.QTYSALEYN, 'Y','사용','N','미사용','') AS QTYSALEYNNM,
+			A.WEIGHTSALEYN, DECODE(A.WEIGHTSALEYN, 'Y','사용','N','미사용','') AS WEIGHTSALEYNNM,
+			A.PARTALIAS AS PARTALIAS, 
+			A.UPPART AS UPPART, 
+			D.PARTNM AS UPPARTNM,
+			A.MKIND AS MKIND,
+			C.CODENM AS CODENM,
+			A.ASSYYN, DECODE(A.ASSYYN, 'Y','사용','N','미사용','') AS ASSYYNNM,
+			A.UPPROCESS, DECODE(A.UPPROCESS, '1','본공정','2','후처리공정','') AS UPPROCESSNM,
+			A.CLEANYN, DECODE(A.CLEANYN, 'Y','사용','N','미사용','') AS CLEANYNNM,
+			A.CLEANZONE AS CLEANZONE,
+			A.CLEANMETHOD AS CLEANMETHOD,
+			A.PACKYN, DECODE(A.PACKYN, 'Y','사용','N','미사용','') AS PACKYNNM,
+			A.PACKZONE AS PACKZONE,
+			A.PACKMETHOD AS PACKMETHOD,
+			A.PHOTOYN, DECODE(A.PHOTOYN, 'Y','사용','N','미사용','') AS PHOTOYNNM,
+			A.PHOTOZONE AS PHOTOZONE, 
+			A.PHOTOMETHOD AS PHOTOMETHOD, 
+			A.REBUILD1 AS REBUILD1, 
+			A.REBUILD2 AS REBUILD2, 
+			A.REBUILD3 AS REBUILD3, 
+			A.SHOPYN, DECODE(A.SHOPYN, 'Y','사용','N','미사용','') AS SHOPYNNM,
+			A.SHOPMETHOD AS SHOPMETHOD,
+			A.ECOAOSYN, DECODE(A.ECOAOSYN, 'Y','사용','N','미사용','') AS ECOAOSYNNM,    
+		    A.GPARTSYN, DECODE(A.GPARTSYN, 'Y','사용','N','미사용','') AS GPARTSYNNM,
+			A.ETC AS ETC,
+			A.PHOTOURL AS PHOTOURL,
+			A.STOCKPART AS STOCKPART,
+			A.PARTKIND AS PARTKIND,
+			E.CODENM AS STOCKPARTNM,
+			F.CODENM AS PARTKINDNM,
+			A.PART_YN AS PART_YN,
+			(SELECT h.ATTACH_NM AS ATTACH_NM FROM V_IS_CARPART g, NSH_ATTACH h WHERE g.CARPARTSEQ = h.TABLE_SEQ AND g.CARPARTSEQ = #{seq}) AS ATTACH_NM
+		FROM 
+			V_IS_CARPART A, V_IS_CODEMST B, V_IS_CODEMST C, V_IS_CARPART D, V_IS_CODEMST E, V_IS_CODEMST F
+			
+		WHERE 
+			A.CARPART = B.CODENO
+		
+		AND 
+			A.MKIND = C.CODENO(+)
+		
+		AND
+			A.UPPART = D.CARPARTSEQ(+)
+		
+		AND 
+			A.STOCKPART = E.CODENO(+)
+		
+		AND 
+			A.PARTKIND = F.CODENO(+)
+		
+		<choose>
+			<when test="!(delyn == '')">
+			AND
+				A.DELYN = #{delyn}
+			</when>
+			<otherwise>
+			AND
+				A.DELYN = 'N'
+			</otherwise>
+		</choose>
+		
+		<if test="!(parttyp == '')">
+		AND
+			A.PARTTYP = #{parttyp}
+		</if>
+		
+		<if test="(sellinfo == 'onesale')" >
+		AND 
+			A.ONESALEYN = 'Y'
+		</if>
+		
+		<if test="(sellinfo == 'qtysale')" >
+		AND 
+			A.QTYSALEYN = 'Y'
+		</if>
+		
+		<if test="(sellinfo == 'weightsale')" >
+		AND 
+			A.WEIGHTSALEYN = 'Y'
+		</if>
+		
+		<if test="!(keyword == '' || keyword == null)" >
+		AND 
+			A.PARTNM like '%${keyword}%' 
+		</if>
+		
+		AND
+			A.CARPARTSEQ = #{seq}
+
+    </select>
+    
+     <select id="getCarPartsShopBunViewList" parameterType="Map" resultType="mcmap">
+		SELECT 
+			CODENO, CODENM
+		FROM
+	    	(
+	    	SELECT 
+	    		* 
+	    	FROM 
+	    		V_IS_CARPART A, V_IS_CODEMST B 
+	    	WHERE 
+	    		B.CODENO = A.STOCKPART 
+	    	AND
+	    		A.CARPARTSEQ = #{seq}
+	    	)
+	    WHERE 
+	    	ROWNUM = 1
+     </select>
+     
+     <select id="getCarPartsShopViewList" parameterType="Map" resultType="mcmap">
+		SELECT 
+			CODENM
+		FROM
+	    	(
+	    	SELECT 
+	    		* 
+	    	FROM 
+	    		V_IS_CARPART A, V_IS_CODEMST B 
+	    	WHERE 
+	    		B.CODENO = A.PARTKIND 
+	    	AND
+	    		A.CARPARTSEQ = #{seq}
+	    	)
+	    WHERE 
+	    	ROWNUM = 1
+     </select>
+     
+     <update id="updateCarPartsState" parameterType="Map">
+		UPDATE
+			IS_CARPART
+		SET
+			DELYN = 'Y'
+		WHERE
+			CARPARTSEQ = #{seq}
+	</update>
+	
+	<select id="getCarParts1DepsMenuList" parameterType="Map" resultType="mcmap">
+	<!-- 대분류 -->
+	<!-- 
+		SELECT
+            *
+        FROM
+            V_IS_CODEMST
+        WHERE
+            LENGTH(UPCODENO) = 6
+        AND
+        	USEYN = 'Y'
+	 -->	
+	 SELECT CODENO, CODENM FROM V_IS_CODEMST WHERE UPCODENO = 050601
+	</select>
+	
+	<select id="getCarPartsSubList" parameterType="Map" resultType="mcmap">
+	<!-- 중분류 -->
+		SELECT
+			*
+		FROM
+			V_IS_CODEMST
+		WHERE
+			UPCODENO LIKE '${seq}%'
+            
+	</select>
+	
+	<select id="getUpPartsNameList" parameterType="Map" resultType="mcmap">
+	<!-- 상위부품 -->
+		    SELECT
+					CARPART, 
+					PARTNM
+				FROM
+					V_IS_CARPART
+				WHERE
+					PARTNM LIKE '%${seq}%'
+            
+	</select>
+	
+	
+	
+	<select id="getShopCodeList" parameterType="Map" resultType="mcmap">
+	<!-- 쇼핑몰분류 -->
+
+	SELECT CODENO, CODENM FROM V_IS_CODEMST WHERE UPCODENO = 050901
+            
+	</select>
+	
+	<select id="getShopCodeSubList" parameterType="Map" resultType="mcmap">
+	<!-- 쇼핑몰상품 -->
+
+	SELECT CODENO, CODENM FROM V_IS_CODEMST WHERE UPCODENO = #{seq}
+            
+	</select>
+	
+	<insert id="InsertPartsData" parameterType="Map">
+		INSERT INTO IS_CARPART
+		(
+			CARPARTSEQ, PARTNM, WEIGHT, WORKHOUR, DELYN,
+			PARTTYP, CARPART, PROCESS, CO2, CARPARTCODE,
+			ONESALEYN, QTYSALEYN, WEIGHTSALEYN, PARTALIAS, UPPART,
+			MKIND, ASSYYN, UPPROCESS, CLEANYN, CLEANZONE,
+			CLEANMETHOD, PACKYN, PACKZONE, PACKMETHOD, PHOTOYN,
+			PHOTOZONE, PHOTOMETHOD, REBUILD1, REBUILD2, REBUILD3,
+			SHOPYN, SHOPMETHOD, ECOAOSYN, GPARTSYN, ETC,
+			PHOTOURL, STOCKPART, PARTKIND, REGDATE,PART_YN
+		)
+		VALUES   
+		(
+			(SELECT MAX(CARPARTSEQ)+1 FROM V_IS_CARPART), #{partnm}, #{weight}, #{workhour}, #{delyn},
+			#{parttyp}, #{carpart}, #{process}, #{co2}, #{carpartcode},
+			#{onesaleyn}, #{qtysaleyn}, #{weightsaleyn}, #{partalias}, #{uppart}, 
+			#{mkind}, #{assyyn}, #{upprocess}, #{cleanyn}, #{cleanzone}, 
+			#{cleanmethod}, #{packyn}, #{packzone}, #{packmethod}, #{photoyn}, 
+			#{photozone}, #{photomethod}, #{rebuild1}, #{rebuild2}, #{rebuild3}, 
+			#{shopyn}, #{shopmethod}, #{ecoaosyn}, #{gpartsyn}, #{etc}, 
+			#{photourl}, #{stockpart}, #{partkind}, SYSDATE,#{part_yn}
+		)
+	</insert>
+	
+	<insert id="InsertPartsDataQry" parameterType="Map">
+		INSERT INTO IS_CARPART
+		(
+			CARPARTSEQ, PARTNM, WEIGHT, WORKHOUR, DELYN,
+			PARTTYP, CARPART, PROCESS, CO2, CARPARTCODE,
+			ONESALEYN, QTYSALEYN, WEIGHTSALEYN, PARTALIAS, UPPART,
+			MKIND, ASSYYN, UPPROCESS, CLEANYN, CLEANZONE,
+			CLEANMETHOD, PACKYN, PACKZONE, PACKMETHOD, PHOTOYN,
+			PHOTOZONE, PHOTOMETHOD, REBUILD1, REBUILD2, REBUILD3,
+			SHOPYN, SHOPMETHOD, ECOAOSYN, GPARTSYN, ETC,
+			PHOTOURL, STOCKPART, PARTKIND, REGDATE,PART_YN
+		)
+		VALUES   
+		(
+			#{carpartseq}, #{partnm}, #{weight}, #{workhour}, #{delyn},
+			#{parttyp}, #{carpart}, #{process}, #{co2}, #{carpartcode},
+			#{onesaleyn}, #{qtysaleyn}, #{weightsaleyn}, #{partalias}, #{uppart}, 
+			#{mkind}, #{assyyn}, #{upprocess}, #{cleanyn}, #{cleanzone}, 
+			#{cleanmethod}, #{packyn}, #{packzone}, #{packmethod}, #{photoyn}, 
+			#{photozone}, #{photomethod}, #{rebuild1}, #{rebuild2}, #{rebuild3}, 
+			#{shopyn}, #{shopmethod}, #{ecoaosyn}, #{gpartsyn}, #{etc}, 
+			#{photourl}, #{stockpart}, #{partkind}, SYSDATE,#{part_yn}
+		)
+	</insert>
+	
+	<select id="getTableSeq" parameterType="Map" resultType="mcmap">
+	<!-- NSH_ATTACH 테이블에 넣기 위한 SEQ -->
+
+	SELECT MAX(CARPARTSEQ) AS CARPARTSEQ  FROM V_IS_CARPART
+            
+	</select>
+	
+	<insert id="InsertAttachData" parameterType="Map">
+		INSERT INTO NSH_ATTACH
+		(
+		    UUID, ATTACH_NM, REG_SEQ, REG_NM, YYYY,
+		    MM, TABLE_NM, TABLE_SEQ, ORDER_SEQ, REG_DT
+		)
+		VALUES
+		(
+		    #{uuid}, #{attach_nm}, #{reg_seq}, #{reg_nm}, #{yyyy},
+			#{mm}, #{table_nm}, #{table_seq}, NVL(#{order_seq}, (SELECT COUNT(1) + 1 FROM NSH_ATTACH WHERE TABLE_NM=#{table_nm} AND TABLE_SEQ=#{table_seq})), SYSDATE
+		)
+	</insert>
+	
+	<update id="getUpdateCarPartInfo" parameterType="Map">
+		
+	 UPDATE 
+	 	IS_CARPART 
+	 SET
+	    PARTNM = #partnm#,
+	    WEIGHT = #weight#,
+	    WORKHOUR = #workhour#,
+	    DELYN = #delyn#,
+	    PARTTYP = #parttyp#,
+	    CARPART = #carpart#,
+	    PROCESS = #process#,
+	    CO2 = #co2#,
+	    ORDERNUM = #ordernum#,
+	    CARPARTCODE = #carpartcode#,
+	    ONESALEYN = #onesaleyn#,
+	    QTYSALEYN = #qtysaleyn#,
+	    WEIGHTSALEYN = #weightsaleyn#,
+	    PARTALIAS = #partAlias#,
+	    UPPART = #uppart#,
+	    MKIND = #mkind#,
+	    ASSYYN = #assyyn#,
+	    UPPROCESS = #upprocess#,
+	    CLEANYN = #cleanyn#,
+	    CLEANZONE = #cleanzone#,
+	    CLEANMETHOD = #cleanmethod#,
+	    PACKYN = #packyn#,
+	    PACKZONE = #packzone#,
+	    PACKMETHOD = #packmethod#,
+	    PHOTOYN = #photoyn#,
+	    PHOTOZONE = #photozone#,
+	    PHOTOMETHOD = #photomethod#,
+	    REBUILD1 = #rebuild1#,
+	    REBUILD2 = #rebuild2#,
+	    REBUILD3 = #rebuild3#,
+	    SHOPYN = #shopyn#,
+	    SHOPMETHOD = #shopmethod#,
+	    ECOAOSYN = #ecoaosyn#,
+	    GPARTSYN = #gpartsyn#,
+	    ETC = #etc#,
+	    PHOTOURL = #photourl#,
+	    STOCKPART = #stockpart#,
+	    PARTKIND = #partkind#,
+	    MODDATE = SYSDATE
+   WHERE 
+   		CARPARTSEQ = #carpartseq#
+	</update>
+	
+	<update id="UpdateAttachData" parameterType="Map">
+		
+	 UPDATE 
+	 	NSH_ATTACH 
+	 SET
+	    UUID = #{uuid_mod},
+	    ATTACH_NM = #{attach_nm_mod},
+	    YYYY = #{yyy_mod},
+	    MM = #{mm_mod}
+   WHERE 
+   		TABLE_SEQ = #carpartseq#
+	</update>
+	
+	<!-- 부품정보 끝-->
+	
+	<!-- MD상품관리 시작-->
+	
+	<select id="getDeps1List" parameterType="Map" resultType="mcmap">
+	<!-- 자주찾는서비스 부품분류 -->
+
+		SELECT
+		    CODENO,
+		    CODENM,
+		    UPCODENO,
+		    SORTNO,
+		    REF,
+		    USEYN,
+		    (
+				SELECT 
+					COUNT(*) AS COUNT
+				FROM
+					V_IS_CODEMST
+				WHERE
+					USEYN='Y'
+				AND
+					UPCODENO = 050901
+			) AS COUNT,
+			ROWNUM AS ROWSEQ
+		FROM
+			V_IS_CODEMST
+		WHERE
+			USEYN='Y'
+		AND
+			UPCODENO = 050901
+		ORDER BY
+			SORTNO, ROWSEQ ASC
+            
+	</select>
+	
+	<select id="getDeps2List" parameterType="Map" resultType="mcmap">
+	<!-- 자주찾는서비스 부품종류 -->
+		
+		SELECT 
+			CODENO,
+			CODENM,
+			UPCODENO,
+			SORTNO,
+			REF,
+			USEYN,
+			(
+				SELECT 
+					COUNT(*) AS COUNT
+				FROM 
+					V_IS_CODEMST
+				WHERE 
+					USEYN='Y' 
+				AND 
+					UPCODENO = #{seq}
+			) AS COUNT,
+			ROWNUM AS ROWSEQ 
+		FROM 
+			V_IS_CODEMST
+		WHERE 
+			USEYN='Y' 
+		AND 
+			UPCODENO = #{seq}
+		ORDER BY
+			SORTNO,ROWSEQ ASC
+		
+	</select>
+	
+	<select id="getDeps3List" parameterType="Map" resultType="mcmap">
+	<!-- 자주찾는서비스 부품 -->
+	
+		SELECT
+			CARPARTSEQ,
+            CARPARTCODE,
+            PARTNM,
+            (
+				SELECT 
+					COUNT(*) AS COUNT
+				FROM 
+					V_IS_CARPART
+				WHERE 
+        			DELYN='N'
+				AND
+        			PARTKIND = #{seq}
+			) AS COUNT,
+			ROWNUM AS ROWSEQ 
+        FROM
+        	V_IS_CARPART
+        WHERE 
+        	DELYN='N'
+        AND
+        	PARTKIND = #{seq}
+        ORDER BY 
+       		CARPARTSEQ ASC
+	</select>
+	
+	<select id="CheckRegCount" parameterType="Map" resultType="mcmap">
+	<!-- 자주찾는서비스 총 갯수  -->
+	
+		SELECT
+			COUNT(*) AS COUNT
+		FROM
+			V_IS_CARPART
+		WHERE
+			SERVICE = 'Y'
+	</select>
+	
+	<select id="getServiceList" parameterType="Map" resultType="mcmap">
+	<!-- 자주찾는서비스 등록되어 있는 리스트  -->
+	SELECT 
+     	CARPARTSEQ,
+      PARTNM
+     FROM
+     (SELECT * FROM V_IS_CARPART WHERE SERVICE = 'Y' AND DELYN ='N')
+     WHERE 
+     <![CDATA[
+     ROWNUM <= 16
+	]]>	
+	</select>
+	
+	<update id="deleteService" parameterType="Map">
+		UPDATE
+			IS_CARPART
+		SET
+			SERVICE = 'N'
+		WHERE
+			CARPARTSEQ = #{seq}
+	</update>
+	
+	<update id="insertService" parameterType="Map">
+		UPDATE
+			IS_CARPART
+		SET
+			SERVICE = 'Y'
+		WHERE
+			CARPARTSEQ = #{seq}
+	</update>
+	
+	<select id="getMDGoodsList" parameterType="Map" resultType="mcmap">
+	<!-- MD 상품관리 > 상품관리 -->
+	
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+                a.ITEM_SEQ, a.COM_SEQ, a.ERP_CODE, a.PRODUCTNM,a.CARYYYY, a.GRADE, a.USER_PRICE, a.SUPPLIER_PRICE, a.SALE_PRICE, 
+                a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+                a.CARMAKERSEQ, a.CARMODELSEQ, a.CARGRADESEQ, a.PART1, a.PART2, a.PART3, a.COLOR,
+                a.REG_DT,a.STOCK_NUM,
+                (SELECT MAKERNM FROM IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                (SELECT CARGRADENM FROM V_IS_CARGRADE WHERE a.CARGRADESEQ=CARGRADESEQ) AS CARGRADENM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART1=CODENO) AS PART1_NM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART2=CODENO) AS PART2_NM,
+                (SELECT PARTNM FROM V_IS_CARPART WHERE a.PART3=CARPARTSEQ) AS PART3_NM,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '37' AND a.COLOR=CODE) AS COLOR_NM,
+                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+                b.ATTACH_NM,
+                c.COM_NM, c.STAFF_TEL,
+                (SELECT DONG_NM FROM NSH_DONG WHERE c.SIDO_CD=SIDO AND c.SIGUNGU_CD=SIGUNGU AND DONG='000') as SIGUNGU_NM
+            FROM NSH_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+            LEFT OUTER JOIN NSH_COOPERATION c
+            ON a.COM_SEQ = c.SEQ
+            JOIN IS_CARMAKER d
+            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+			 WHERE
+            	a.SERVICE = 'Y'
+	</select>
+	
+	<select id="getMDGoodsSearchList" parameterType="Map" resultType="mcmap">
+	<!-- MD 상품관리 > 상품관리 > 부품검색 -->
+	SELECT PT1.* FROM ( 
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+                a.ITEM_SEQ, a.COM_SEQ, a.ERP_CODE, a.PRODUCTNM,a.CARYYYY, a.GRADE, a.USER_PRICE, a.SUPPLIER_PRICE, a.SALE_PRICE, 
+                a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+                a.CARMAKERSEQ, a.CARMODELSEQ, a.CARGRADESEQ, a.PART1, a.PART2, a.PART3, a.COLOR,
+                a.REG_DT,
+                (SELECT MAKERNM FROM IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                (SELECT CARGRADENM FROM V_IS_CARGRADE WHERE a.CARGRADESEQ=CARGRADESEQ) AS CARGRADENM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART1=CODENO) AS PART1_NM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART2=CODENO) AS PART2_NM,
+                (SELECT PARTNM FROM V_IS_CARPART WHERE a.PART3=CARPARTSEQ) AS PART3_NM,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '37' AND a.COLOR=CODE) AS COLOR_NM,
+                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+                b.ATTACH_NM,
+                c.COM_NM, c.STAFF_TEL,
+                (SELECT DONG_NM FROM NSH_DONG WHERE c.SIDO_CD=SIDO AND c.SIGUNGU_CD=SIGUNGU AND DONG='000') as SIGUNGU_NM
+            FROM NSH_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+            LEFT OUTER JOIN NSH_COOPERATION c
+            ON a.COM_SEQ = c.SEQ
+            JOIN IS_CARMAKER d
+            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+			<include refid="listWhere"/>
+			) PT1
+			WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+	</select>
+	
+	<select id="getMDGoodsSearchPaging" parameterType="Map" resultType="mcmap">
+		SELECT
+			CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+			COUNT(1) TOTALCOUNT
+        	FROM NSH_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+            LEFT OUTER JOIN NSH_COOPERATION c
+            ON a.COM_SEQ = c.SEQ
+            JOIN IS_CARMAKER d
+            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+			<include refid="listWhere"/>
+	</select>
+	
+	<update id="deleteMDGoodsService" parameterType="Map">
+		UPDATE
+			NSH_GOODS
+		SET
+			SERVICE = 'N'
+		WHERE
+			ITEM_SEQ = #{seq}
+	</update>
+	
+	<sql id="listWhere">
+		WHERE a.DEL_YN='N' 
+        	AND a.GUBUN = nvl(#{gubun}, '1')
+        	AND a.SERVICE = 'N'
+        	AND a.STOCK_NUM > 0
+			AND a.APPROVAL = 'Y'
+			AND b.UUID IS NOT NULL
+			AND nvl(a.USER_PRICE, 0) > 0
+        <if test="!(keyword == null or keyword == '')" >
+        	AND ${condition} like '%${keyword}%' 
+        </if>
+        <if test="!(keyword == null or keyword == '')" >
+        	AND ${condition} like '%${keyword}%' 
+        </if>
+        <if test="!(nation == null or nation == '')" >
+        	AND d.NATION = #{nation} 
+        </if>
+        <if test="!(item_code == null or item_code == '')" >
+        	AND a.ITEM_CODE = #{item_code}
+        </if>
+        <if test="!(carmakerseq == null or carmakerseq == '')" >
+        	AND a.CARMAKERSEQ = #{carmakerseq} 
+        </if>
+        <if test="!(carmodelseq == null or carmodelseq == '')" >
+        	AND a.CARMODELSEQ = #{carmodelseq} 
+        </if>
+        <if test="!(cargradeseq == null or cargradeseq == '')" >
+        	AND a.CARGRADESEQ = #{cargradeseq} 
+        </if>
+        <if test="!(caryyyy == null or caryyyy == '')" >
+        	AND a.CARYYYY = #{caryyyy} 
+        </if>
+        <if test="!(color == null or color == '')" >
+        	AND a.COLOR = #{color} 
+        </if>
+        <if test="!(grade == null or grade == '')" >
+        	AND a.GRADE = #{grade} 
+        </if>
+        <if test="!(part1 == null or part1 == '')" >
+        	AND a.PART1 = #{part1} 
+        </if>
+        <if test="!(part2 == null or part2 == '')" >
+        	AND a.PART2 = #{part2} 
+        </if>
+        <if test="!(part3 == null or part3 == '')" >
+        	AND a.PART3 = #{part3} 
+        </if>
+        <if test="sdate != null and sdate != '' and edate != null and edate != ''" >
+        	AND a.REG_DT BETWEEN TO_DATE(#{sdate} || '000000', 'YYYY-MM-DDHH24MISS') AND TO_DATE(#{edate} || '235959', 'YYYY-MM-DDHH24MISS')
+        </if>
+	</sql>
+	
+	<select id="CheckRegMDGoodsCount" parameterType="Map" resultType="mcmap">
+	<!-- MD상품관리 총 갯수  -->
+	
+		SELECT
+			COUNT(*) AS COUNT
+		FROM
+			NSH_GOODS
+		WHERE
+			SERVICE = 'Y'
+	</select>
+	
+	
+	<update id="insertMDGoodsService" parameterType="Map">
+		UPDATE
+			NSH_GOODS
+		SET
+			SERVICE = 'Y'
+		WHERE
+			ITEM_SEQ = #{seq}
+	</update>
+	<!-- MD상품관리 끝-->
+</mapper>

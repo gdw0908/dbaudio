@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//#allmenu
+$("#submenu_open").toggle(function(){
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_close.gif";
+}, function() {
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb.html"; ?>
+    <div class="sub">
+      <div class="sm_wrap">
+        <div class="sm_top">
+          <span class="select_box">
+          <select id="" name="" class="select_sm">
+          <option>부품을 선택해 주세요</option>
+          </select>
+          </span>
+          <span class="sm_btn"><img id="submenu_open" src="/images/mobile/sub/sub_menu_open.gif" alt="상세조건 검색버튼" style="cursor:pointer;"></span>
+          <div class="sm_con" id="sub_menu" style="display:none;">
+            <div class="con_1">
+              <h3><img src="/images/mobile/sub/details_title.gif" alt="부품 상세검색"></h3>
+              <p class="c1">※검색조건과 함께 찾으시는 부품을 선택해 주세요</p>
+              <table class="sm_style_1">
+              <colgroup>
+              <col width="20%">
+              <col width="">
+              </colgroup>
+              <tbody>
+
+              <tr>
+                <th scope="row">제조사</th>
+                <td>
+                  <select id="" name="" class="select_sm">
+                  <option>현대자동차</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">차량명</th>
+                <td>
+                  <select id="" name="" class="select_sm">
+                  <option>K5</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">모델명</th>
+                <td>
+                  <select id="" name="" class="select_sm">
+                  <option>더 뉴 K5 (13년~현재)</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">연식</th>
+                <td>
+                  <select id="" name="" class="select_sm">
+                  <option>2013 년</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">부품</th>
+                <td>
+                  <select id="" name="" class="select_sm">
+                  <option>라지에이터 그릴</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">등급</th>
+                <td>
+                  <select id="" name="" class="select_sm">
+                  <option>A 등급</option>
+                  </select>
+                </td>
+              </tr>
+
+              </tbody>
+              </table>
+            </div>
+
+            <div class="con_2">
+              <table class="sm_style_1">
+              <colgroup>
+              <col width="20%">
+              <col width="">
+              </colgroup>
+              <tbody>
+
+              <tr>
+                <th scope="row">지역별</th>
+                <td class="s_type_2">
+
+                  <span>
+                  <select id="" name="" class="select_sm">
+                  <option>시/도</option>
+                  </select>
+                  </span>
+
+                  <span>
+                  <select id="" name="" class="select_sm">
+                  <option>시/군/구</option>
+                  </select>
+                  </span>
+
+                  <span class="last">
+                  <select id="" name="" class="select_sm">
+                  <option>읍/면/동</option>
+                  </select>
+                  </span>
+
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">조건 내 검색</th>
+                <td class="i_type_2">
+                  <p>
+                  <span class="input_t"><input type="text" id="" name="" class="input_m1"></span>
+                  <span class="btn">
+                  <a href="#"><img src="/images/mobile/common/btn_reset.gif" alt="초기화"></a>
+                  <a href="#"><img src="/images/mobile/common/btn_search.gif" alt="검색"></a>
+                  </span>
+                  </p>
+                </td>
+              </tr>
+
+              </tbody>
+
+              </table>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="sub_wrap">
+
+        <div class="sub_line">
+          <h3><img src="/images/mobile/sub/sub_title_7.gif" alt="지역별 부품정보"></h3>
+          <p><a href="#"><img src="/images/mobile/sub/counsel.gif" alt=""></a></p>
+        </div>
+
+        <div class="sc_top">
+
+          <div class="sc_type">
+            <select id="" name="" class="select_1">
+            <option>40개</option>
+            </select>
+          </div>
+
+        </div>
+
+		<table class="sub_list_style_1">
+          <colgroup>
+          <col width="18%">
+          <col width="">
+          <col width="20%">
+          <col width="25%">
+          </colgroup>
+
+          <thead>
+          <tr>
+            <th>지역사진</th>
+            <th>업체명</th>
+            <th>담당자명</th>
+            <th>상세보기</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr>
+            <td>경기도 수원시</td>
+			<td>최고자동차 공급사</td>
+			<td>홍길동</td>
+			<td class="img">
+			  <a href="/html/mobile/sub/m07/m07_02.html"><img src="/images/sub/see_g7_03.gif" alt="상세보기"></a>
+			</td>
+          </tr>
+
+		  <tr>
+            <td>경기도 수원시</td>
+			<td>최고자동차 공급사</td>
+			<td>홍길동</td>
+			<td class="img">
+			  <a href="/html/mobile/sub/m07/m07_02.html"><img src="/images/sub/see_g7_03.gif" alt="상세보기"></a>
+			</td>
+          </tr>
+
+		  <tr>
+            <td>경기도 수원시</td>
+			<td>최고자동차 공급사</td>
+			<td>홍길동</td>
+			<td class="img">
+			  <a href="/html/mobile/sub/m07/m07_02.html"><img src="/images/sub/see_g7_03.gif" alt="상세보기"></a>
+			</td>
+          </tr>
+
+		  <tr>
+            <td>경기도 수원시</td>
+			<td>최고자동차 공급사</td>
+			<td>홍길동</td>
+			<td class="img">
+			  <a href="/html/mobile/sub/m07/m07_02.html"><img src="/images/sub/see_g7_03.gif" alt="상세보기"></a>
+			</td>
+          </tr>
+
+          </tbody>
+
+          </table>
+        
+
+        <? include "../../../article/paging/paging.html"; ?>
+
+      </div>
+	  <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+<div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//#allmenu
+$("#submenu_open").toggle(function(){
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_close.gif";
+}, function() {
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "/mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "/mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/no_mem_title.gif" alt="비회원 주문/배송조회"></h3>
+        </div>
+
+        <div class="no_mem_visual">
+          <strong class="c1">비회원으로 주문하신 내용은 다음과 같습니다.</strong>  주문/배송조회 이외의 서비스는 회원가입 후 이용이 가능합니다.<br>
+          <strong class="c1">반품/환불 및 교환은 판매자와 협의 후 진행 하시기 바랍니다.</strong> <strong>(기타 문의사항은 파츠모아쇼핑몰 고객센터로 전화주시기 바랍니다)</strong>
+        </div>
+
+        <h5 class="pay_type">상품정보</h5>
+
+        <div class="sub_list">
+
+          <ul>
+
+            <li>
+
+            <div>
+
+              <span class="img_box">
+              <span class="img_b1"><a href="#"><img src="/images/mobile/sub/sub_list_img1.gif" alt=""></a></span>
+              <span class="img_btn"><a href="#"><img src="/images/sub_2/pay_c_btn1.gif" alt="현금영수증신청"></a></span>
+              </span>
+
+              <a href="#">
+
+              <span class="info">
+
+              <span class="order_num"><strong>주문번호 : A123456789</strong></span>
+
+              <span class="in_t1">
+              <span class="first"><strong>제네시스쿠페 (2012)</strong></span>
+              <span><strong>컴비네이션램프 후미등</strong></span>
+              <span><strong>A등급</strong></span>
+              </span>
+
+              <span><strong>최고자동차공급사</strong> / 전라남도 광주시</span>
+              <span><strong>주문일 :</strong> 2015-06-06</span>
+              <span><strong>주문수량 : 1 개</strong></span>
+              <span><strong>합계 : <b class="c2">20,000,000</b> 원</strong></span>
+
+              </span>
+
+              </a>
+
+            </div>
+
+            </li>
+
+            <li>
+
+            <div>
+
+              <span class="img_box">
+              <span class="img_b1"><a href="#"><img src="/images/mobile/sub/sub_list_img1.gif" alt=""></a></span>
+              <span class="img_btn"><a href="#"><img src="/images/sub_2/pay_c_btn2.gif" alt="카드전표"></a></span>
+              </span>
+
+              <a href="#">
+
+              <span class="info">
+
+              <span class="order_num"><strong>주문번호 : A123456789</strong></span>
+
+              <span class="in_t1">
+              <span class="first"><strong>제네시스쿠페 (2012)</strong></span>
+              <span><strong>컴비네이션램프 후미등</strong></span>
+              <span><strong>A등급</strong></span>
+              </span>
+
+              <span><strong>최고자동차공급사</strong> / 전라남도 광주시</span>
+              <span><strong>주문일 :</strong> 2015-06-06</span>
+              <span><strong>주문수량 : 1 개</strong></span>
+              <span><strong>합계 : <b class="c2">20,000,000</b> 원</strong></span>
+
+              </span>
+
+              </a>
+
+            </div>
+
+            </li>
+
+          </ul>
+
+        </div>
+
+		<h5 class="pay_type">결제내역</h5>
+
+        <div class="cart_style_2">
+
+          <table>
+          <colgroup>
+          <col width="25%">
+          <col width="">
+          </colgroup>
+          <tbody>
+          <tr>
+            <th scope="row" rowspan="3">카드<br>안심클릭</th>
+            <td>결제금액 : <b class="b_num">120,000</b>원</td>
+          </tr>
+          <tr>
+            <td>카드번호 : 9999-9999-****-****</td>
+          </tr>
+          <tr>
+            <td>납부방식 : 일시불</td>
+          </tr>
+          </tbody>
+          </table>
+
+        </div>
+
+		<h5 class="pay_type">결제금액</h5>
+
+        <div class="pricecheck" style="margin-top:0;">
+
+          <div class="top">
+
+            <p>
+            <span class="pt_l">정상가격</span>
+            <span class="pt_r">20,000 원</span>
+            </p>
+
+            <p class="t_mar">
+            <span class="pt_l">할인금액</span>
+            <span class="pt_r minus">5,000 원</span>
+            </p>
+
+          </div>
+
+          <div class="bottom">
+
+            <p>
+            <span class="pt_l">정상가격</span>
+            <span class="pt_r"><b class="c1">20,000</b> 원</span>
+            </p>
+
+          </div>
+
+        </div>
+
+        <h5 class="pay_type">주문회원 정보</h5>
+
+        <div class="sub_table_1">
+          <table>
+          <colgroup>
+          <col width="25%">
+          <col width="">
+          </colgroup>
+          <tbody>
+          <tr>
+            <th scope="row">주문자</th>
+            <td>홍길동</td>
+          </tr>
+          <tr>
+            <th scope="row">이메일</th>
+            <td>mediacore@mediacore.kr</td>
+          </tr>
+          <tr>
+            <th scope="row">주문자<br>휴대폰</th>
+            <td>010-999-9999</td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+
+        <h5 class="pay_type">배송정보 내역</h5>
+
+        <div class="sub_table_1">
+          <table>
+          <colgroup>
+          <col width="25%">
+          <col width="">
+          </colgroup>
+          <tbody>
+          <tr>
+            <th scope="row">수취인</th>
+            <td>홍길동</td>
+          </tr>
+          <tr>
+            <th scope="row">배송지<br>주소</th>
+            <td>
+              <p>(999 - 999) 경기도 수원시 팔달구 인계동</p>
+              <p>1120-10 대승빌딩 2층</p>
+              <p>(주)미디어코어시스템즈</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">수취인<br>휴대폰</th>
+            <td>010-999-9999</td>
+          </tr>
+          <tr>
+            <th scope="row">수취인<br>연락처</th>
+            <td>010-999-9999</td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+
+        <h5 class="pay_type">배송시 요청사항</h5>
+
+        <div class="sub_table_1">
+          <table>
+          <colgroup>
+          <col width="25%">
+          <col width="">
+          </colgroup>
+          <tbody>
+          <tr>
+            <th scope="row">배송시<br>요청사항</th>
+            <td>
+
+              <div class="request_top">
+                <p class="request_c1"><strong>상품명</strong> : 컴비네이션 램프 후미등 / 제네시스쿠페 (2012)</p>
+                <p><strong>요청사항</strong> : 빠른배송, 안전포장, 오시기전에 전화주세요.</p>
+              </div>
+
+              <div class="request_bottom">
+                <p class="request_c1"><strong>상품명</strong> : 컴비네이션 램프 후미등 / 제네시스쿠페 (2012)</p>
+                <p>요청사항이 없습니다.</p>
+              </div>
+
+            </td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+
+        <ul class="pay_c_list">
+          <li class="c1"><strong>PARTSMOA</strong>는 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서 <strong>PARTSMOA</strong>는 상품ㆍ거래정보 및 거래에 대하여 책임을 지지 않습니다.</li>
+          <li>구매주문내역, 배송상태 확인, 구매영수증 출력, 구매취소/반품/교환은 사이트상단의 주문/배송조회에서 확인할 수 있습니다.</li>
+          <li class="c1">
+          고객님의 주문이 체결된 후 상품품절 및 단종 등에 의해 배송이 불가능할 경우, 전자상거래등에서의 소비자 보호에 관한 법률 제15조 2항에 의거하여
+          3영업일(공휴일제외) 이내에 자동으로 취소될 수 있으며, 이 경우 취소 안내 메일이 고객님께 발송되오니 양지 바랍니다.
+          </li>
+          <li>극히 일부 상품의 경우, 상품페이지의 팔자주문수량이 해당 상품의 실제 재고수량과 다를 수 있는 점 양해바랍니다. </li>
+          <li>일부상품에 대해 수량부족, 카드결제승인오류 등의 사례가 간혹 있을 수 있으니 나의쇼핑정보에서 다시 한번 확인해주세요. </li>
+          <li>무통장 입금으로 구매하셨을 경우, 입금 하신 후 판매자에게 입금확인이 되었는지를 다시 한번 확인해주세요. </li>
+        </ul>
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/html/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/html/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "/mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "/mobile/include/my_menu.html"; ?>
+</body>
+</html>

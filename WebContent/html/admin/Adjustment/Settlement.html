@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>파츠모아 통합관리 시스템</title>
+<link href="/lib/css/cmsbase.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/cmsadmin.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/redmond/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div class="titlebar">
+    <h2>일일정산등록</h2>
+    <div> <span>통합관리</span> &gt; <span>정산관리</span> &gt; <span class="bar_tx">일일정산등록</span> </div>
+  </div>
+  <div class="container"> 
+    <!-- <div class="tab_menu">
+      <ul class="tab">
+        <li><a href="#">이달의 우수상점</a></li>
+        <li class="on"><a href="#">상점소개</a></li>
+      </ul>
+    </div>  -->
+    <div class="contents">
+      <table class="style_1">
+         <colgroup>
+          <col width="10%" />
+          <col width="*" />
+          </colgroup>
+        <tr>
+          <th>조회조건</th>
+          <td>
+            <select title="업체별/전체선" style="width: 100px;">
+                <option>전체선택</option>
+                <option>업체별선택</option>
+            </select>
+            <select title="월선택"  style="width: 100px;">
+                <option>인선모터스</option>
+                <option>서원인계자동</option>
+            </select>
+          </td>
+        </tr> 
+        <tr>
+          <th>기간선택</th>
+          <td>
+            <select title="년도선택" style="width: 100px;">
+                <option>2015</option>
+            </select>
+            <select title="월선택"  style="width: 100px;">
+                <option>3월</option>
+            </select>
+            <select title="일선"  style="width: 100px;">
+                <option>25일</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+      <div class="btn_bottom">
+        <div class="r_btn">
+          <span class="bt_all"><span><input type="button" value="조회 " onclick="" class="btall"/></span></span> 
+          </div>
+      </div>
+      
+      <table class="style_6">
+        <colgroup>
+          <col width="5%" />
+          <col width="7%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="*" />
+        </colgroup>
+        <tr>
+          <th rowspan="3">번호</th>
+          <th rowspan="3">업체명</th>
+          <th colspan="2">현금</th>
+          <th rowspan="3">카드</th>
+          <th colspan="4">PG수수료</th>
+          <th colspan="2">마켓수수료</th>
+          <th colspan="2">취소/환불(배송비포함)</th>
+          <th rowspan="3">판매총액</th>
+        </tr>
+        <tr>
+          <th rowspan="2">실시간계좌이체</th>
+          <th rowspan="2">가상계좌</th>
+          <th colspan="2">카드</th>
+          <th rowspan="2">실시간계좌이체</th>
+          <th rowspan="2">가상계좌</th>
+          <th rowspan="2">사용자</th>
+          <th rowspan="2">판매자</th>
+          <th rowspan="2">현금</th>
+          <th rowspan="2">카드</th>
+        </tr>
+        <tr>
+          <th>수수료</th>
+          <th>인증비</th>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>인선모터스</td>
+          <td>250,000</td>
+          <td>300,000</td>
+          <td>550,000</td>
+          <td>19,250</td>
+          <td>3,000</td>
+          <td>6,250</td>
+          <td>주문건당금액</td>
+          <td>일반회원및 사업자회원 구매 금액의 수수료 </td>
+          <td>협력업체간의 수수료</td>
+          <td>50,000</td>
+          <td>60,000</td>
+          <td>1,300,000</td>
+        </tr>
+        <!-- 이하 반복 -->
+        <tr>
+          <td>9</td>
+          <td>인선모터스</td>
+          <td>250,000</td>
+          <td>300,000</td>
+          <td>550,000</td>
+          <td>19,250</td>
+          <td>3,000</td>
+          <td>6,250</td>
+          <td>2,000</td>
+          <td>31,200 </td>
+          <td>3,900</td>
+          <td>50,000</td>
+          <td>60,000</td>
+          <td>1,300,000</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>인선모터스</td>
+          <td>250,000</td>
+          <td>300,000</td>
+          <td>550,000</td>
+          <td>19,250</td>
+          <td>3,000</td>
+          <td>6,250</td>
+          <td>2,000</td>
+          <td>31,200 </td>
+          <td>3,900</td>
+          <td>50,000</td>
+          <td>60,000</td>
+          <td>1,300,000</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>인선모터스</td>
+          <td>250,000</td>
+          <td>300,000</td>
+          <td>550,000</td>
+          <td>19,250</td>
+          <td>3,000</td>
+          <td>6,250</td>
+          <td>2,000</td>
+          <td>31,200 </td>
+          <td>3,900</td>
+          <td>50,000</td>
+          <td>60,000</td>
+          <td>1,300,000</td>
+        </tr>
+        <tr>
+          <th rowspan="2" colspan="2">합계</th>
+          <th>1,000,000</th>
+          <th>1,200,000</th>
+          <th rowspan="2">2,200,000</th>
+          <th colspan="2">77,000</th>
+          <th>25,000</th>
+          <th>8,000</th>
+          <th>124,800</th>
+          <th>15,600</th>
+          <th>200,000</th>
+          <th>240,000</th>
+          <th rowspan="2">5,200,000</th>
+        </tr>        
+        <tr>
+          <th colspan="2">2,200,000</th>
+          <th colspan="4">1,500,000</th>
+          <th colspan="2">140,100</th>
+          <th colspan="2">520,000</th>
+        </tr>
+      </table>
+      
+      
+      
+      
+        
+        
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/lib/js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="/lib/js/jquery-ui-1.10.3.custom.min.js"></script> 
+<script>
+$("input.date").datepicker({
+		showOn: "button",      
+		buttonImage: "/images/admin/contents/calendar.png",
+});
+
+$( "#tabs" ).tabs();
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#dialog2" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link2" ).click(function( event ) {
+	$( "#dialog2" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+</script>
+</body>
+</html>

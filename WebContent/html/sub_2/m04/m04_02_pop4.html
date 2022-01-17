@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/common.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/article.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/sub_2.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+  <? include "../../include/header.html"; ?>
+  <div id="container">
+    <div class="c_wrap">
+      <? include "../../include/left.html"; ?>
+      <div id="sub">
+        <div class="strapline">
+          <h3><img src="/images/sub_2/h3_img_4_2.gif" alt="주문/배송조회"></h3>
+          <div class="state"> <span>홈</span> &gt; <span>고객센터</span> &gt; <span><strong>나의쇼핑</strong></span> </div>
+        </div>
+        <div class="contents">
+
+          <p><a href="#" class="openMask">처리현황보기</a></p>
+
+          <div id="mask"></div>
+          <div class="window">
+            <div class="address_bg">
+              <div class="address_pop">
+
+                <div class="pop_strapline">
+                  <h3><img src="/images/sub_2/h3_img_4_pop_2_3.gif" alt="처리현황보기"></h3>
+                  <p class="pop_close"><a class="close" href="#"><img src="/images/header/popup_close.png" alt="닫기"></a></p>
+                </div>
+
+                <p class="type_2">※ 반품,교환절차는 판매자와 협의 후 진행하시기 바라며 온라인입금환불 및 기타 문의사항은 고객센터로 전화주시기 바랍니다.</p>
+
+                <h4 class="hs_1">처리현황 <span class="cut_1"><strong>주문번호</strong> 123456789</span></h4>
+
+                <table class="cart_style_1 t_top_style_1">
+                <colgroup>
+                <col width="18%">
+                <col width="">
+                <col width="25%">
+                <col width="25%">
+                </colgroup>
+
+                <thead>
+                <tr>
+                  <th scope="col">신청종류</th>
+                  <th scope="col">접수일</th>
+                  <th scope="col">처리상태</th>
+                  <th scope="col">환불상태</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr>
+                  <td>취소</td>
+                  <td>2015-06-06  14:20:00</td>
+                  <td>주문취소</td>
+                  <td class="b_none">승인취소</td>
+                </tr>
+
+                </tbody>
+
+                </table>
+
+                <h4 class="hs_1">취소신청정보</h4>
+
+                <table class="cart_style_1 t_top_style_1">
+                <colgroup>
+                <col width="50%">
+                <col width="">
+                </colgroup>
+
+                <thead>
+                <tr>
+                  <th scope="col">취소상품명</th>
+                  <th scope="col">취소사유</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr>
+                  <td>컴비네이션램프 후미등 / 제네시스쿠페 (2012) / A급</td>
+                  <td class="b_none">취소사유 입력내용</td>
+                </tr>
+
+                </tbody>
+
+                </table>
+                
+
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript">
+          //<![CDATA[
+          function wrapWindowByMask(){
+          	//화면의 높이와 너비
+          	var maskHeight = $(document).height();
+          	var maskWidth = $(window).width();
+
+          	$('#mask').css({'width':maskWidth,'height':maskHeight});
+          	//애니메이션 효과 - 0초동안 까맣게 됐다가 60% 불투명도
+          	$('#mask').fadeIn(0);
+          	$('#mask').fadeTo("slow",0.6);
+          	//윈도우 띄움.
+          	$('.window').show();
+          }
+          $(document).ready(function(){
+          //검은 막 띄우기
+          $('.openMask').click(function(e){
+          e.preventDefault();
+          wrapWindowByMask();
+          });
+          //닫기 버튼을 눌렀을 때
+          $('.window .close').click(function (e) {
+          //링크 기본동작은 작동하지 않도록 한다.
+          e.preventDefault();
+          $('#mask, .window').hide();
+          });
+          //검은 막을 눌렀을 때
+          //      $('#mask').click(function () {
+          //          $(this).hide();
+          //          $('.window').hide();
+          //      });
+          });
+          //]]>
+          </script>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <? include "../../include/footer.html"; ?>
+</div>
+</body>
+</html>

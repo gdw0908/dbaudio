@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+						http://www.springframework.org/schema/context 
+      					http://www.springframework.org/schema/context/spring-context-4.1.xsd
+						http://www.springframework.org/schema/util 
+        				http://www.springframework.org/schema/util/spring-util-4.1.xsd
+						">
+    <!-- property -->
+    <context:property-placeholder location="classpath:properties/mc.properties"  />
+	
+    <!-- oracle -->
+    <bean id="dataSource-dev" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${dev.jdbc.driver}"/>
+        <property name="url" value="${dev.jdbc.url}"/>
+        <property name="username" value="${dev.jdbc.username}"/>
+        <property name="password" value="${dev.jdbc.password}"/>
+    </bean>
+    
+    <bean id="dataSource-real" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${real.jdbc.driver}"/>
+        <property name="url" value="${real.jdbc.url}"/>
+        <property name="username" value="${real.jdbc.username}"/>
+        <property name="password" value="${real.jdbc.password}"/>
+    </bean>
+    
+    <alias name="dataSource-${develope}" alias="dataSource"/>
+        
+    <bean id="dataSource_mms" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    	<property name="driverClassName" value="${real_mms.jdbc.driver}"/>
+        <property name="url" value="${real_mms.jdbc.url}"/>
+        <property name="username" value="${real_mms.jdbc.username}"/>
+        <property name="password" value="${real_mms.jdbc.password}"/>
+    </bean>
+
+    <bean id="dataSource_erp_dev" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    	<property name="driverClassName" value="${dev_erp.jdbc.driver}"/>
+        <property name="url" value="${dev_erp.jdbc.url}"/>
+        <property name="username" value="${dev_erp.jdbc.username}"/>
+        <property name="password" value="${dev_erp.jdbc.password}"/>
+    </bean>
+    <bean id="dataSource_erp_real" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    	<property name="driverClassName" value="${real_erp.jdbc.driver}"/>
+        <property name="url" value="${real_erp.jdbc.url}"/>
+        <property name="username" value="${real_erp.jdbc.username}"/>
+        <property name="password" value="${real_erp.jdbc.password}"/>
+    </bean>
+    <alias name="dataSource_erp_${develope}" alias="dataSource_erp"/>
+        
+</beans>

@@ -1,0 +1,82 @@
+<div data-ng-controller="partSearchCtrl" title="부품검색">
+		<div id="dialog" title="부품검색" >
+		<form id="basongjiFrm" name="frm" method="post" novalidate="novalidate">
+          <div class="seldiv">
+                <select title="국산/수입 선택" data-ng-model="search.nation" data-ng-change="changeNation()" data-ng-init="changeNation()">
+	          		<option value="">국산/수입</option>
+	          		<option value="Y">국산</option>
+	          		<option value="N">수입</option>
+	            </select>
+	          	<select title="제조사선택" data-ng-model="search.carmakerseq" data-ng-options="item.carmakerseq as item.makernm for item in carmaker" data-ng-change="changeCarmaker()">
+	          		<option value="">제조사</option>
+	            </select>
+	          	<select title="차량명선택" data-ng-model="search.carmodelseq" data-ng-options="item.carmodelseq as item.carmodelnm for item in carmodel" data-ng-change="changeCarmodel()">
+	          		<option value="">차량명</option>
+	            </select>
+	          	<select title="모델명선택" data-ng-model="search.cargradeseq" data-ng-options="item.cargradeseq as item.cargradenm for item in cargrade">
+	          		<option value="">모델명</option>
+	            </select>
+	          	<select title="연식선택" data-ng-model="search.caryyyy" data-ng-options="item as item for item in [1995, main.year()]|range:4">
+	          		<option value="">연식</option>
+	            </select>
+	          	<select title="색상선택" data-ng-model="search.color" data-ng-options="item.code as item.code_nm for item in color">
+	          		<option value="">색상</option>
+	            </select>
+	          	<select title="등급선택" data-ng-model="search.grade" data-ng-options="item.code as item.code_nm for item in grade">
+	          		<option value="">등급</option>
+	            </select>
+	          	<select title="부품분류선택" data-ng-model="search.part1" data-ng-options="item.code as item.code_nm for item in part1" data-ng-change="changePart1()">
+	          		<option value="">부품분류</option>
+	            </select>
+	          	<select title="부품종류선택" data-ng-model="search.part2" data-ng-options="item.code as item.code_nm for item in part2" data-ng-change="changePart2()">
+	          		<option value="">부품종류</option>
+	            </select>
+	          	<select title="부품선택" data-ng-model="search.part3" data-ng-options="item.code as item.code_nm for item in part3">
+	          		<option value="">부품</option>
+	            </select>
+          </div>
+          <div class="btn_bottom">
+            <div class="r_btn">
+             <span><a data-ng-click="board.go(1)"><img src="/images/admin/contents/pop_search.gif" alt="검색" /></a></span>
+            </div> 
+          </div>
+		</form>
+          <table class="style_3">
+            <colgroup>
+              <col width="10%" />
+              <col width="12%" />
+              <col width="12%" />
+              <col width="7%" />
+              <col width="7%" />
+              <col width="5%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="*" />
+            </colgroup>
+            <tr>
+              <th>제조사</th>
+              <th>차량명</th>
+              <th>모델명</th>
+              <th>연식</th>
+              <th>색상</th>
+              <th>등급</th>
+              <th>부품<br/><span style="font-weight:normal;">(대분류)</span></th>
+              <th>부품<br/><span style="font-weight:normal;">(소분류)</span></th>
+              <th>상세부품명</th>
+            </tr>
+            <tr data-ng-if="board.list.length==0"><td colspan="9">결과가 없습니다.</td></tr>
+            <tr data-ng-repeat="item in board.list" data-ng-click="send(item)">
+              <td>{{item.makernm}}</td>
+              <td>{{item.carmodelnm}}</td>
+              <td>{{item.cargradenm}}</td>
+              <td>{{item.caryyyy}}</td>
+              <td>{{item.color_nm}}</td>
+              <td>{{item.grade}}</td>
+              <td>{{item.part1_nm}}</td>
+              <td>{{item.part2_nm}}</td>
+              <td>{{item.part3_nm}}</td>
+            </tr>
+          </table>
+      	  <pagination total-page="board.totalPage" current-page="board.currentPage" on-select-page="board.go(page)"></pagination>
+        </div>
+</div>

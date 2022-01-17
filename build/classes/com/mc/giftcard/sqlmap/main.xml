@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="main">
+	
+	<select id="menu_category" parameterType="String" resultType="mcmap">
+		SELECT 
+			B.CODENO, MAX(B.CODENM) AS C_NAME, COUNT(1) AS CNT, B.SORTNO 
+		FROM NSH_GOODS A JOIN V_IS_CODEMST B
+		ON A.PART2 = B.CODENO 
+			AND A.DEL_YN='N' 
+			AND A.GUBUN='1' 
+		WHERE A.PART1=#{part1}
+			AND A.STOCK_NUM > 0 
+			AND A.APPROVAL = 'Y' 
+			AND nvl(A.USER_PRICE, 0) > 0 
+		GROUP BY B.CODENO, B.SORTNO 
+		ORDER BY B.SORTNO ASC
+	</select>
+	
+	<select id="menu_category_nation" parameterType="String" resultType="mcmap">
+		SELECT
+		    MAX(b.CARMAKERSEQ) as CARMAKERSEQ, MAX(b.MAKERNM) as MAKERNM,
+		    COUNT(a.ITEM_SEQ) as CNT
+		FROM NSH_GOODS a RIGHT OUTER JOIN V_IS_CARMAKER b
+		ON A.CARMAKERSEQ = B.CARMAKERSEQ
+			AND A.DEL_YN='N'
+			AND A.GUBUN='1'
+		WHERE b.NATION=#{nation}
+			AND b.USEYN='Y'
+			AND a.STOCK_NUM > 0
+			AND a.APPROVAL = 'Y'
+			AND nvl(a.USER_PRICE, 0) > 0
+		GROUP BY b.CARMAKERSEQ
+	</select>
+	
+	<select id="menu_category_sido" parameterType="String" resultType="mcmap">
+		SELECT
+		    SIDO, DONG_NM
+		FROM NSH_DONG
+		WHERE USE_YN='Y'
+		    AND SIGUNGU='000'
+		ORDER BY SIDO, SIGUNGU, DONG ASC
+	</select>
+	
+	<select id="menu_top" parameterType="String" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+           SELECT
+               ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+               a.ITEM_SEQ, a.ERP_CODE, a.CARYYYY, a.USER_PRICE, a.SUPPLIER_PRICE,
+               (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+               (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART1=CODENO) AS PART1_NM,
+               (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART2=CODENO) AS PART2_NM,
+               (SELECT PARTNM FROM V_IS_CARPART WHERE a.PART3=CARPARTSEQ) AS PART3_NM,
+               ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+               b.ATTACH_NM
+           FROM NSH_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+           WHERE a.PART1=#{part}
+           		AND a.DEL_YN='N'
+				AND a.GUBUN='1'
+		    	AND a.STOCK_NUM > 0
+				AND a.APPROVAL = 'Y'
+				AND nvl(a.USER_PRICE, 0) > 0
+				AND b.UUID IS NOT NULL
+       ) PT1
+       WHERE RN<=8
+       ]]>
+	</select>
+	
+	<select id="menu_top_nation" parameterType="String" resultType="mcmap">
+		<![CDATA[
+        SELECT PT1.* FROM (
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+                a.ITEM_SEQ, a.ERP_CODE, a.CARYYYY, a.USER_PRICE, a.SUPPLIER_PRICE,
+                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART1=CODENO) AS PART1_NM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART2=CODENO) AS PART2_NM,
+                (SELECT PARTNM FROM V_IS_CARPART WHERE a.PART3=CARPARTSEQ) AS PART3_NM,
+                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+                b.ATTACH_NM
+            FROM NSH_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+            JOIN V_IS_CARMAKER c
+            ON A.CARMAKERSEQ = c.CARMAKERSEQ
+            WHERE c.NATION=#{nation}
+            	AND a.DEL_YN='N'
+				AND a.GUBUN='1'
+		    	AND a.STOCK_NUM > 0
+				AND a.APPROVAL = 'Y'
+				AND nvl(a.USER_PRICE, 0) > 0
+				AND b.UUID IS NOT NULL
+        ) PT1
+        WHERE RN<=8
+       ]]>
+	</select>
+	
+	<select id="notice" parameterType="String" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+			SELECT T1.ARTICLE_SEQ, T1.TITLE, TO_CHAR(T1.REG_DT,'YYYY-MM-DD') REG_DT,
+			ROW_NUMBER() OVER(ORDER BY T1.REG_DT DESC, T1.NOTICE_YN DESC) RN, 
+			CASE WHEN T1.REG_DT >= SYSDATE-3 THEN 'Y' ELSE 'N' END NEW_YN
+			FROM NSH_ARTICLE T1		
+		WHERE
+			BOARD_SEQ in (1)
+			AND T1.DEL_YN='N'
+		) PT1
+		WHERE RN <= 6
+		]]>
+	</select>
+	
+	<select id="mobile_popup" parameterType="Map" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+		SELECT 
+			T1.POPUPZONE_SEQ, T1.TITLE, T1.LINK_YN, T1.LINK_URL, T1.LINK_TARGET, T1.FILE_PATH,
+			T1.USE_YN, T1.ORDER_SEQ, T1.REG_DT, T1.REG_SEQ, T1.REG_NM, T1.MOD_DT, T1.MOD_SEQ, T1.MOD_NM,
+			T1.START_DT, T1.END_DT, T1.ALT, T1.RL,
+			ROW_NUMBER() OVER(ORDER BY ORDER_SEQ ASC, POPUPZONE_SEQ) RN
+		FROM NSH_POPUPZONE T1
+        WHERE T1.DEL_YN = 'N'
+        AND T1.MOBILE = 1
+        AND T1.SELECTER in (1)
+        AND (T1.START_DT <= SYSDATE AND T1.END_DT >= SYSDATE-1) 
+        ) PT1
+		WHERE RN <= 1
+		]]>
+	</select>
+	
+	<select id="main_popup" parameterType="Map" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+		SELECT 
+			T1.POPUPZONE_SEQ, T1.TITLE, T1.LINK_YN, T1.LINK_URL, T1.LINK_TARGET, T1.FILE_PATH,
+			T1.USE_YN, T1.ORDER_SEQ, T1.REG_DT, T1.REG_SEQ, T1.REG_NM, T1.MOD_DT, T1.MOD_SEQ, T1.MOD_NM,
+			T1.START_DT, T1.END_DT, T1.ALT, T1.RL,
+			ROW_NUMBER() OVER(ORDER BY ORDER_SEQ ASC, POPUPZONE_SEQ) RN
+		FROM NSH_POPUPZONE T1
+        WHERE T1.DEL_YN = 'N'
+        AND T1.USE_YN = 'Y'
+        AND T1.SELECTER in (1)
+        AND (T1.START_DT <= SYSDATE AND T1.END_DT >= SYSDATE-1) 
+        ) PT1
+		WHERE RN <= 10
+		]]>
+	</select>
+    
+    <select id="banner_popup" parameterType="Map" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+		SELECT 
+			T1.POPUPZONE_SEQ, T1.TITLE, T1.LINK_YN, T1.LINK_URL, T1.LINK_TARGET, T1.FILE_PATH,
+			T1.USE_YN, T1.ORDER_SEQ, T1.REG_DT, T1.REG_SEQ, T1.REG_NM, T1.MOD_DT, T1.MOD_SEQ, T1.MOD_NM,
+			T1.START_DT, T1.END_DT, T1.ALT, T1.RL,
+			ROW_NUMBER() OVER(ORDER BY ORDER_SEQ ASC, POPUPZONE_SEQ) RN
+		FROM NSH_POPUPZONE T1
+        WHERE T1.DEL_YN = 'N'
+        AND T1.USE_YN = 'Y'
+        AND T1.SELECTER in (2)
+        AND (T1.START_DT <= SYSDATE AND T1.END_DT >= SYSDATE-1)
+        ) PT1
+		WHERE RN <= 10
+		]]>
+	</select>
+	
+	<select id="top_popup" parameterType="Map" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+		SELECT 
+			T1.POPUPZONE_SEQ, T1.TITLE, T1.LINK_YN, T1.LINK_URL, T1.LINK_TARGET, T1.FILE_PATH,
+			T1.USE_YN, T1.ORDER_SEQ, T1.REG_DT, T1.REG_SEQ, T1.REG_NM, T1.MOD_DT, T1.MOD_SEQ, T1.MOD_NM,
+			T1.START_DT, T1.END_DT, T1.ALT, T1.RL,
+			ROW_NUMBER() OVER(ORDER BY ORDER_SEQ ASC, POPUPZONE_SEQ) RN
+		FROM NSH_POPUPZONE T1
+        WHERE T1.DEL_YN = 'N'
+        AND T1.USE_YN = 'Y'
+        AND T1.SELECTER in (3)
+        AND (T1.START_DT <= SYSDATE AND T1.END_DT >= SYSDATE-1)
+        ) PT1
+		WHERE RN <= 3
+		]]>
+	</select>
+	
+	<select id="quick_popup" parameterType="Map" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+		SELECT 
+			T1.POPUPZONE_SEQ, T1.TITLE, T1.LINK_YN, T1.LINK_URL, T1.LINK_TARGET, T1.FILE_PATH,
+			T1.USE_YN, T1.ORDER_SEQ, T1.REG_DT, T1.REG_SEQ, T1.REG_NM, T1.MOD_DT, T1.MOD_SEQ, T1.MOD_NM,
+			T1.START_DT, T1.END_DT, T1.ALT, T1.RL,
+			ROW_NUMBER() OVER(ORDER BY ORDER_SEQ ASC, POPUPZONE_SEQ) RN
+		FROM NSH_POPUPZONE T1
+        WHERE T1.DEL_YN = 'N'
+        AND T1.USE_YN = 'Y'
+        AND T1.SELECTER in (4)
+        AND (T1.START_DT <= SYSDATE AND T1.END_DT >= SYSDATE-1)
+        ) PT1
+		WHERE RN <= 10
+		]]>
+	</select>
+	
+	<select id="layer_popup" parameterType="Map" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+		SELECT 
+			T1.POPUPZONE_SEQ, T1.TITLE, T1.LINK_YN, T1.LINK_URL, T1.LINK_TARGET, T1.FILE_PATH,
+			T1.USE_YN, T1.ORDER_SEQ, T1.REG_DT, T1.REG_SEQ, T1.REG_NM, T1.MOD_DT, T1.MOD_SEQ, T1.MOD_NM,
+			T1.START_DT, T1.END_DT, T1.ALT, X_COORD, Y_COORD,
+			ROW_NUMBER() OVER(ORDER BY ORDER_SEQ ASC, POPUPZONE_SEQ) RN
+		FROM NSH_POPUPZONE T1
+        WHERE T1.DEL_YN = 'N'
+        AND T1.USE_YN = 'Y'
+        AND T1.SELECTER in (5)
+        AND (T1.START_DT <= SYSDATE AND T1.END_DT >= SYSDATE-1) 
+        ) PT1
+		]]>
+	</select>
+	
+	<select id="service" parameterType="Map" resultType="mcmap">
+		<![CDATA[
+     	SELECT
+        	PARTNM,
+          	STOCKPART,
+          	PARTKIND
+        FROM
+        	V_IS_CARPART
+        WHERE
+        	SERVICE = 'Y'	
+		]]>
+	</select>
+	
+	<select id="mdpart" parameterType="Map" resultType="mcmap">
+			<![CDATA[
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+	                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+	                a.ITEM_SEQ, a.PRODUCTNM AS PRODUCTNM, a.USER_PRICE, 
+	                a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+	                a.CARMAKERSEQ, a.CARMODELSEQ,
+	                a.REG_DT,
+	                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+	                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+	                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+	                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+	                b.ATTACH_NM
+	            FROM GC_GOODS a 
+	            LEFT OUTER JOIN NSH_ATTACH b ON b.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ AND b.ORDER_SEQ=1
+	            JOIN V_IS_CARMAKER d
+	            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+	            WHERE
+	            	a.RECOMMYN = 'Y'
+	             AND
+	            	a.STOCK_NUM > 0
+	            	
+	            ORDER BY DBMS_RANDOM.RANDOM()
+	            )
+     	WHERE
+     		ROWNUM <= 10
+			]]>
+	</select>
+	
+	<select id="cooperation" parameterType="String" resultType="mcmap">
+		<![CDATA[
+		SELECT PT1.* FROM (
+			SELECT 
+				T1.SEQ, T1.COM_NM,
+				ROW_NUMBER() OVER(ORDER BY T1.REG_DT DESC) RN, 
+				CASE WHEN T1.REG_DT >= SYSDATE-3 THEN 'Y' ELSE 'N' END NEW_YN
+			FROM NSH_COOPERATION T1		
+			WHERE T1.DEL_YN='N'
+		) PT1
+		WHERE RN <= 9
+		]]>
+	</select>
+	
+	
+	<select id="part_view_list" parameterType="String" resultType="mcmap">
+		SELECT
+			a.*,
+            b.COM_NM, b.ADDR1, b.ADDR2, b.STAFF_NM, b.STAFF_TEL, b.CEO_NM, b.TEL, b.FAX, b.TELESALES_NO, b.COMPTYP1, b.COMPTYP2, b.BUSI_NO,
+            b.X_COORD, b.Y_COORD,
+            SUBSTR(a.PART1,-1,1) AS MENU_CODE,
+            (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+            (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+            (SELECT CARGRADENM FROM V_IS_CARGRADE WHERE a.CARGRADESEQ=CARGRADESEQ) AS CARGRADENM,
+            (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART1=CODENO) AS PART1_NM,
+            (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART2=CODENO) AS PART2_NM,
+            (SELECT PARTNM FROM V_IS_CARPART WHERE a.PART3=CARPARTSEQ) AS PART3_NM,
+            (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '37' AND a.COLOR=CODE) AS COLOR_NM,
+            ('/upload/board/'||C.YYYY||'/'||C.MM||'/'||C.UUID) AS THUMB,
+            C.ATTACH_NM
+		FROM NSH_GOODS a LEFT OUTER JOIN NSH_COOPERATION b ON a.COM_SEQ = b.SEQ
+        LEFT OUTER JOIN NSH_ATTACH C ON C.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = C.TABLE_SEQ AND C.ORDER_SEQ=1
+		WHERE a.ITEM_SEQ in (${part_view_seq}) 
+		ORDER BY DECODE(a.ITEM_SEQ, ${part_view_seq_orderby}) DESC
+	</select>
+	
+    <select id="all_menu" parameterType="String" resultType="mcmap">
+    	SELECT
+			*
+		FROM
+			V_IS_CODEMST
+		WHERE
+			UPCODENO = #{upcodeno}
+      AND USEYN = 'Y'
+		ORDER BY
+		CODENO DESC
+	</select>
+	
+	<select id="newPartsList" parameterType="String" resultType="mcmap">
+    	SELECT
+			*
+		FROM
+			(
+				SELECT 
+        			A.ITEM_SEQ AS ITEM_SEQ,
+          			A.PART1 AS PART1,
+                A.PRODUCTNM AS PRODUCTNM,
+          			A.CARYYYY AS CARYYYY,
+          			A.GRADE AS GREADE,
+          			C.CARMODELNM AS CARMODELNM,
+          			A.SALE_PRICE AS SALE_PRICE,
+          			A.USER_PRICE AS USER_PRICE,
+          			A.GRADE AS GRADE,
+          			A.INQUIRY_YN
+				FROM
+					NSH_GOODS A
+          LEFT OUTER JOIN V_IS_CARMODEL C ON A.CARMODELSEQ = C.CARMODELSEQ
+          LEFT OUTER JOIN NSH_ATTACH b ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ AND b.ORDER_SEQ=1
+        WHERE 
+          A.DEL_YN = 'N'
+          AND A.STOCK_NUM > 0
+				  AND A.APPROVAL = 'Y'
+				  AND b.UUID IS NOT NULL
+				  AND nvl(A.USER_PRICE, 0) > 0
+				ORDER BY
+					A.ITEM_SEQ DESC
+			)
+		<![CDATA[
+		WHERE 
+			ROWNUM <= 5
+		]]>
+	</select>
+	
+	
+	
+	<select id="mymenu_count" parameterType="String" resultType="mcmap">
+		<![CDATA[
+		SELECT 
+			REPLACE(REPLACE(XMLElement(CNT, XMLAttributes(count(*) AS CNT), ''),'<CNT CNT="',''),'"></CNT>','') AS CNT
+		FROM NSH_ARTICLE
+			WHERE DEL_YN='N'
+				AND BOARD_SEQ = #{board_seq}
+				AND REG_DT >= SYSDATE-1
+		GROUP BY BOARD_SEQ
+		]]>
+	</select>
+	
+	<select id="mymenu_carallbaro_count" parameterType="String" resultType="mcmap">
+		<![CDATA[
+		SELECT 
+			COUNT(1) AS CNT
+		FROM NSH_CARALLBARO
+		WHERE DEL_YN = 'N'
+		  AND (SET_TYPE = 0 OR SET_TYPE = 1)
+		  AND REG_DT >= SYSDATE-1
+		]]>
+	</select>	
+	
+	<select id="mobile_mdpart" parameterType="Map" resultType="mcmap">
+	
+		SELECT 
+		<if test="select_type eq 'item'.toString()">
+		PT1.*
+		</if>
+		<if test="select_type eq 'pageinfo'.toString()">
+		CEIL(COUNT(1)/NVL(#{rows, jdbcType=INTEGER},2)) TOTALPAGE,
+		COUNT(1) TOTALCOUNT
+		</if>
+		FROM
+		<![CDATA[
+		(
+		SELECT
+                ROW_NUMBER() OVER(ORDER BY DBMS_RANDOM.RANDOM()) RN,
+                a.ITEM_SEQ, a.COM_SEQ, a.ERP_CODE, a.PRODUCTNM AS PRODUCTNM,a.CARYYYY, a.GRADE, a.USER_PRICE, a.SUPPLIER_PRICE, a.SALE_PRICE, 
+                a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+                a.CARMAKERSEQ, a.CARMODELSEQ, a.CARGRADESEQ, a.PART1, a.PART2, a.PART3, a.COLOR,
+                a.REG_DT,
+                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                (SELECT CARGRADENM FROM V_IS_CARGRADE WHERE a.CARGRADESEQ=CARGRADESEQ) AS CARGRADENM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART1=CODENO) AS PART1_NM,
+                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART2=CODENO) AS PART2_NM,
+                (SELECT PARTNM FROM V_IS_CARPART WHERE a.PART3=CARPARTSEQ) AS PART3_NM,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '37' AND a.COLOR=CODE) AS COLOR_NM,
+                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+                b.ATTACH_NM,
+                c.COM_NM, c.STAFF_TEL,
+                (SELECT DONG_NM FROM NSH_DONG WHERE c.SIDO_CD=SIDO AND c.SIGUNGU_CD=SIGUNGU AND DONG='000') as SIGUNGU_NM
+            FROM NSH_GOODS a LEFT OUTER JOIN NSH_ATTACH b
+            ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ AND b.ORDER_SEQ=1
+            LEFT OUTER JOIN NSH_COOPERATION c
+            ON a.COM_SEQ = c.SEQ
+            JOIN V_IS_CARMAKER d
+            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+            WHERE
+            	a.SERVICE = 'Y'
+             AND
+	            a.STOCK_NUM > 0
+	         
+     	) PT1
+     	]]>
+     	<if test="select_type eq 'item'.toString()">
+		WHERE CEIL(RN/NVL(#{rows, jdbcType=INTEGER},2))=NVL(#{cpage, jdbcType=INTEGER},1)  ORDER BY RN ASC
+		</if>
+	</select>
+	
+	
+	
+	
+	
+	<!-- 최근 상품 할차례 -->
+	<select id="mobile_newpart" parameterType="Map" resultType="mcmap">
+		SELECT
+		<if test="select_type eq 'item'.toString()">
+		PT1.*
+		</if>
+	    <if test="select_type eq 'pageinfo'.toString()">
+		CEIL(COUNT(1)/NVL(#{rows, jdbcType=INTEGER},2)) TOTALPAGE,
+		COUNT(1) TOTALCOUNT
+		</if>
+		<if test="select_type eq 'total'.toString()">
+		COUNT(1) TOTALCOUNT
+		</if>
+	    FROM (
+	            SELECT
+	                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+	                a.ITEM_SEQ, a.COM_SEQ, a.ERP_CODE, a.PRODUCTNM,a.CARYYYY, a.GRADE, a.USER_PRICE, a.SUPPLIER_PRICE, a.SALE_PRICE, 
+	                a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+	                a.CARMAKERSEQ, a.CARMODELSEQ, a.CARGRADESEQ, a.PART1, a.PART2, a.PART3, a.COLOR,
+	                a.REG_DT,
+	                CASE
+                	WHEN a.SALE_SDATE &lt;= SYSDATE AND a.SALE_EDATE &gt; SYSDATE-1 THEN a.DISCOUNT_RATE
+                	ELSE 0
+                	END AS DISCOUNT_RATE,
+	                a.DISCOUNT_RATE AS DISCOUNT_RATE2,
+	                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+	                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+	                (SELECT CARGRADENM FROM V_IS_CARGRADE WHERE a.CARGRADESEQ=CARGRADESEQ) AS CARGRADENM,
+	                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART1=CODENO) AS PART1_NM,
+	                (SELECT CODENM FROM V_IS_CODEMST WHERE a.PART2=CODENO) AS PART2_NM,
+	                (SELECT PARTNM FROM V_IS_CARPART WHERE a.PART3=CARPARTSEQ) AS PART3_NM,
+	                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '37' AND a.COLOR=CODE) AS COLOR_NM,
+	                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+	                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+	                b.ATTACH_NM,
+	                c.COM_NM, c.STAFF_TEL,
+	                (SELECT DONG_NM FROM NSH_DONG WHERE c.SIDO_CD=SIDO AND c.SIGUNGU_CD=SIGUNGU AND DONG='000') as SIGUNGU_NM
+	            FROM NSH_GOODS a LEFT OUTER JOIN NSH_ATTACH b
+            	ON b.TABLE_NM='NSH_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ AND b.ORDER_SEQ=1
+	            LEFT OUTER JOIN NSH_COOPERATION c
+	            ON a.COM_SEQ = c.SEQ
+	            JOIN V_IS_CARMAKER d
+	            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+	            WHERE a.DEL_YN = 'N'
+	            AND a.GUBUN = '1'
+	            AND a.STOCK_NUM > 0
+				AND a.APPROVAL = 'Y'
+				AND b.UUID IS NOT NULL
+				AND nvl(a.USER_PRICE, 0) > 0
+			) PT1
+			<if test="select_type eq 'item'.toString()">
+			WHERE CEIL(RN/NVL(#{rows, jdbcType=INTEGER},2))=NVL(#{cpage, jdbcType=INTEGER},1)  ORDER BY RN ASC
+			</if>
+			<if test="select_type eq 'pageinfo'.toString()">
+			<![CDATA[
+			WHERE RN <= 10
+			]]>
+			</if>
+	</select>
+	
+	<select id="getCartListCount" parameterType="Map" resultType="mcmap">
+	 	SELECT 
+	 		COUNT(*) AS COUNT
+	    FROM
+			NSH_CART 
+		WHERE
+			 USER_ID = 'user'
+		AND
+			 STATUS = 0
+	</select>
+	
+	<select id="autocomplete" resultType="String">
+	<![CDATA[
+        SELECT
+            DISTINCT VAL
+        FROM (
+            SELECT 
+                DISTINCT TRIM(REGEXP_SUBSTR(SEARCH_TAG, '[^,]+', 1, lv)) as VAL
+            FROM (
+                SELECT ITEM_SEQ, SEARCH_TAG FROM NSH_GOODS WHERE SEARCH_TAG IS NOT NULL
+            ), (
+                SELECT LEVEL lv FROM dual CONNECT BY LEVEL <= 10
+            ) 
+            WHERE lv <= REGEXP_COUNT(SEARCH_TAG, '[^,]+')
+            UNION ALL
+            SELECT 
+                DISTINCT TRIM(REGEXP_SUBSTR(replace(replace(PARTALIAS,Chr(13),' '),Chr(10),' '), '[^,]+', 1, lv)) as VAL
+            FROM (
+                SELECT CARPARTSEQ, PARTALIAS FROM V_IS_CARPART WHERE PARTALIAS IS NOT NULL
+            ), (
+                SELECT LEVEL lv FROM dual CONNECT BY LEVEL <= 10
+            ) 
+            WHERE lv <= REGEXP_COUNT(PARTALIAS, '[^,]+')
+            UNION ALL
+            SELECT 
+                DISTINCT TRIM(REGEXP_SUBSTR(replace(replace(STR,Chr(13),' '),Chr(10),' '), '[^,]+', 1, lv)) as VAL
+            FROM (
+                SELECT DECODE(CARMODELALIAS, '', CARMODELNM, CARMODELNM||','||CARMODELALIAS) as STR FROM V_IS_CARMODEL
+            ), (
+                SELECT LEVEL lv FROM dual CONNECT BY LEVEL <= 10
+            ) 
+            WHERE lv <= REGEXP_COUNT(STR, '[^,]+')
+            UNION ALL
+            SELECT 
+                DISTINCT PRODUCTNM as VAL
+            FROM NSH_GOODS
+        )
+        ORDER BY VAL ASC
+		]]>
+	</select>
+	
+</mapper>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code">
+	
+	<select id="groupList" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+		SELECT
+          CODE_GROUP_SEQ,
+          GROUP_NM,
+          (SELECT COUNT(*) FROM MC_COMMON_CODE T2 WHERE T2.CODE_GROUP_SEQ = T1.CODE_GROUP_SEQ AND T2.DEL_YN='N') AS CODE_CNT,
+          ROW_NUMBER() OVER(ORDER BY CODE_GROUP_SEQ DESC) RN
+        FROM
+          MC_COMMON_CODE_GROUP T1 
+        WHERE DEL_YN='N'
+        <if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%${keyword}%' 
+        </if>
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+	</select>
+	
+	<select id="page_info" parameterType="Map" resultType="mcmap">
+		SELECT
+		CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+		COUNT(1) TOTALCOUNT
+		FROM MC_COMMON_CODE_GROUP
+		WHERE DEL_YN='N'
+		<if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%${keyword}%' 
+        </if>
+	</select>
+	
+	<select id="codeList" parameterType="Map" resultType="mcmap">
+		SELECT
+		  CODE_SEQ,
+		  CODE_GROUP_SEQ,
+		  CODE,
+		  CODE_NM,
+		  VAL1,
+		  VAL2,
+		  ETC,
+		  USE_YN
+		FROM
+		  MC_COMMON_CODE 
+		WHERE DEL_YN='N'
+		AND CODE_GROUP_SEQ=${code_group_seq}
+		<if test="use_yn != null">
+		AND USE_YN=#{use_yn}
+		</if>
+		<if test="etc != null">
+		AND etc=#{etc}
+		</if>
+        <if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%'||trim('${keyword}')||'%' 
+        </if>
+		ORDER BY ORDER_SEQ ASC
+	</select>
+	
+	<select id="codeListVar1" parameterType="Map" resultType="mcmap">
+		SELECT
+		  CODE_SEQ,
+		  CODE_GROUP_SEQ,
+		  CODE,
+		  CODE_NM,
+		  VAL1,
+		  VAL2,
+		  ETC,
+		  USE_YN
+		FROM
+		  MC_COMMON_CODE 
+		WHERE DEL_YN='N'
+		AND VAL1=#{code_group_seq}
+		<if test="use_yn != ''">
+		AND USE_YN=#{use_yn}
+		</if>
+		ORDER BY ORDER_SEQ ASC
+	</select>	
+	
+	<select id="codeListForVal1" parameterType="Map" resultType="mcmap">
+		SELECT
+		  CODE_SEQ,
+		  CODE_GROUP_SEQ,
+		  CODE,
+		  CODE_NM,
+		  VAL1,
+		  VAL2,
+		  ETC,
+		  USE_YN
+		FROM
+		  MC_COMMON_CODE 
+		WHERE DEL_YN='N'
+		AND VAL1=#{code}
+		<if test="use_yn != ''">
+		AND USE_YN=#{use_yn}
+		</if>
+		ORDER BY ORDER_SEQ ASC
+	</select>
+
+	<update id="updateCodeOrderSeq" parameterType="Map">
+		update MC_COMMON_CODE set ORDER_SEQ=#{order_seq}, MOD_DT=sysdate, MOD_ID=#{session_member_id}, MOD_NM=#{session_member_nm}
+		WHERE CODE_SEQ=#{code_seq}
+	</update>
+	
+	<update id="updateGroup" parameterType="Map">
+		update MC_COMMON_CODE_GROUP set GROUP_NM=#{group_nm}, MOD_DT=sysdate, MOD_ID=#{session_member_id}, MOD_NM=#{session_member_nm}
+		WHERE CODE_GROUP_SEQ=#{code_group_seq}
+	</update>
+	
+	<insert id="insertGroup" parameterType="Map">
+		insert into MC_COMMON_CODE_GROUP(
+			CODE_GROUP_SEQ,
+			GROUP_NM,
+			REG_ID,
+			REG_NM
+		)values(
+			SEQ_MC_COMMON_CODE_GROUP.nextval,
+			#{group_nm},
+			#{session_member_id, jdbcType=VARCHAR},
+			#{session_member_nm, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertCode" parameterType="Map">
+		INSERT
+		INTO
+		  MC_COMMON_CODE
+		  (
+		    CODE_SEQ,
+		    CODE_GROUP_SEQ,
+		    CODE,
+		    CODE_NM,
+		    VAL1,
+		    VAL2,
+		    ORDER_SEQ,
+		    ETC,
+		    USE_YN,
+		    REG_ID,
+		    REG_NM
+		  )
+		  VALUES
+		  (
+		    SEQ_MC_COMMON_CODE.nextval,
+		    #{code_group_seq},
+		    #{code},
+		    #{code_nm},
+		    #{val1},
+		    #{val2},
+		   	(select nvl(max(ORDER_SEQ), 0)+1 from MC_COMMON_CODE where code_group_seq=#{code_group_seq}),
+		    #{etc},
+		    #{use_yn},
+		    #{session_member_id},
+			#{session_member_nm}
+		  )
+	</insert>
+	
+	<update id="updateCode" parameterType="Map">
+		update
+		  MC_COMMON_CODE
+		  set 
+		    CODE_GROUP_SEQ=#{code_group_seq},
+		    CODE=#{code},
+		    CODE_NM=#{code_nm},
+		    VAL1=#{val1},
+		    VAL2=#{val2},
+		    ETC=#{etc},
+		    USE_YN=#{use_yn},
+		    MOD_ID=#{session_member_id},
+		    MOD_NM=#{session_member_nm}
+		  where CODE_SEQ=#{code_seq}
+	</update>
+	
+	<delete id="groupDelete" parameterType="Map">
+		update MC_COMMON_CODE_GROUP set DEL_YN='Y', DEL_DT=sysdate, DEL_ID=#{session_member_id}, DEL_NM=#{session_member_nm}
+		WHERE CODE_GROUP_SEQ=#{code_group_seq}
+	</delete>
+	
+	<delete id="codeDelete" parameterType="Map">
+		update MC_COMMON_CODE set DEL_YN='Y', DEL_DT=sysdate, DEL_ID=#{session_member_id}, DEL_NM=#{session_member_nm}
+		WHERE CODE_SEQ=#{code_seq}
+	</delete>
+	
+	<select id="sido" parameterType="Map" resultType="mcmap">
+		SELECT
+		    SIDO, DONG_NM
+		FROM NSH_DONG
+		WHERE USE_YN='Y'
+		    AND ((SIDO = '36' and SIGUNGU='110' AND DONG='000')  OR (SIGUNGU='000' AND DONG='000'))
+		ORDER BY SIDO, SIGUNGU, DONG ASC
+	</select>
+	
+	<select id="sigungu" parameterType="Map" resultType="mcmap">
+		SELECT
+		    SIGUNGU, 
+		    CASE WHEN length(DONG_NM) -length(replace(DONG_NM, ' ', ''))=0 THEN DONG_NM
+            ELSE TRIM(FN_GET_SPLIT(DONG_NM, 2, ' ', '')) || ' ' || FN_GET_SPLIT(DONG_NM, 3, ' ', '') 
+            END AS DONG_NM
+		FROM NSH_DONG
+		WHERE USE_YN='Y'
+		    AND SIDO=#{sido}
+		    AND SIGUNGU != '000'
+		    AND DONG='000'
+		ORDER BY SIDO, SIGUNGU, DONG ASC
+	</select>
+	
+	<select id="dong" parameterType="Map" resultType="mcmap">
+		SELECT
+		    DONG, 
+		    TRIM(REGEXP_REPLACE(FN_GET_SPLIT(DONG_NM, 3, ' ', ''), '(.+구)', '') || ' ' || FN_GET_SPLIT(DONG_NM, 4, ' ', '')) AS DONG_NM
+		FROM NSH_DONG
+		WHERE USE_YN='Y'
+		    AND SIDO=#{sido}
+		    AND SIGUNGU=#{sigungu}
+		    AND DONG!='000'
+            AND RI='00'
+		ORDER BY SIDO, SIGUNGU, DONG ASC
+	</select>
+    
+</mapper>

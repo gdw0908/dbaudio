@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cart">
+	
+	<select id="cart_list" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+                a.ITEM_SEQ, a.PRODUCTNM, a.USER_PRICE,  
+                a.FEE_YN, a.FEE_AMOUNT, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+                a.CARMAKERSEQ, a.CARMODELSEQ, 
+                a.REG_DT,
+                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+                b.ATTACH_NM,
+                e.QTY, e.CART_NO, e.COD_YN, e.FEE_AMT
+            FROM GC_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+            LEFT OUTER JOIN V_IS_CARMAKER d
+            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+            JOIN (SELECT ITEM_SEQ, QTY, CART_NO, COD_YN, FEE_AMT FROM NSH_CART WHERE STATUS='0' and (SESSIONID = #{sessionid} or user_id = #{session_member_id})) e
+            ON a.ITEM_SEQ = e.ITEM_SEQ
+            WHERE a.STOCK_NUM > 0
+		) PT1
+	</select>
+	
+	<select id="dir_cart" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+                a.ITEM_SEQ, a.PRODUCTNM, a.USER_PRICE, 
+                a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+                a.CARMAKERSEQ, a.CARMODELSEQ, 
+                a.REG_DT,
+                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID) AS THUMB,
+                b.ATTACH_NM,
+                e.QTY, e.CART_NO, e.COD_YN, e.FEE_AMT
+            FROM GC_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+            LEFT OUTER JOIN V_IS_CARMAKER d
+            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+            JOIN (SELECT ITEM_SEQ, QTY, CART_NO, COD_YN, FEE_AMT FROM NSH_CART WHERE STATUS='0' AND CART_NO = #{cart_no}) e
+            ON a.ITEM_SEQ = e.ITEM_SEQ
+		) PT1
+	</select>
+	
+	<select id="chk_cart_list" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY a.ITEM_SEQ DESC) RN,
+                a.ITEM_SEQ, a.PRODUCTNM, a.USER_PRICE,  
+                a.FEE_YN, a.BESTYN, a.EVENTYN, a.NEWYN, a.PUBLICYN, a.RECOMMYN, a.SALEYN, a.PLANYN,
+                a.CARMAKERSEQ, a.CARMODELSEQ, 
+                a.REG_DT,
+                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE a.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE a.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                DECODE(a.APPROVAL, 'Y', '승인', '비승인') as APPROVAL,
+                ('/upload/board/'||b.YYYY||'/'||b.MM||'/'||b.UUID||'_thumb') AS THUMB,
+                b.ATTACH_NM,
+                e.QTY, e.CART_NO, e.COD_YN, e.FEE_AMT
+            FROM GC_GOODS a LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) b
+            ON b.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = b.TABLE_SEQ
+            LEFT OUTER JOIN V_IS_CARMAKER d
+            ON a.CARMAKERSEQ=d.CARMAKERSEQ
+            JOIN (SELECT ITEM_SEQ, QTY, CART_NO, COD_YN, FEE_AMT FROM NSH_CART WHERE STATUS='0' AND QTY > 0 AND CART_NO IN (
+                    '0'
+                    <if test="cart_list.size() > 0" >
+			    	,
+						<foreach item="item" index="index" collection="cart_list" separator=",">
+							#{item}
+						</foreach>
+					</if>
+            	)	
+            ) e
+            ON a.ITEM_SEQ = e.ITEM_SEQ
+		) PT1
+	</select>
+	
+	<select id="inquiry_yn" parameterType="Map" resultType="mcmap">
+		SELECT INQUIRY_YN FROM GC_GOODS WHERE ITEM_SEQ=#{item_seq}
+	</select>
+	
+	<select id="in_cart" parameterType="Map" resultType="mcmap">
+		SELECT * FROM NSH_CART WHERE (SESSIONID = #{sessionid} OR USER_ID=#{session_member_id}) AND ITEM_SEQ=#{item_seq} AND STATUS='0'
+	</select>
+	
+	<update id="add_cartQty" parameterType="Map">
+		UPDATE NSH_CART SET 
+		    QTY =  (
+		        CASE WHEN (SELECT STOCK_NUM FROM GC_GOODS WHERE ITEM_SEQ = #{item_seq}) > QTY+${qty} THEN QTY+${qty}
+		        ELSE (SELECT STOCK_NUM FROM GC_GOODS WHERE ITEM_SEQ = #{item_seq})
+		        END
+		    )   
+		WHERE CART_NO = #{cart_no}
+	</update>
+	
+	<update id="add_cart" parameterType="Map" useGeneratedKeys="true" keyColumn="cart_no" keyProperty="cart_no">
+		INSERT INTO NSH_CART(
+			CART_NO, ITEM_SEQ, QTY, STATUS, FEE_AMT,
+			USER_ID, REG_DT, SESSIONID
+		)VALUES(
+			SEQ_NSH_CART.NEXTVAL, #{seq}, #{qty}, '0', (SELECT DECODE(FEE_YN, 'Y', FEE_AMOUNT, '0') FROM GC_GOODS WHERE ITEM_SEQ=#{seq}),
+			#{session_member_id}, SYSDATE, #{sessionid}
+		)
+	</update>
+	
+	<select id="member_info" parameterType="Map" resultType="mcmap">
+        SELECT
+            aa.*,
+            FN_GET_SPLIT(aa.ZIP_CD, 1, '-', '') as ZIP1, 
+            FN_GET_SPLIT(aa.ZIP_CD, 2, '-', '') as ZIP2,
+            FN_GET_SPLIT(aa.EMAIL, 1, '@', '') as EMAIL1, 
+            FN_GET_SPLIT(aa.EMAIL, 2, '@', '') as EMAIL2,
+            FN_GET_SPLIT(aa.TEL, 1, '-', '') as TEL1,
+            FN_GET_SPLIT(aa.TEL, 2, '-', '') as TEL2,
+            FN_GET_SPLIT(aa.TEL, 3, '-', '') as TEL3,
+            FN_GET_SPLIT(aa.CELL, 1, '-', '') as CELL1,
+            FN_GET_SPLIT(aa.CELL, 2, '-', '') as CELL2,
+            FN_GET_SPLIT(aa.CELL, 3, '-', '') as CELL3
+        FROM (
+            SELECT
+                MEMBER_SEQ, MEMBER_ID, MEMBER_NM, TEL, CELL, GROUP_SEQ, 
+                ZIP_CD, ADDR1, ADDR2, EMAIL
+            FROM MC_MEMBER
+            WHERE DEL_YN='N'
+            UNION ALL
+            SELECT
+                a.SEQ AS MEMBER_SEQ, a.MEMBER_ID, b.CEO_NM as MEMBER_NM, TEL, nvl('', staff_tel) AS CELL, 3 as GROUP_SEQ, 
+                ZIP_CD, ADDR1, ADDR2, nvl('', staff_email) as EMAIL
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+        ) aa
+        WHERE MEMBER_SEQ = #{member_seq} 
+	</select>
+	
+	<select id="member_basongji" parameterType="Map" resultType="mcmap">
+		SELECT
+		    SEQ, MEMBER_SEQ, RECEIVER_NM, RECEIVER_TITLE, TEL, CELL, ZIP_CD, ADDR1, ADDR2, DEFAULT_YN, ORDER_SEQ,
+            FN_GET_SPLIT(ZIP_CD, 1, '-', '') as ZIP1, 
+            FN_GET_SPLIT(ZIP_CD, 2, '-', '') as ZIP2,
+            FN_GET_SPLIT(TEL, 1, '-', '') as TEL1,
+            FN_GET_SPLIT(TEL, 2, '-', '') as TEL2,
+            FN_GET_SPLIT(TEL, 3, '-', '') as TEL3,
+            FN_GET_SPLIT(CELL, 1, '-', '') as CELL1,
+            FN_GET_SPLIT(CELL, 2, '-', '') as CELL2,
+            FN_GET_SPLIT(CELL, 3, '-', '') as CELL3
+		FROM MC_BASONGJI
+		WHERE MEMBER_SEQ = #{member_seq} 
+		ORDER BY DEFAULT_YN DESC, ORDER_SEQ ASC
+	</select>
+	
+	<select id="basongji_one" parameterType="Map" resultType="mcmap">
+		SELECT
+		    SEQ, MEMBER_SEQ, RECEIVER_NM, RECEIVER_TITLE, TEL, CELL, ZIP_CD, ADDR1, ADDR2, DEFAULT_YN, ORDER_SEQ,
+            FN_GET_SPLIT(ZIP_CD, 1, '-', '') as ZIP1, 
+            FN_GET_SPLIT(ZIP_CD, 2, '-', '') as ZIP2,
+            FN_GET_SPLIT(TEL, 1, '-', '') as TEL1,
+            FN_GET_SPLIT(TEL, 2, '-', '') as TEL2,
+            FN_GET_SPLIT(TEL, 3, '-', '') as TEL3,
+            FN_GET_SPLIT(CELL, 1, '-', '') as CELL1,
+            FN_GET_SPLIT(CELL, 2, '-', '') as CELL2,
+            FN_GET_SPLIT(CELL, 3, '-', '') as CELL3
+		FROM MC_BASONGJI
+		WHERE SEQ = #{seq} 
+	</select>
+	
+	<select id="cart_stock" parameterType="Map" resultType="int">
+		SELECT nvl(STOCK_NUM, 0) as STOCK_NUM FROM GC_GOODS WHERE ITEM_SEQ=#{item_seq} 
+	</select>
+	
+	<select id="cart_stock_cartno" parameterType="Map" resultType="int">
+		SELECT
+		    nvl(b.STOCK_NUM, 0) as STOCK_NUM
+		FROM NSH_CART a JOIN GC_GOODS b
+		ON a.ITEM_SEQ=b.ITEM_SEQ
+		WHERE A.CART_NO = #{cart_no}
+	</select>
+	
+	<select id="cart_qty_cartno" parameterType="Map" resultType="int">
+		SELECT QTY FROM NSH_CART WHERE CART_NO=#{cart_no}
+	</select>
+	
+	<update id="updateQty" parameterType="Map">
+		UPDATE NSH_CART SET
+			QTY = #{qty}
+		WHERE CART_NO = #{cart_no}	
+			AND STATUS=0	
+	</update>
+	
+	<update id="changeCod" parameterType="Map">
+		UPDATE NSH_CART SET
+			COD_YN = #{cod_yn}
+		WHERE CART_NO = #{cart_no}	
+			AND STATUS=0	
+	</update>
+	
+	<update id="minusStock" parameterType="Map">
+		UPDATE GC_GOODS SET
+			STOCK_NUM = (STOCK_NUM - ${qty})
+		WHERE ITEM_SEQ=(SELECT ITEM_SEQ FROM NSH_CART WHERE CART_NO=#{cart_no})		
+	</update>
+	
+	<update id="remove_cart" parameterType="Map">
+		DELETE FROM NSH_CART WHERE CART_NO = #{cart_no}		
+	</update>
+	
+	<update id="orderno_create" parameterType="Map" useGeneratedKeys="true" keyColumn="orderno" keyProperty="orderno">
+		INSERT INTO NSH_ORDERNO(
+			ORDERNO, REG_DT
+		)VALUES(
+			(SELECT 'PT'||TO_CHAR(SYSDATE, 'DDMMYY')||LPAD((NVL(MAX(TO_NUMBER(SUBSTR(ORDERNO, 9, 6))), 0) + 1), 6, '0') AS ORDERNO
+			  FROM NSH_ORDERNO
+			  WHERE SUBSTR(ORDERNO, 3, 6) = TO_CHAR(SYSDATE, 'DDMMYY')), sysdate
+		)
+	</update>
+	
+	<select id="get_commission" parameterType="Map" resultType="String">
+		SELECT 
+		DECODE(D.MEMBER_ID, NULL, '3.5', '3.5') AS COMMISSION
+		FROM NSH_CART A 
+		LEFT OUTER JOIN MC_MEMBER C ON A.USER_ID = C.MEMBER_ID
+		LEFT OUTER JOIN NSH_COOPERATION_MEMBER D ON A.USER_ID = D.MEMBER_ID
+		JOIN GC_GOODS E ON A.ITEM_SEQ = E.ITEM_SEQ
+		WHERE CART_NO = #{cart_no}
+	</select>
+	
+	<update id="order_insert" parameterType="Map">
+		INSERT INTO NSH_ORDERMST(
+			ORDERNO, ZIPCD, RECEIVER, ADDR, ADDRDETAIL, REHP, MESSAGE, PAYTYP, SUBTY, PAYAMT, USERID, ORDERDATE, REG_DT, RETEL, EMAIL, PASSWD, RDEALNO, RAPPRNO, RINSTMT, RAPPRTM, TRANS, TRANS_ID, PG_COMMISSION
+		)VALUES(
+			#{orderno}, #{m_zip_cd}, #{m_member_nm}, #{m_addr1}, #{m_addr2}, #{m_cell}, #{message}, #{paytyp}, #{subty}, #{payamt}, #{userid}, sysdate, sysdate, #{m_tel}, #{m_email}, #{passwd}, #{rdealno}, #{rapprno}, #{rinstmt}, #{rapprtm}, #{trans}, #{trans_id}, #{pg_commission}
+		)
+	</update>
+	
+	<update id="orderCart" parameterType="Map">
+		UPDATE NSH_CART SET
+			ORDERNO = #{orderno},
+			MESSAGE = #{message},
+			ZIP_CD = #{zip_cd},
+			RECEIVER = #{receiver},
+			ADDR1 = #{addr1},
+			ADDR2 = #{addr2},
+			CELL = #{cell},
+			TEL = #{tel},
+			AMT = #{amt},
+			STATUS = DECODE(#{paytyp}, 'virtual', '99', '1'),
+			<if test="paytyp != 'virtual'" >
+			PAY_DT = sysdate,
+			</if>
+			BANK_SEQ = #{bankCd},
+			ACCOUNTNO = #{account},
+			M_COMMISSION = TRUNC((${amt} + DECODE(COD_YN, 'Y', FEE_AMT, 0)) * ${commission} / 100)
+		WHERE CART_NO = #{cart_no}		
+	</update>
+	
+	<update id="virAcctResult1" parameterType="Map">
+		UPDATE NSH_ORDERMST SET
+			RAPPRTM = #{rapprtm}
+		WHERE ORDERNO = #{orderno}
+	</update>
+	<update id="virAcctResult2" parameterType="Map">
+		UPDATE NSH_CART SET
+			STATUS = '1',
+			PAY_DT = sysdate
+		WHERE ORDERNO = #{orderno}
+	</update>
+	
+	<delete id="cartCleaning">
+	<![CDATA[
+		DELETE FROM NSH_CART WHERE STATUS='0' AND TO_CHAR(REG_DT, 'YYYYMMDD') <= TO_CHAR(SYSDATE-7, 'YYYYMMDD')
+	]]>	
+	</delete>
+	
+	<select id="orderResultList" parameterType="Map" resultType="mcmap">
+        SELECT 
+            a.CART_NO, a.QTY, a.MESSAGE, a.AMT, a.STATUS, a.FEE_AMT, a.COD_YN,
+            b.*,
+            (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '40' AND a.STATUS=CODE) AS STATUS_NM,
+            (SELECT MAKERNM FROM V_IS_CARMAKER WHERE b.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+            (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE b.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+            ('/upload/board/'||c.YYYY||'/'||c.MM||'/'||c.UUID) AS THUMB
+        FROM NSH_CART a JOIN GC_GOODS b
+        ON a.ITEM_SEQ=b.ITEM_SEQ
+        LEFT OUTER JOIN (
+            SELECT
+                bb.*
+            FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+            ON aa.UUID = bb.UUID
+        ) c
+        ON c.TABLE_NM='GC_GOODS' AND a.ITEM_SEQ = c.TABLE_SEQ
+		WHERE a.ORDERNO=#{orderno}
+	</select>
+	
+	<select id="orderResultInfo" parameterType="Map" resultType="mcmap">
+        SELECT
+            distinct
+            a.ORDERNO, a.ZIPCD, a.RECEIVER AS ORDER_NM, a.ADDR, a.ADDRDETAIL, a.REHP, a.MESSAGE, a.PAYTYP, a.PAYAMT, a.USERID, a.ORDERDATE, a.RETEL, a.EMAIL,
+            b.ZIP_CD AS RE_ZIPCD, b.ADDR1 AS RE_ADDR1, b.ADDR2 AS RE_ADDR2, b.RECEIVER, b.CELL AS RE_CELL, b.TEL AS RE_TEL
+        FROM NSH_ORDERMST a JOIN NSH_CART b
+        ON a.ORDERNO = b.ORDERNO              
+        WHERE a.ORDERNO = #{orderno}
+	</select>
+	
+	<select id="completePay" parameterType="Map" resultType="mcmap">
+		SELECT
+		    DISTINCT
+            A.ORDERNO, TO_CHAR(A.ORDERDATE, 'yyyy-MM-dd HH24:mi:ss') as ORDERDATE,
+		    REPLACE(B.ZIP_CD, '-', '') as ZIPCD, B.RECEIVER, B.ADDR1 AS ADDR, B.ADDR2 AS ADDRDETAIL, B.CELL AS REHP, A.MESSAGE, 
+		    DECODE(PAYTYP, 'card', '02020101', 'iche', '02020102', 'virtual', '02020103') as PAYTYP, SUM(B.ACTUAL_AMT) over(partition by A.ORDERDATE) as PAYAMT,
+		    A.USERID,
+		    TO_CHAR(A.REG_DT, 'yyyy-MM-dd HH24:mi:ss') as REGDATE, a.MOD_ID as MODEMPNO, TO_CHAR(A.MOD_DT, 'yyyy-MM-dd HH24:mi:ss') as MODDATE,
+		    b.TEL as RETEL, a.EMAIL,
+		    'N' AS ORDERYN
+		FROM NSH_ORDERMST A LEFT OUTER JOIN (
+		    SELECT 
+		        CART_NO, ITEM_SEQ, QTY, REG_DT, USER_ID, STATUS, SESSIONID, MESSAGE, ORDERNO, AMT, FEE_AMT, ZIP_CD, ADDR1, ADDR2, RECEIVER, CELL, TEL, CH_DT, CH_D_DT, CH_B_DT, CH_C_NO, BAN_DT, BAN_D_DT, BAN_B_DT, HAN_DT, HAN_D_DT, HAN_C_DT, PAY_C_DT, PAY_E_DT, ORDER_C_DT, SAYU, MOD_DT, DELIVERY, COD_YN, M_COMMISSION, PAY_DT, BANK_SEQ, ACCOUNTNO, 
+		        DECODE(COD_YN, 'Y', (AMT+FEE_AMT), AMT) as ACTUAL_AMT 
+		        FROM NSH_CART
+		    ) B
+		ON A.ORDERNO = B.ORDERNO
+		LEFT OUTER JOIN GC_GOODS C
+		ON B.ITEM_SEQ=C.ITEM_SEQ
+		WHERE A.ORDERNO=#{orderno}
+		    AND C.COM_SEQ='30'
+	</select>
+	
+	<select id="completePayList" parameterType="Map" resultType="mcmap">
+        SELECT 
+        	a.CART_NO,
+            '' as CLIENTNO,
+            b.INSUN_ITEMSEQ as ITEMSEQ, A.AMT AS SELLAMT, A.FEE_AMT, A.COD_YN AS FEETYP,
+            '' AS SENDDATE, A.QTY AS CNT, '02020202' AS ORDERSTATUS, '' AS MODDATE, TO_CHAR(A.REG_DT, 'yyyy-MM-dd HH24:mi:ss') as REGDATE,
+            a.USER_ID AS USERID, b.SALE_PRICE as SALEGAPAMT, a.SESSIONID
+        FROM NSH_CART a JOIN GC_GOODS b
+        ON a.ITEM_SEQ=b.ITEM_SEQ
+        LEFT OUTER JOIN NSH_COOPERATION d
+        ON b.COM_SEQ = d.SEQ
+        WHERE a.ORDERNO=#{orderno}
+            AND b.COM_SEQ='30'
+	</select>
+	
+	<!-- 가격 -->
+	<select id="actual_amount" parameterType="Map" resultType="int">
+		SELECT 
+            (b.USER_PRICE) * a.qty AS ACTUAL_PRICE 
+        FROM NSH_CART a JOIN GC_GOODS b
+        ON a.ITEM_SEQ = b.ITEM_SEQ
+            AND a.CART_NO = #{cart_no}
+	</select>
+	
+</mapper>

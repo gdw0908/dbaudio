@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_5_2_3.gif" alt="취소신청"></h3>
+        </div>
+
+        <div class="address_pop">
+
+          <ul>
+            <li>※ 상품이 배송전일 경우 취소신청을 할 수 있습니다.</li>
+            <li>※ 이미 상품을 받으신 경우,반품신청을 해주시기 바랍니다.</li>
+            <li>※ 반품,교환 신청은 배송완료일부터 7일 이내까지 가능합니다.</li>
+          </ul>
+
+          <div class="sub_list sub_list_a1">
+            <p class="s_top_line">
+            <span class="st_l">2011-06-06</span>
+            <span class="st_r"><a href="#"><img src="/images/mobile/sub_2/s_top_btn1.gif" alt="주문/배송조회"></a></span>
+            </p>
+
+            <ul>
+
+              <li>
+
+              <div>
+
+                <span class="img_box">
+                <span class="img_b1"><a href="#"><img src="/images/mobile/sub/sub_list_img1.gif" alt=""></a></span>
+                </span>
+
+                <span class="info">
+
+                <span class="order_num"><strong>주문번호 : A123456789</strong></span>
+
+                <span class="in_t1">
+                <span class="first"><strong>제네시스쿠페 (2012)</strong></span>
+                <span><strong>컴비네이션램프 후미등</strong></span>
+                <span><strong>A등급</strong></span>
+                </span>
+
+                <span><strong>최고자동차공급사</strong> / 전라남도 광주시</span>
+                <span><strong>주문상태 : <b class="c1">입금대기</b></strong></span>
+                <span><strong>합계 : <b class="c2">20,000,000</b> 원</strong></span>
+
+                </span>
+
+              </div>
+
+              </li>
+
+            </ul>
+
+          </div>
+
+		  <div class="btn_bottom"><a href="/html/mobile/sub_2/m05/m05_02_03.html#"><img src="/images/sub_2/btn_cancel_1.gif" alt="취소신청"></a></div>
+
+        </div>
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

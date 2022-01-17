@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="state">
+	
+	<sql id="listWhere">
+		WHERE a.USERID = #{session_member_id}
+        <if test="!(receiver == null or receiver == '')" >
+        	AND a.RECEIVER LIKE '%${receiver}%'
+        </if>
+        <if test="!(productnm == null or productnm == '')" >
+        	AND c.PRODUCTNM LIKE '%${productnm}%'
+        </if>
+<!--         <if test="!(status == null or status == '')" > -->
+<!--         	AND b.STATUS = #{status}  -->
+<!--         </if> -->
+        <if test="!(status_arr == null or status_arr == '')" >
+        	AND b.STATUS IN (${status_arr}) 
+        </if>
+        <if test="!(orderno == null or orderno == '')" >
+        	AND a.ORDERNO LIKE '%${orderno}%' 
+        </if>
+        <if test="!(paytyp == null or paytyp == '')" >
+        	AND a.PAYTYP = #{paytyp} 
+        </if>
+        <if test="!(com_seq == null or com_seq == '' or com_seq == 0)" >
+        	AND c.COM_SEQ = #{com_seq} 
+        </if>
+        <if test="sdate != null and sdate != '' and edate != null and edate != ''" >
+        	AND a.ORDERDATE BETWEEN TO_DATE(#{sdate} || '000000', 'YYYY-MM-DDHH24MISS') AND TO_DATE(#{edate} || '235959', 'YYYY-MM-DDHH24MISS')
+        </if>
+	</sql>
+	
+	<select id="list" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY TO_CHAR(a.ORDERDATE, 'yyyyMMddHHmm') DESC, a.ORDERNO, a.ORDERDATE DESC) RN,
+                a.USERID, a.ORDERNO, a.ORDERDATE, a.RECEIVER,
+                b.CART_NO, b.STATUS, b.AMT, b.QTY, b.FEE_AMT, b.COD_YN,
+                c.ITEM_SEQ, c.PRODUCTNM, a.REG_DT,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '39' AND a.PAYTYP=CODE) AS PAYTYP_NM,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '40' AND b.STATUS=CODE) AS STATUS_NM,
+                (SELECT MAKERNM FROM V_IS_CARMAKER WHERE c.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+                (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE c.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+                ('/upload/board/'||e.YYYY||'/'||e.MM||'/'||e.UUID||'_thumb') AS THUMB
+            FROM NSH_ORDERMST a JOIN NSH_CART b
+            ON a.ORDERNO=b.ORDERNO
+                AND b.STATUS!='0'
+            JOIN GC_GOODS c
+            ON b.ITEM_SEQ = c.ITEM_SEQ
+            LEFT OUTER JOIN (
+                SELECT
+                    bb.*
+                FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH WHERE TABLE_NM='GC_GOODS' GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+                ON aa.UUID = bb.UUID
+            ) e
+            ON c.ITEM_SEQ = e.TABLE_SEQ  
+			<include refid="listWhere"/>
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+	</select>
+	
+	<select id="pagination" parameterType="Map" resultType="mcmap">
+		SELECT
+			CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+			COUNT(1) TOTALCOUNT
+        FROM NSH_ORDERMST a JOIN NSH_CART b
+		ON a.ORDERNO=b.ORDERNO
+		    AND b.STATUS!='0'
+		JOIN GC_GOODS c
+		ON b.ITEM_SEQ = c.ITEM_SEQ
+		LEFT OUTER JOIN (
+		    SELECT
+		        bb.*
+		    FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH WHERE TABLE_NM='GC_GOODS' GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+		    ON aa.UUID = bb.UUID
+		) e
+		ON c.ITEM_SEQ = e.TABLE_SEQ
+		<include refid="listWhere"/>
+	</select>
+	
+	<select id="check_nonmember" parameterType="Map" resultType="int">
+		SELECT
+		    COUNT(1) as CNT
+		FROM NSH_ORDERMST
+		WHERE RECEIVER = #{receiver}
+		    AND ORDERNO = #{orderno}
+		    AND PASSWD = #{passwd}
+	</select>
+	
+	<select id="check_my_cart" parameterType="Map" resultType="int">
+		SELECT
+		    COUNT(1) as CNT
+		FROM NSH_CART
+		WHERE CART_NO = #{cart_no}
+	</select>
+	
+	<select id="pay_info" parameterType="Map" resultType="mcmap">
+		SELECT
+			a.CART_NO, a.ITEM_SEQ, a.QTY, a.REG_DT, a.USER_ID, a.STATUS, a.SESSIONID, a.MESSAGE, a.ORDERNO, a.AMT, a.FEE_AMT, DECODE(a.COD_YN, 'Y', (a.AMT+a.FEE_AMT), a.AMT) AS CANCEL_AMT,
+			a.ZIP_CD, a.ADDR1, a.ADDR2, a.RECEIVER, a.CELL, a.TEL, a.CH_DT, a.CH_D_DT, a.CH_B_DT, a.CH_C_NO, a.BAN_DT, a.BAN_D_DT, 
+			a.BAN_B_DT, a.HAN_DT, a.HAN_D_DT, a.HAN_C_DT, a.PAY_C_DT, a.PAY_E_DT, a.ORDER_C_DT, a.SAYU, a.MOD_DT, a.DELIVERY, a.COD_YN, 
+		    b.PAYTYP, b.SUBTY, b.RAPPRNO, b.RAPPRTM, b.RDEALNO, b.RINSTMT
+		FROM NSH_CART a JOIN NSH_ORDERMST b
+		ON a.ORDERNO = b.ORDERNO
+		WHERE a.CART_NO=#{cart_no}
+	</select>
+	
+	<select id="m_pay_info" parameterType="Map" resultType="mcmap">
+		SELECT 
+		    a.CART_NO, a.ITEM_SEQ, a.QTY, a.REG_DT, a.USER_ID, a.STATUS, a.SESSIONID, a.MESSAGE, a.ORDERNO, a.AMT, a.FEE_AMT, DECODE(a.COD_YN, 'Y', (a.AMT+a.FEE_AMT), a.AMT) as CANCEL_AMT,
+			a.ZIP_CD, a.ADDR1, a.ADDR2, a.RECEIVER, a.CELL, a.TEL, a.CH_DT, a.CH_D_DT, a.CH_B_DT, a.CH_C_NO, a.BAN_DT, a.BAN_D_DT, 
+			a.BAN_B_DT, a.HAN_DT, a.HAN_D_DT, a.HAN_C_DT, a.PAY_C_DT, a.PAY_E_DT, a.ORDER_C_DT, a.SAYU, a.MOD_DT, a.DELIVERY, a.COD_YN, 
+		    b.RDEALNO, b.RAPPRNO, b.RINSTMT, b. RAPPRTM, b.ORDERNO, b.USERID, b.EMAIL, b.PAYTYP, b.SUBTY, b.PAYAMT, b.TRANS, b.TRANS_ID
+		FROM NSH_CART a JOIN NSH_ORDERMST b
+		ON a.ORDERNO = b.ORDERNO
+		WHERE a.CART_NO=#{cart_no}
+	</select>
+	
+	<select id="m_info_count" parameterType="Map" resultType="mcmap">
+	SELECT 
+		    COUNT(*) AS COUNT
+		FROM NSH_CART a JOIN NSH_ORDERMST b
+		ON a.ORDERNO = b.ORDERNO
+		WHERE a.ORDERNO = #{orderno} AND a.STATUS IN ('1', '6')
+	</select>
+	
+	<select id="cancel_view" parameterType="Map" resultType="mcmap">
+	    SELECT
+	        ROW_NUMBER() OVER(ORDER BY TO_CHAR(a.ORDERDATE, 'yyyyMMddHHmm') DESC, a.ORDERNO, a.ORDERDATE DESC) RN,
+	        a.USERID, a.ORDERNO, a.ORDERDATE, a.RECEIVER,
+	        b.CART_NO, b.STATUS, b.AMT, b.QTY, b.FEE_AMT, b.COD_YN,
+	        c.ITEM_SEQ, c.PRODUCTNM, c.ERP_CODE, c.GRADE, c.CARYYYY,
+	        d.COM_NM, a.PAYTYP, b.SAYU,
+	        (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '39' AND a.PAYTYP=CODE) AS PAYTYP_NM,
+	        (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '40' AND b.STATUS=CODE) AS STATUS_NM,
+	        (SELECT MAKERNM FROM V_IS_CARMAKER WHERE c.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+	        (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE c.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM,
+	        (SELECT CARGRADENM FROM V_IS_CARGRADE WHERE c.CARGRADESEQ=CARGRADESEQ) AS CARGRADENM,
+	        (SELECT CODENM FROM V_IS_CODEMST WHERE c.PART1=CODENO) AS PART1_NM,
+	        (SELECT CODENM FROM V_IS_CODEMST WHERE c.PART2=CODENO) AS PART2_NM,
+	        (SELECT PARTNM FROM V_IS_CARPART WHERE c.PART3=CARPARTSEQ) AS PART3_NM,
+	        (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '37' AND c.COLOR=CODE) AS COLOR_NM,
+	        (SELECT DONG_NM FROM NSH_DONG WHERE d.SIDO_CD=SIDO AND d.SIGUNGU_CD=SIGUNGU AND DONG='000') as SIGUNGU_NM,
+	        ('/upload/board/'||e.YYYY||'/'||e.MM||'/'||e.UUID||'_thumb') AS THUMB
+	    FROM NSH_ORDERMST a JOIN NSH_CART b
+	    ON a.ORDERNO=b.ORDERNO
+	        AND b.STATUS!='0'
+	    JOIN GC_GOODS c
+	    ON b.ITEM_SEQ = c.ITEM_SEQ
+	    LEFT OUTER JOIN NSH_COOPERATION d
+	    ON c.COM_SEQ = d.SEQ
+	    LEFT OUTER JOIN (
+	        SELECT
+	            bb.*
+	        FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH WHERE TABLE_NM='GC_GOODS' GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+	        ON aa.UUID = bb.UUID
+	    ) e
+	    ON c.ITEM_SEQ = e.TABLE_SEQ
+	    WHERE CART_NO=#{cart_no}
+	</select>
+	
+	<select id="track" parameterType="Map" resultType="mcmap">
+        SELECT
+            CH_C_NO, DELIVERY,
+            (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '42' AND CODE=DELIVERY) AS DELIVERY_NM,
+            (SELECT VAL1 FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '42' AND CODE=DELIVERY) AS DELIVERY_URL
+        FROM NSH_CART
+        WHERE CART_NO=#{cart_no}
+	</select>
+	
+	<!-- 재고 다시 늘리기 -->
+	<update id="qty_cancel" parameterType="Map">
+		UPDATE GC_GOODS SET
+			STOCK_NUM = STOCK_NUM + NVL(#{qty}, 0)
+		WHERE ITEM_SEQ = #{item_seq}
+	</update>
+	
+	<!-- 결제취소완료 -->
+	<update id="pay_cancel" parameterType="Map">
+		UPDATE NSH_CART SET
+			STATUS = '5',
+		    SAYU=#{sayu},
+		    PAY_C_DT = SYSDATE,
+		    PAY_E_DT = SYSDATE,
+		    MOD_ID = #{session_member_id},
+		    MOD_DT = SYSDATE    
+		WHERE CART_NO=#{cart_no}
+	</update>
+	
+	<!-- 모바일 결제취소중 -->
+	<update id="m_pay_cancel" parameterType="Map">
+		UPDATE NSH_CART SET
+			STATUS = '3',
+		    SAYU=#{sayu},
+		    <if test="!(form_submit == null)" >
+		    BANK_SEQ = #{bank},
+		    ACCOUNTNO = #{accountNo},
+		    </if>
+		    PAY_C_DT = SYSDATE,
+		    MOD_ID = #{session_member_id},
+		    MOD_DT = SYSDATE    
+		WHERE CART_NO=#{cart_no}
+	</update>
+	
+	<!-- 반품신청 -->
+	<update id="return_send" parameterType="Map">
+		UPDATE NSH_CART SET
+			STATUS = '9',
+		    SAYU=#{sayu},
+		    PAY_C_DT = SYSDATE,
+		    MOD_ID = #{session_member_id},
+		    MOD_DT = SYSDATE    
+		WHERE CART_NO=#{cart_no}
+	</update>
+	
+	<!-- 교환신청 -->
+	<update id="exchange_send" parameterType="Map">
+		UPDATE NSH_CART SET
+			STATUS = '13',
+		    SAYU=#{sayu},
+		    PAY_C_DT = SYSDATE,
+		    MOD_ID = #{session_member_id},
+		    MOD_DT = SYSDATE    
+		WHERE CART_NO=#{cart_no}
+	</update>
+	
+	<!-- 환불신청 -->
+	<update id="refunds_send" parameterType="Map">
+		UPDATE NSH_CART SET
+			STATUS = '19',
+		    SAYU=#{sayu},
+		    <if test="!(form_submit == null)" >
+		    BANK_SEQ = #{bank},
+		    ACCOUNTNO = #{accountNo},
+		    </if>
+		    PAY_C_DT = SYSDATE,
+		    MOD_ID = #{session_member_id},
+		    MOD_DT = SYSDATE    
+		WHERE CART_NO=#{cart_no}
+	</update>
+	
+	<!-- 주문취소 -->
+	<update id="order_cancel" parameterType="Map">
+		UPDATE NSH_CART SET
+			STATUS = '2',
+		    SAYU=#{sayu},
+		    ORDER_C_DT = SYSDATE,
+		    MOD_ID = #{session_member_id},
+		    MOD_DT = SYSDATE    
+		WHERE CART_NO=#{cart_no}
+	</update>
+	
+</mapper>

@@ -1,0 +1,92 @@
+@charset "utf-8";
+
+body, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, p, button, select, input, textarea, th, td {margin:0; padding:0;}
+body {height:100%; font-family: 'S-Core'; font-size:12px; color:#1a1e26; }
+::selection {
+  background: var(--main-color);
+  color: #fff;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: none;
+  -webkit-box-shadow: none !important;
+  background-color: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+  /* background: linear-gradient(to top, #d71e26, #dc7526, #de8e27); */
+  background: var(--main-color);
+}
+
+img {border:none; vertical-align:top;}
+
+button {
+	font-family: 'Spoqa Han Sans Neo', 'sans-serif';
+	border: none;
+}
+
+button, input[type="submit"], input[type="button"], input[type="number"] {
+	font-family: 'S-Core';
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+	outline: none;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+select {
+  font-family: 'S-Core';
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  background-image: url("/images/common/select.png");
+  background-repeat: no-repeat;
+  background-position: right 0px center;
+  cursor: pointer;
+  background-color:#fff;
+  padding: 5px;
+  border: 1px solid #bfbfbf;
+  box-sizing: border-box;
+}
+select:focus { outline: none; }
+
+ul li , ol li {list-style:none;}
+span, input {
+	font-family: 'S-Core';
+}
+input:focus { outline: 1px solid var(--main-color); }
+fieldset {border:none;}
+
+table {table-layout: fixed; border-collapse:collapse;}
+
+caption {display:none;}
+
+img, fieldset, button { border:0; padding:0px;}
+/* input, select {vertical-align:middle;} */
+legend {width:0; height:0; font-size:0; position:absolute; overflow:hidden;}
+
+a {color:#1a1e26; text-decoration:none; cursor:pointer; transition: color .3s ease;}
+a:link {color:#1a1e26;}
+a:visited {color:#1a1e26;}
+a:active {color:#1a1e26 ;}
+a:hover {color:#2c2c2c; }
+
+:root {
+	--main-color: #8D95AC;
+	--sub-color: #AAC4D9;
+	--hover-color: #8089A2;
+	--light-gray: #E4E7EB;
+	--main-text: #1F261F;
+	--border-color: #707070;
+}

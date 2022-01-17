@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/common.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/article.css" type="text/css">
+<link rel="stylesheet" href="/lib/css/sub_2.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+  <? include "/include/header.html"; ?>
+  <div id="container">
+    <div class="c_wrap">
+      <? include "/include/left.html"; ?>
+      <div id="sub">
+        <div class="strapline">
+          <h3><img src="/images/sub_2/h3_img_4_2.gif" alt="주문/배송조회"></h3>
+          <div class="state"> <span>홈</span> &gt; <span>고객센터</span> &gt; <span><strong>나의쇼핑</strong></span> </div>
+        </div>
+        <div class="contents">
+
+          <div class="period_line">
+
+            <p class="title">기간별조회</p>
+
+            <ul>
+              <li><a class="first" href="#">1주일</a></li>
+              <li><a href="#">15일</a></li>
+              <li><a href="#">1개월</a></li>
+              <li><a href="#">3개월</a></li>
+              <li class="cut"><a class="first" href="#">전월</a></li>
+              <li><a href="#">당월</a></li>
+            </ul>
+
+            <div class="inquiry_top">
+              <input type="text" id="" name="" value ="2015-06-06">
+              ~
+              <input type="text" id="" name="" value ="2015-06-06">
+              <a href="#"><img src="/images/sub_2/btn_inquiry.gif" alt="조회하기"></a>
+            </div>
+
+          </div>
+
+		  <p class="important">장바구니에 담긴 상품은 최대 <b>7</b>일 간 보관됩니다.</p>
+
+          <table class="cart_style_1 t_top_style_1">
+          <colgroup>
+          <col width="12%">
+          <col width="">
+          <col width="13%">
+          <col width="15%">
+          </colgroup>
+
+          <thead>
+          <tr>
+            <th scope="col">주문번호/날짜</th>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">상태</th>
+            <th scope="col">확인</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr>
+            <td class="b_none" colspan="4">
+			<p class="none_img"><img src="/images/sub_2/none_cart.gif" alt="상품없음이미지"></p>
+			<p class="none_text">상품이 존재하지 않습니다.</p>
+			</td>
+          </tr>
+
+          </tbody>
+
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <? include "/include/footer.html"; ?>
+</div>
+</body>
+</html>

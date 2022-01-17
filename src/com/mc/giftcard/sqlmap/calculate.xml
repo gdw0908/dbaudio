@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="calculate">
+
+	<select id="get_yesterday_calc_cnt" parameterType="Map" resultType="Integer">
+		SELECT COUNT(*) FROM NSH_CALCULATE 
+		WHERE 1 = 1
+		<choose>
+		<when test="!(date == null or date == '')">
+		AND C_DATE = #{date}
+		</when>
+		<otherwise>
+		AND C_DATE = TO_CHAR(SYSDATE-${day},'yyyy-mm-dd')
+		</otherwise>
+		</choose>
+		
+	</select>
+	
+	<select id="select_cooperation_list" parameterType="Map" resultType="mcmap">
+		SELECT 
+		CARMAKERSEQ AS COM_SEQ, 
+		MAKERNM AS COM_NM, 
+		<choose>
+		<when test="!(date == null or date == '')">
+		#{date} AS C_DATE 
+		</when>
+		<otherwise>
+		TO_CHAR(SYSDATE-${day},'yyyy-mm-dd') AS C_DATE 
+		</otherwise>
+		</choose>
+		FROM IS_CARMAKER WHERE USEYN = 'Y'
+	</select>
+	<!-- <select id="select_cooperation_list" parameterType="Map" resultType="mcmap">
+		SELECT 
+		SEQ AS COM_SEQ, COM_NM, 
+		<choose>
+		<when test="!(date == null or date == '')">
+		#{date} AS C_DATE 
+		</when>
+		<otherwise>
+		TO_CHAR(SYSDATE-${day},'yyyy-mm-dd') AS C_DATE 
+		</otherwise>
+		</choose>
+		FROM NSH_COOPERATION WHERE DEL_YN = 'N'
+	</select> -->
+	
+	<select id="yesterday_calc_list" parameterType="Map" resultType="mcmap">
+		SELECT
+	        COM_SEQ, 
+	        NVL(SUM(CASE WHEN PAYTYP = 'card' THEN MONEY END), 0) CARD,
+	        COUNT(CASE WHEN PAYTYP = 'card' THEN MONEY END) CARD_CNT,
+	        NVL(SUM(CASE WHEN PAYTYP = 'card' THEN QTY END), 0) CARD_QTY,
+	        NVL(SUM(CASE WHEN PAYTYP = 'card' THEN PG_COMMISSION END), 0) CARD_PG_COMMISSION,
+	        NVL(SUM(CASE WHEN PAYTYP = 'iche' THEN MONEY END), 0)  ICHE,
+	        COUNT(CASE WHEN PAYTYP = 'iche' THEN MONEY END) ICHE_CNT,
+	        NVL(SUM(CASE WHEN PAYTYP = 'iche' THEN QTY END), 0) ICHE_QTY,
+	        NVL(SUM(CASE WHEN PAYTYP = 'iche' THEN PG_COMMISSION END), 0)  ICHE_PG_COMMISSION,
+	        NVL(SUM(CASE WHEN PAYTYP = 'virtual' THEN MONEY END), 0)  VIRTUAL,
+	        COUNT(CASE WHEN PAYTYP = 'virtual' THEN MONEY END) VIRTUAL_CNT,
+	        NVL(SUM(CASE WHEN PAYTYP = 'virtual' THEN QTY END), 0) VIRTUAL_QTY,
+	        NVL(SUM(CASE WHEN PAYTYP = 'virtual' THEN PG_COMMISSION END), 0)  VIRTUAL_PG_COMMISSION, 
+	        NVL(SUM(CASE WHEN PAYTYP = 'hp' THEN MONEY END), 0)  HP,
+	        COUNT(CASE WHEN PAYTYP = 'hp' THEN MONEY END) HP_CNT, 
+	        NVL(SUM(CASE WHEN PAYTYP = 'hp' THEN QTY END), 0) HP_QTY,
+	        NVL(SUM(CASE WHEN PAYTYP = 'hp' THEN PG_COMMISSION END), 0)  HP_PG_COMMISSION,
+	        NVL(SUM(CASE WHEN U_TYPE = 'U' THEN MONEY END), 0) U_SUM,
+	        COUNT(CASE WHEN U_TYPE = 'U' THEN MONEY END) U_CNT,
+	        NVL(SUM(CASE WHEN U_TYPE = 'U' THEN QTY END), 0) U_QTY,
+	        NVL(SUM(CASE WHEN U_TYPE = 'U' THEN M_COMMISSION END), 0)  U_M_COMMISSION,
+	        NVL(SUM(CASE WHEN U_TYPE = 'C' THEN MONEY END), 0) C_SUM,
+	        COUNT(CASE WHEN U_TYPE = 'C' THEN MONEY END) C_CNT,
+	        NVL(SUM(CASE WHEN U_TYPE = 'C' THEN QTY END), 0) C_QTY,
+	        NVL(SUM(CASE WHEN U_TYPE = 'C' THEN M_COMMISSION END), 0)  C_M_COMMISSION,
+	        NVL(SUM(MONEY), 0) TOTAL,
+	        COUNT(MONEY) CNT
+        FROM
+        (
+        SELECT
+	        ORDERNO, MAX(COM_SEQ) COM_SEQ, MAX(PAYTYP) PAYTYP, MAX(U_TYPE) U_TYPE, 
+	        SUM(MONEY) MONEY, SUM(QTY) QTY, MAX(PG_COMMISSION) PG_COMMISSION, SUM(M_COMMISSION) M_COMMISSION
+        FROM
+        (
+        SELECT 
+	        (SELECT E.CARMAKERSEQ FROM V_IS_CARMAKER WHERE E.CARMAKERSEQ=CARMAKERSEQ) AS COM_SEQ, 
+	        B.PAYTYP, A.QTY,
+	        DECODE(D.MEMBER_ID, NULL, 'U', 'C') AS U_TYPE,
+	        CASE 
+	        WHEN COD_YN = 'Y' THEN AMT + FEE_AMT
+	        ELSE AMT END MONEY, B.PG_COMMISSION, M_COMMISSION, A.ORDERNO
+        FROM NSH_CART A 
+        JOIN NSH_ORDERMST B ON A.ORDERNO = B.ORDERNO
+        LEFT OUTER JOIN MC_MEMBER C ON A.USER_ID = C.MEMBER_ID
+        LEFT OUTER JOIN NSH_COOPERATION_MEMBER D ON A.USER_ID = D.MEMBER_ID
+        JOIN GC_GOODS E ON A.ITEM_SEQ = E.ITEM_SEQ
+        <choose>
+		<when test="type eq 'C'.toString()">
+			WHERE A.STATUS = 5 
+			<choose>
+				<when test="!(date == null or date == '')">
+				AND TO_CHAR(A.PAY_E_DT,'yyyy-mm-dd') = #{date}
+				</when>
+				<otherwise>
+				AND TO_CHAR(A.PAY_E_DT,'yyyy-mm-dd') = TO_CHAR(SYSDATE-${day},'yyyy-mm-dd')
+				</otherwise>
+			</choose>
+		</when>
+		<when test="type eq 'R'.toString()">
+			WHERE A.STATUS = 22 
+			<choose>
+				<when test="!(date == null or date == '')">
+				AND TO_CHAR(A.HAN_C_DT,'yyyy-mm-dd') = #{date}
+				</when>
+				<otherwise>
+				AND TO_CHAR(A.HAN_C_DT,'yyyy-mm-dd') = TO_CHAR(SYSDATE-${day},'yyyy-mm-dd')
+				</otherwise>
+			</choose>
+		</when>
+		<when test="type eq 'O'.toString()">
+			WHERE A.STATUS > 0
+			<choose>
+				<when test="!(date == null or date == '')">
+				AND TO_CHAR(B.ORDERDATE,'yyyy-mm-dd') = #{date}
+				</when>
+				<otherwise>
+				AND TO_CHAR(B.ORDERDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE-${day},'yyyy-mm-dd')
+				</otherwise>
+			</choose>
+		</when>
+		<otherwise>
+			WHERE A.STATUS <![CDATA[>=]]> 1 AND A.STATUS <![CDATA[<=]]> 23
+			<choose>
+				<when test="!(date == null or date == '')">
+				AND TO_CHAR(B.ORDERDATE,'yyyy-mm-dd') = #{date}
+				</when>
+				<otherwise>
+				AND TO_CHAR(B.ORDERDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE-${day},'yyyy-mm-dd')
+				</otherwise>
+			</choose>
+		</otherwise>
+		</choose>
+        )
+        GROUP BY ORDERNO
+        )
+        GROUP BY COM_SEQ
+	</select>
+	
+	<insert id="insert_nsh_calculate" parameterType="Map">
+		INSERT INTO NSH_CALCULATE
+		(
+		CALCULATE_SEQ, COM_SEQ, COM_NM, 
+		CARD, CARD_CNT, CARD_QTY, CARD_PG_COMMISSION, 
+		ICHE, ICHE_CNT, ICHE_QTY, ICHE_PG_COMMISSION, 
+		VIRTUAL, VIRTUAL_CNT, VIRTUAL_QTY, VIRTUAL_PG_COMMISSION, 
+		HP, HP_CNT, HP_QTY, HP_PG_COMMISSION, 
+		U_SUM, U_CNT, U_QTY, U_M_COMMISSION, 
+		C_SUM, C_CNT, C_QTY, C_M_COMMISSION, 
+		CANCEL_CASH_SUM, CANCEL_CASH_CNT, CANCEL_CASH_QTY, 
+		CANCEL_CARD_SUM, CANCEL_CARD_CNT, CANCEL_CARD_QTY,
+		REFUND_CASH_SUM, REFUND_CASH_CNT, REFUND_CASH_QTY,
+		REFUND_CARD_SUM, REFUND_CARD_CNT, REFUND_CARD_QTY,
+		ORDER_SUM, ORDER_CNT, ORDER_QTY, 
+		TOTAL, C_DATE
+		) 
+		VALUES
+		(
+		SEQ_NSH_CALCULATE.NEXTVAL, ${com_seq}, #{com_nm}, 
+		${card}, ${card_cnt}, ${card_qty}, ${card_pg_commission}, 
+		${iche}, ${iche_cnt}, ${iche_qty}, ${iche_pg_commission}, 
+		${virtual}, ${virtual_cnt}, ${virtual_qty}, ${virtual_pg_commission}, 
+		${hp}, ${hp_cnt}, ${hp_qty}, ${hp_pg_commission}, 
+		${u_sum}, ${u_cnt}, ${u_qty}, ${u_m_commission}, 
+		${c_sum}, ${c_cnt}, ${c_qty}, ${c_m_commission}, 
+		${cancel_cash_sum}, ${cancel_cash_cnt}, ${cancel_cash_qty}, 
+		${cancel_card_sum}, ${cancel_card_cnt}, ${cancel_card_qty}, 
+		${refund_cash_sum}, ${refund_cash_cnt}, ${refund_cash_qty}, 
+		${refund_card_sum}, ${refund_card_cnt}, ${refund_card_qty}, 
+		${order_sum}, ${order_cnt}, ${order_qty}, 
+		${total}, #{c_date}
+		)
+	</insert>
+	
+	<select id="select_com_list" parameterType="Map" resultType="mcmap">
+		SELECT 
+		COM_SEQ, COM_NM
+		FROM NSH_CALCULATE 
+		WHERE C_DATE = #{date}
+		AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+		ORDER BY COM_NM
+	</select>
+	
+	<select id="select_nsh_calculate_list" parameterType="Map" resultType="mcmap">
+		SELECT 
+		COM_SEQ, COM_NM, 
+		CARD, CARD_PG_COMMISSION, 
+		ICHE, ICHE_PG_COMMISSION, 
+		VIRTUAL, VIRTUAL_PG_COMMISSION,
+		U_CNT, U_M_COMMISSION, 
+		C_CNT, C_M_COMMISSION, 
+		CANCEL_CASH_SUM, CANCEL_CASH_CNT, 
+		CANCEL_CARD_SUM, CANCEL_CARD_CNT, 
+		REFUND_CASH_SUM, REFUND_CASH_CNT, 
+		REFUND_CARD_SUM, REFUND_CARD_CNT, 
+		ORDER_SUM, ORDER_CNT, TOTAL
+		FROM NSH_CALCULATE 
+		WHERE C_DATE = #{date}
+		AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+		<if test="!(com_seq == null or com_seq == '')" >
+		AND COM_SEQ = #{com_seq}
+		</if>
+		ORDER BY COM_NM
+	</select>
+	
+	<select id="select_nsh_calculate_sum" parameterType="Map" resultType="mcmap">
+		SELECT 
+		'합계' AS COM_NM, 
+		SUM(CARD) AS CARD, SUM(CARD_PG_COMMISSION) AS CARD_PG_COMMISSION, 
+		SUM(ICHE) AS ICHE, SUM(ICHE_PG_COMMISSION) AS ICHE_PG_COMMISSION, 
+		SUM(VIRTUAL) AS VIRTUAL, SUM(VIRTUAL_PG_COMMISSION) AS VIRTUAL_PG_COMMISSION,
+		SUM(U_CNT) AS U_CNT, SUM(U_M_COMMISSION) AS U_M_COMMISSION, 
+		SUM(C_CNT) AS C_CNT, SUM(C_M_COMMISSION) AS C_M_COMMISSION, 
+		SUM(CANCEL_CASH_SUM) AS CANCEL_CASH_SUM, SUM(CANCEL_CASH_CNT) AS CANCEL_CASH_CNT, 
+		SUM(CANCEL_CARD_SUM) AS CANCEL_CARD_SUM, SUM(CANCEL_CARD_CNT) AS CANCEL_CARD_CNT, 
+		SUM(REFUND_CASH_SUM) AS REFUND_CASH_SUM, SUM(REFUND_CASH_CNT) AS REFUND_CASH_CNT, 
+		SUM(REFUND_CARD_SUM) AS REFUND_CARD_SUM, SUM(REFUND_CARD_CNT) AS REFUND_CARD_CNT, 
+		SUM(ORDER_SUM) AS ORDER_SUM, SUM(ORDER_CNT) AS ORDER_CNT, SUM(TOTAL) AS TOTAL
+		FROM NSH_CALCULATE 
+		WHERE C_DATE = #{date}
+		AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+		<if test="!(com_seq == null or com_seq == '')" >
+		AND COM_SEQ = #{com_seq}
+		</if>
+	</select>
+	
+	<select id="select_com_list_group" parameterType="Map" resultType="mcmap">
+		SELECT 
+		COM_SEQ, MAX(COM_NM) AS COM_NM
+		FROM NSH_CALCULATE
+		WHERE 1=1
+        <choose>
+        <when test="type eq 'confirm'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        </when>
+        <when test="type eq 'check'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NULL
+        AND C_DATE IN('${c_date}')
+        </when>
+        <when test="type eq 'week'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND C_DATE BETWEEN #{start_date}
+        AND #{end_date}
+        </when>
+        <when test="type eq 'month'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND SUBSTR(C_DATE, 0, 7) = '${year}-${month}'
+        </when>
+        <when test="type eq 'branch'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND SUBSTR(C_DATE, 0, 7) BETWEEN '${year}-${start_month}'
+        AND '${year}-${end_month}'
+        </when>
+        <when test="type eq 'year'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND SUBSTR(C_DATE, 0, 4) = #{year}
+        </when>
+        </choose>
+        GROUP BY COM_SEQ
+	</select>
+	
+	<select id="select_nsh_calculate_group" parameterType="Map" resultType="mcmap">
+		SELECT 
+        COM_SEQ, DECODE(COM_SEQ, NULL, '', MAX(COM_NM)) AS COM_NM, 
+        SUM(CARD) AS CARD, SUM(CARD_PG_COMMISSION) AS CARD_PG_COMMISSION, 
+        SUM(ICHE) AS ICHE, SUM(ICHE_PG_COMMISSION) AS ICHE_PG_COMMISSION, 
+        SUM(VIRTUAL) AS VIRTUAL, SUM(VIRTUAL_PG_COMMISSION) AS VIRTUAL_PG_COMMISSION,
+        SUM(U_CNT) AS U_CNT, SUM(U_M_COMMISSION) AS U_M_COMMISSION, 
+        SUM(C_CNT) AS C_CNT, SUM(C_M_COMMISSION) AS C_M_COMMISSION, 
+        SUM(CANCEL_CASH_SUM) AS CANCEL_CASH_SUM, SUM(CANCEL_CASH_CNT) AS CANCEL_CASH_CNT, 
+        SUM(CANCEL_CARD_SUM) AS CANCEL_CARD_SUM, SUM(CANCEL_CARD_CNT) AS CANCEL_CARD_CNT, 
+        SUM(REFUND_CASH_SUM) AS REFUND_CASH_SUM, SUM(REFUND_CASH_CNT) AS REFUND_CASH_CNT, 
+        SUM(REFUND_CARD_SUM) AS REFUND_CARD_SUM, SUM(REFUND_CARD_CNT) AS REFUND_CARD_CNT, 
+        SUM(ORDER_SUM) AS ORDER_SUM, SUM(ORDER_CNT) AS ORDER_CNT, SUM(TOTAL) AS TOTAL
+        FROM NSH_CALCULATE 
+        WHERE 1=1
+        <choose>
+        <when test="type eq 'confirm'.toString()">
+        AND CALCULATE_CONFIRM_SEQ = #{calculate_confirm_seq}
+        </when>
+        <when test="type eq 'check'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NULL
+        AND C_DATE IN('${c_date}')
+        </when>
+        <when test="type eq 'week'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND C_DATE BETWEEN #{start_date}
+        AND #{end_date}
+        </when>
+        <when test="type eq 'month'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND SUBSTR(C_DATE, 0, 7) = '${year}-${month}'
+        </when>
+        <when test="type eq 'branch'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND SUBSTR(C_DATE, 0, 7) BETWEEN '${year}-${start_month}'
+        AND '${year}-${end_month}'
+        </when>
+        <when test="type eq 'year'.toString()">
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        AND SUBSTR(C_DATE, 0, 4) = #{year}
+        </when>
+        </choose>
+        <if test="!(com_seq == null or com_seq == '')" >
+		AND COM_SEQ = #{com_seq}
+		</if>
+        GROUP BY ROLLUP(COM_SEQ)
+        ORDER BY COM_NM
+	</select>
+	
+	<select id="get_week_data" parameterType="Map" resultType="mcmap">
+		SELECT
+		ROWNUM,
+		TO_CHAR(DT, 'YYYY') YEAR,
+		TO_CHAR(DT, 'WW') WEEK_SEQ,
+		TO_CHAR(TRUNC(DT, 'DAY'), 'yyyy-MM-dd') START_DATE,
+		TO_CHAR(TRUNC(DT, 'DAY') + 6, 'yyyy-MM-dd') END_DATE
+		FROM
+		(SELECT TO_DATE(#{year}||'-'||#{month}||'-01', 'yyyy-MM-dd') + ((ROWNUM-1)*7) AS DT
+		FROM DUAL
+		CONNECT BY LEVEL <![CDATA[<=]]> 6)
+		WHERE DT <![CDATA[<=]]> LAST_DAY(TO_DATE(#{year}||'-'||#{month}||'-01', 'yyyy-MM-dd'))
+	</select>
+	
+	<select id="get_deadline_list" parameterType="Map" resultType="mcmap">
+		SELECT 
+		DISTINCT(C_DATE) AS C_DATE 
+		FROM NSH_CALCULATE 
+		WHERE CALCULATE_CONFIRM_SEQ IS NULL
+        ORDER BY C_DATE
+	</select>
+	
+	<insert id="insert_nsh_clulate_confirm" parameterType="Map" useGeneratedKeys="true" keyColumn="calculate_confirm_seq" keyProperty="calculate_confirm_seq">
+		INSERT INTO NSH_CALCULATE_CONFIRM(CALCULATE_CONFIRM_SEQ, PERIOD, DAYS, COOPERATIONS, REG_NM, REG_SEQ, REG_ID)
+		VALUES(SEQ_NSH_CALCULATE_CONFIRM.NEXTVAL, #{period}, #{days}, #{cooperations}, #{reg_nm}, #{reg_seq}, #{reg_id})
+	</insert>
+	
+	<update id="update_confirm" parameterType="Map">
+		UPDATE NSH_CALCULATE SET CALCULATE_CONFIRM_SEQ = #{calculate_confirm_seq} WHERE C_DATE IN('${c_date}')
+	</update>
+	
+	<delete id="delete_nsh_clulate_confirm" parameterType="Map">
+		DELETE NSH_CALCULATE_CONFIRM WHERE CALCULATE_CONFIRM_SEQ = #{calculate_confirm_seq}
+	</delete>
+	
+	<update id="update_confirm_rollback" parameterType="Map">
+		UPDATE NSH_CALCULATE SET CALCULATE_CONFIRM_SEQ = null WHERE CALCULATE_CONFIRM_SEQ = #{calculate_confirm_seq}
+	</update>
+	
+	<select id="confirm_list" parameterType="Map" resultType="mcmap">
+		SELECT T.* 
+		FROM
+		(
+		SELECT 
+		ROW_NUMBER() OVER(ORDER BY CONFIRM_DT DESC) RN,
+		CALCULATE_CONFIRM_SEQ, PERIOD, DAYS, COOPERATIONS, TO_CHAR(CONFIRM_DT ,'YYYY-MM-DD') CONFIRM_DT
+		FROM 
+		NSH_CALCULATE_CONFIRM
+		<where>
+		<if test="!(start_date == null or start_date == '')" >
+		AND TO_CHAR(CONFIRM_DT, 'YYYY-MM-DD') BETWEEN TO_DATE(#{start_date})
+        AND #{end_date}
+        </if>
+		<if test="!(com_nm == null or com_nm == '')" >
+        AND COOPERATIONS like '%${keyword}%' 
+        </if>
+        </where>
+		) T
+		WHERE CEIL(RN/NVL(#{rows, jdbcType=INTEGER},10))=NVL(#{cpage, jdbcType=INTEGER},1)  ORDER BY RN ASC
+	</select>
+	
+	<select id="confirm_page_info" parameterType="Map" resultType="mcmap" >
+		SELECT 
+		CEIL(COUNT(1)/NVL(#{rows, jdbcType=INTEGER},10)) TOTALPAGE,
+		COUNT(1) TOTALCOUNT
+		FROM NSH_CALCULATE_CONFIRM T1
+		<where>
+		<if test="!(start_date == null or start_date == '')" >
+		AND TO_CHAR(CONFIRM_DT, 'YYYY-MM-DD') BETWEEN #{start_date}
+        AND #{end_date}
+        </if>
+		<if test="!(com_nm == null or com_nm == '')" >
+        AND COOPERATIONS like '%${keyword}%' 
+        </if>
+        </where>
+	</select>
+	
+	<select id="select_confirm" parameterType="Map" resultType="mcmap" >
+		SELECT 
+		CALCULATE_CONFIRM_SEQ, PERIOD, DAYS, COOPERATIONS, TO_CHAR(CONFIRM_DT,'YYYY-MM-DD HH24:MI') CONFIRM_DT, REG_NM
+		FROM 
+		NSH_CALCULATE_CONFIRM
+		WHERE CALCULATE_CONFIRM_SEQ = #{calculate_confirm_seq}
+	</select>
+	
+	<select id="statistics" parameterType="Map" resultType="mcmap">
+		SELECT 
+        COM_SEQ, DECODE(COM_SEQ, NULL, '', MAX(COM_NM)) AS COM_NM, 
+        SUM(U_SUM) AS U_SUM, SUM(C_SUM) AS C_SUM,
+        SUM(U_CNT) AS U_CNT, SUM(C_CNT) AS C_CNT,
+        SUM(U_QTY) AS U_QTY, SUM(C_QTY) AS C_QTY,
+        SUM(REFUND_CASH_SUM) AS REFUND_CASH_SUM, SUM(REFUND_CASH_CNT) AS REFUND_CASH_CNT, SUM(REFUND_CASH_QTY) AS REFUND_CASH_QTY, 
+        SUM(REFUND_CARD_SUM) AS REFUND_CARD_SUM, SUM(REFUND_CARD_CNT) AS REFUND_CARD_CNT, SUM(REFUND_CARD_QTY) AS REFUND_CARD_QTY
+        FROM NSH_CALCULATE
+        WHERE 1=1
+        AND CALCULATE_CONFIRM_SEQ IS NOT NULL
+        <if test="!(start_date == null or start_date == '')" >
+        AND C_DATE BETWEEN #{start_date}
+        AND #{end_date}
+        </if>
+        GROUP BY ROLLUP(COM_SEQ)
+        ORDER BY COM_NM
+	</select>
+	
+	<delete id="delete_nsh_clulate" parameterType="Map">
+		DELETE NSH_CALCULATE WHERE C_DATE IN('${c_date}')
+	</delete>
+	
+	
+	<select id="view_detail" parameterType="Map" resultType="mcmap">
+	SELECT PT.* FROM (
+	  SELECT
+	    PT_SUB.*
+	  FROM (
+	    SELECT 
+	      ROW_NUMBER() OVER(ORDER BY B.ORDERDATE ASC) AS RN,
+	      B.RECEIVER,
+	      ('/upload/board/'||G.YYYY||'/'||G.MM||'/'||G.UUID||'_thumb') AS THUMB,
+	      E.PRODUCTNM,
+	      NVL(IS_LOCATION(E.CARPARTCODE), E.LOCATION) AS PART_LOCATION,
+	      CASE 
+	      WHEN COD_YN = 'Y' THEN AMT + FEE_AMT
+	      ELSE AMT END MONEY,
+	      AMT AS TOTMONEY,
+	      B.ORDERNO,
+	      E.ERP_CODE,
+	      F.COM_NM,
+	      E.COM_SEQ,
+	      B.PAYTYP, 
+	      A.QTY,      
+	      DECODE(D.MEMBER_ID, NULL, 'U', 'C') AS U_TYPE,
+	      B.PG_COMMISSION, M_COMMISSION, 
+	      A.STATUS,
+	      B.ORDERDATE,
+	      NVL(TO_CHAR(A.PAY_DT,'yyyy-mm-dd'),TO_CHAR(B.ORDERDATE,'yyyy-mm-dd')) AS PAY_DT,
+	      NVL(TO_CHAR(A.PAY_E_DT,'yyyy-mm-dd'),'') AS PAY_E_DT
+	    FROM
+	      NSH_CART A 
+	      JOIN NSH_ORDERMST B ON A.ORDERNO = B.ORDERNO
+	      LEFT OUTER JOIN MC_MEMBER C ON A.USER_ID = C.MEMBER_ID
+	      LEFT OUTER JOIN NSH_COOPERATION_MEMBER D ON A.USER_ID = D.MEMBER_ID
+	      JOIN NSH_GOODS E ON A.ITEM_SEQ = E.ITEM_SEQ
+	      JOIN NSH_COOPERATION F ON E.COM_SEQ = F.SEQ AND F.DEL_YN = 'N' AND E.COM_SEQ = ${com_seq}
+	      LEFT OUTER JOIN NSH_ATTACH G ON G.TABLE_NM='NSH_GOODS' AND E.ITEM_SEQ = G.TABLE_SEQ AND G.ORDER_SEQ=1
+	      <if test="type eq 'N'.toString()">
+	      WHERE (A.STATUS <![CDATA[>=]]> 1 AND A.STATUS NOT IN (2,99))
+		  AND TO_CHAR(A.PAY_DT,'yyyy-mm-dd') IN (${order_date})
+		  AND A.PAY_E_DT IS NULL AND A.HAN_C_DT IS NULL
+		  </if>
+		  <if test="type eq 'Y'.toString()">
+		  WHERE A.STATUS > 0
+		  AND (
+		  	 TO_CHAR(A.PAY_E_DT,'yyyy-mm-dd') IN (${order_date}) 
+		  OR TO_CHAR(A.HAN_C_DT,'yyyy-mm-dd') IN (${order_date}) 
+		  OR (
+		  	TO_CHAR(A.PAY_DT,'yyyy-mm-dd') IN (${order_date}) AND A.STATUS IN (2)
+		  	)
+		  ) 
+		  </if>
+		  
+		  <if test="type eq 'N1'.toString()">
+	      WHERE (A.STATUS <![CDATA[>=]]> 1 AND A.STATUS NOT IN (2,99))
+	      	<if test="!(start_date == null or start_date == '') and !(end_date == null or end_date == '')">
+		  		AND TO_CHAR(A.PAY_DT,'yyyy-mm-dd') BETWEEN #{start_date} AND #{end_date}
+		  	</if>
+		  AND A.PAY_E_DT IS NULL AND A.HAN_C_DT IS NULL
+		  </if>
+		  <if test="type eq 'Y1'.toString()">
+		  WHERE A.STATUS > 0
+			<if test="!(start_date == null or start_date == '') and !(end_date == null or end_date == '')">
+			  	AND ( ( TO_CHAR(A.PAY_E_DT,'yyyy-mm-dd') BETWEEN #{start_date} AND #{end_date} ) OR (TO_CHAR(A.HAN_C_DT,'yyyy-mm-dd') BETWEEN #{start_date} AND #{end_date} ) )
+			</if>
+		  </if>
+	    ) PT_SUB
+	) PT
+	</select>
+	
+	
+	
+	
+	<select id="view_detail_excel" parameterType="Map" resultType="mcmap">
+	SELECT PT.* FROM (
+	  SELECT
+	    PT_SUB.*
+	  FROM (
+	    SELECT 
+	      ROW_NUMBER() OVER(ORDER BY B.ORDERDATE ASC) AS RN,
+	      <if test="type eq 'N'.toString()">
+        	'판매' AS PAY_YN,
+          </if>
+          <if test="type eq 'Y'.toString()">
+        	'취소' AS PAY_YN,
+          </if>
+	      B.RECEIVER,
+	      E.PRODUCTNM,
+        NVL(TO_CHAR(A.PAY_DT,'yyyy-mm-dd'),TO_CHAR(B.ORDERDATE,'yyyy-mm-dd')) AS PAY_DT,
+	      CASE 
+	      WHEN COD_YN = 'Y' THEN AMT + FEE_AMT
+	      ELSE AMT END MONEY,
+        B.ORDERNO,
+        E.ERP_CODE,
+        CASE
+        WHEN B.PAYTYP = 'iche' THEN '계좌이체'
+        WHEN B.PAYTYP = 'virtual' THEN '가상계좌'
+        ELSE '신용카드' END AS PAY_TYPE,
+        B.PG_COMMISSION,
+        ((M_COMMISSION/AMT)*100) || ' %' AS COMMISSION_PROTAGE,
+        M_COMMISSION, 
+	      F.COM_NM,        
+	      A.STATUS,
+	      B.ORDERDATE,	      
+	      NVL(TO_CHAR(A.PAY_E_DT,'yyyy-mm-dd'),'') AS PAY_E_DT
+	    FROM
+	      NSH_CART A 
+	      JOIN NSH_ORDERMST B ON A.ORDERNO = B.ORDERNO
+	      LEFT OUTER JOIN MC_MEMBER C ON A.USER_ID = C.MEMBER_ID
+	      LEFT OUTER JOIN NSH_COOPERATION_MEMBER D ON A.USER_ID = D.MEMBER_ID
+	      JOIN NSH_GOODS E ON A.ITEM_SEQ = E.ITEM_SEQ
+	      JOIN NSH_COOPERATION F ON E.COM_SEQ = F.SEQ AND F.DEL_YN = 'N' AND E.COM_SEQ = ${com_seq}
+	      LEFT OUTER JOIN NSH_ATTACH G ON G.TABLE_NM='NSH_GOODS' AND E.ITEM_SEQ = G.TABLE_SEQ AND G.ORDER_SEQ=1
+	      <if test="type eq 'N'.toString()">
+	      WHERE (A.STATUS <![CDATA[>=]]> 1 AND A.STATUS NOT IN (2,99))
+		  AND TO_CHAR(A.PAY_DT,'yyyy-mm-dd') IN (${order_date})
+		  AND A.PAY_E_DT IS NULL AND A.HAN_C_DT IS NULL
+		  </if>
+		  <if test="type eq 'Y'.toString()">
+		  WHERE A.STATUS > 0
+		  AND (
+		  	 TO_CHAR(A.PAY_E_DT,'yyyy-mm-dd') IN (${order_date}) 
+		  OR TO_CHAR(A.HAN_C_DT,'yyyy-mm-dd') IN (${order_date}) 
+		  OR (
+		  	TO_CHAR(A.PAY_DT,'yyyy-mm-dd') IN (${order_date}) AND A.STATUS IN (2)
+		  	)
+		  ) 
+		  </if>
+	    ) PT_SUB
+	) PT
+	</select>
+</mapper>

@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>파츠모아 통합관리 시스템</title>
+<link href="/lib/css/cmsbase.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/cmsadmin.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/redmond/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div class="titlebar">
+    <h2>대기중 데이터 관리</h2>
+    <div> <span>통합관리</span> &gt; <span>정산관리</span> &gt; <span class="bar_tx">대기중 데이터 관리</span> </div>
+  </div>
+  <div class="container"> 
+    <!-- <div class="tab_menu">
+      <ul class="tab">
+        <li><a href="#">이달의 우수상점</a></li>
+        <li class="on"><a href="#">상점소개</a></li>
+      </ul>
+    </div>  -->
+    <div class="contents">
+      <table class="style_1">
+         <colgroup>
+          <col width="10%" />
+          <col width="*" />
+          </colgroup>
+        <!-- <tr>
+          <th>조회조건</th>
+          <td>
+            <select title="업체별/전체선" style="width: 100px;">
+                <option>전체선택</option>
+                <option>업체별선택</option>
+            </select>
+            <select title="업체개별선택"  style="width: 100px;">
+                <option>인선모터스</option>
+                <option>서원인계자동</option>
+            </select>
+          </td>
+        </tr>  -->
+        <tr>
+          <th>특정일자 재정산</th>
+          <td>
+            
+            <input type="text" class="input_1 date" id="" name="" />
+            <span class="bt_all"><span><input type="button" value="재정산 " onclick="" class="btall"/></span></span>
+          </td>
+        </tr>
+        <tr>
+          <th>대기중<br />정산데이터</th>
+          <td>
+            <label>
+              <input type="checkbox" name="" id="" />
+              <span>2015-03-01</span>
+            </label>
+            <label>
+              <input type="checkbox" name="" id="" />
+              <span>2015-03-02</span>
+            </label>
+            <label>
+              <input type="checkbox" name="" id="" />
+              <span>2015-03-03</span>
+            </label>
+            <label>
+              <input type="checkbox" name="" id="" />
+              <span>2015-03-04</span>
+            </label>
+            <label>
+              <input type="checkbox" name="" id="" />
+              <span>2015-03-05</span>
+            </label>
+            <label>
+              <input type="checkbox" name="" id="" />
+              <span>2015-03-09</span>
+            </label>
+            <label>
+              <input type="checkbox" name="" id="" />
+              <span>2015-03-10</span>
+            </label>
+          </td>
+        </tr>
+      </table>
+      <div class="btn_bottom">
+        <div class="r_btn">
+          <span class="bt_all"><span><input type="button" value="취소 " onclick="" class="btall"/></span></span> 
+          </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/lib/js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="/lib/js/jquery-ui-1.10.3.custom.min.js"></script> 
+<script>
+$("input.date").datepicker({
+		showOn: "button",      
+		buttonImage: "/images/admin/contents/calendar.png",
+});
+
+$( "#tabs" ).tabs();
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#dialog2" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link2" ).click(function( event ) {
+	$( "#dialog2" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<description>JSTL 1.1 user functions library</description>
+	<display-name>JSTL user functions</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>dtf</short-name>
+
+	<function>
+		<description>getTime</description>
+		<name>getTime</name>
+		<function-class>com.mc.common.util.DateUtil</function-class>
+		<function-signature>java.lang.String getTime(java.lang.String)</function-signature>
+		<example>
+     		${dtf:getTime('yyyy/MM/dd') }
+    	</example>
+	</function>
+
+	<function>
+		<description>getCurrentFirstDay</description>
+		<name>getCurrentFirstDay</name>
+		<function-class>com.mc.common.util.DateUtil</function-class>
+		<function-signature>java.lang.String getCurrentFirstDay(java.lang.String)</function-signature>
+		<example>
+     		${dtf:getCurrentFirstDay('yyyy-MM-dd') }
+    	</example>
+	</function>
+
+	<function>
+		<description>getCurrentLastDay</description>
+		<name>getCurrentLastDay</name>
+		<function-class>com.mc.common.util.DateUtil</function-class>
+		<function-signature>java.lang.String getCurrentLastDay(java.lang.String)</function-signature>
+		<example>
+     		${dtf:getCurrentLastDay('yyyy-MM-dd') }
+    	</example>
+	</function>
+
+	<function>
+		<description>simpleDateFormat</description>
+		<name>simpleDateFormat</name>
+		<function-class>com.mc.common.util.DateUtil</function-class>
+		<function-signature>java.lang.String simpleDateFormat(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+     		${dtf:simpleDateFormat('2013-04-03 10:28:16.0', 'yyyy-MM-dd HH:mm:ss' , 'yyyy-MM-dd') }
+    	</example>
+	</function>
+
+</taglib>

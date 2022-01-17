@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="defaultStatementTimeout" value="25000"/>
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+	<typeAliases>
+		<typeAlias alias="mcmap" type="com.mc.web.MCMap"/>
+		<package name="com.mc.web"/>
+	</typeAliases>
+	<mappers>
+				
+		<!-- 상품권관련 -->
+		<mapper resource="com/mc/giftcard/sqlmap/attach.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/admin.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/part.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/article.xml" />
+ 		<mapper resource="com/mc/giftcard/sqlmap/category.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/old_code.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/main.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/cart.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/code.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/member.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/state.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/spell.xml" />
+		<mapper resource="com/mc/giftcard/sqlmap/calculate.xml" />
+		 
+	</mappers>
+</configuration>

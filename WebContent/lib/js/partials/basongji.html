@@ -1,0 +1,63 @@
+<div data-ng-controller="basongjiCtrl" title="배송지등록">
+		<form id="basongjiFrm" name="frm" method="post" novalidate="novalidate">
+        <table class="style_1">
+        <colgroup>
+        <col width="15%" />
+        <col width="*" />
+        </colgroup>
+          <tr>
+            <th>주소</th>
+            <td>
+              <input type="text" class="input_1" style="width:80px" data-ng-model="data.zip1" required maxlength="3" data-ng-pattern="/[0-9]{3}/"/>-<input type="text" class="input_1" style="width:80px" data-ng-model="data.zip2" required maxlength="3" data-ng-pattern="/[0-9]{3}/"/>
+            <span class="bt_alls"><span><input type="button" value="주소검색" class="btalls" data-ng-click="main.openAddr('setAddrB')"/></span></span> 
+            <label>
+                <input type="checkbox" data-ng-model="data.default_yn" data-ng-true-value="Y" data-ng-false-value="N"/><span style="margin-left:3px;">기본배송주소</span>
+              </label>
+            <input type="text" class="input_1" style="width:85%; margin-top:3px;" data-ng-model="data.addr1" required/>
+            <input type="text" class="input_1" style="width:85%; margin-top:3px;" data-ng-model="data.addr2"/>
+            </td>
+          </tr>
+          <tr>
+            <th>수취인명</th>
+            <td>
+              <input type="text" class="input_1" data-ng-model="data.receiver_nm" required/>
+            </td>
+          </tr>
+          <tr>
+            <th>배송지명</th>
+            <td>
+              <input type="text" class="input_1" data-ng-model="data.receiver_title" value="{{data.isEquals?data.receiver_title=data.receiver_nm:data.receiver_title}}" required/>
+              <label>
+                <input type="checkbox" data-ng-model="data.isEquals"/><span style="margin-left:3px;">수취인명과동일하게 적용</span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>전화번호</th>
+            <td>
+          		<select title="전화번호 앞자리 선택" data-ng-model="data.tel1" data-ng-options="item.code as item.code for item in main.tel1" data-ng-init="data.tel1=main.tel1[0].code">
+            	</select>
+            	<input type="text" class="input_1" style="width:60px" data-ng-model="data.tel2" required maxlength="4" data-ng-pattern="/[0-9]{3,4}/"/> - <input type="text" class="input_1"  style="width:60px" data-ng-model="data.tel3" required maxlength="4" data-ng-pattern="/[0-9]{4}/"/>
+            </td>
+          </tr>
+          <tr>
+            <th>핸드폰</th>
+            <td>
+          		<select title="휴대폰 앞자리 선택" data-ng-model="data.cell1" data-ng-options="item.code as item.code for item in main.cell1" data-ng-init="data.cell1=main.cell1[0].code">
+            	</select>
+            	<input type="text" class="input_1" style="width:60px" data-ng-model="data.cell2" maxlength="4" data-ng-pattern="/[0-9]{3,4}/"/> - <input type="text" class="input_1"  style="width:60px" data-ng-model="data.cell3" maxlength="4" data-ng-pattern="/[0-9]{4}/"/>
+            </td>
+          </tr>
+        </table>
+        <div class="btn_bottom">
+	        <div class="r_btn">
+	          <span class="bt_all"><span>
+	          <input type="button" value="저장" class="btall" data-ng-click="save()"/>
+	          </span></span> 
+	          <span class="bt_all"><span>
+	          <input type="button" value="취소" class="btall" data-ng-click="cancel()"/>
+	          </span></span>
+	        </div>
+		</div>
+	</form>
+</div>

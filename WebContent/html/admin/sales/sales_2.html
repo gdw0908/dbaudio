@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>파츠모아 통합관리 시스템</title>
+<link href="/lib/css/cmsbase.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/cmsadmin.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/redmond/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div class="titlebar">
+    <h2>매출조회 - 일조회</h2>
+    <div> <span>통합관리</span> &gt; <span>매출조회</span> &gt; <span class="bar_tx">매출조회 - 일조회</span> </div>
+  </div>
+  <div class="container">
+    <div class="contents">
+      <table class="style_1">
+        <colgroup>
+        <col width="15%" />
+        <col width="" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th>조회조건</th>
+            <td><select id="" name="">
+                <option>협력업체 전체</option>
+              </select>
+              <select id="" name="">
+                <option>협력업체개별</option>
+              </select></td>
+          </tr>
+          <tr>
+            <th>기간선택</th>
+            <td><select id="" name="">
+                <option>2015년</option>
+              </select>
+              <select id="" name="">
+                <option>3월</option>
+              </select>
+              <select id="" name="">
+                <option>25일</option>
+              </select></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn_bottom">
+        <div class="r_btn"> <span class="bt_all"><span>
+          <input type="button" value="조회" onclick="" class="btall"/>
+          </span></span> </div>
+      </div>
+      <table class="style_6">
+        <colgroup>
+        <col width="12%" />
+        <col width="11%" />
+        <col width="17%" />
+        <col width="14%" />
+        <col width="14%" />
+        <col width="10%" />
+        <col width="" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th rowspan="2">협력업체명</th>
+            <th>주문건수</th>
+            <th rowspan="2">할인전매출총액</th>
+            <th colspan="2">확정금액+결제예정금액</th>
+            <th rowspan="2">할인금액</th>
+            <th rowspan="2">결제완료액+결제예정금액</th>
+          </tr>
+          <tr>
+            <th>주문수량</th>
+            <th>카드</th>
+            <th>현금</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="2">인선모터스</td>
+            <td>500</td>
+            <td rowspan="2">1,000,000</td>
+            <td rowspan="2">700,000</td>
+            <td rowspan="2">300,000</td>
+            <td rowspan="2">0</td>
+            <td rowspan="2">1,000,000</td>
+          </tr>
+          <tr>
+            <td>1500</td>
+          </tr>
+          <tr class="total">
+            <td rowspan="2">인선모터스</td>
+            <td>500</td>
+            <td rowspan="2">1,000,000</td>
+            <td rowspan="2">700,000</td>
+            <td rowspan="2">300,000</td>
+            <td rowspan="2">0</td>
+            <td rowspan="2">1,000,000</td>
+          </tr>
+          <tr class="total">
+            <td>1500</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn_bottom">
+        <div class="r_btn"> <span class="bt_all"> <span>
+          <input type="button" value="엑셀 다운로드" onclick="" class="btall"/>
+          </span> </span> </div>
+      </div>
+      <!-- 자원관리팝업 -->
+      <div id="dialog" title="상세보기" >
+        <h4 style="padding:0 0 8px 0;">경기자동차 폐차장 폐물질 반출신청현황</h4>
+        <table class="style_1">
+          <colgroup>
+          <col width="20%" />
+          <col width="" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th>주소</th>
+              <td>경기도 팔달구 인계동 1120-10번지</td>
+            </tr>
+            <tr>
+              <th>담당자/연락처</th>
+              <td>홍길동 / 031-5555-5555</td>
+            </tr>
+            <tr>
+              <th>반출희망일자</th>
+              <td>2015.01.01</td>
+            </tr>
+            <tr>
+              <th>진행상황</th>
+              <td>반출대기/반출진행/반출완료 (2015.01.01)</td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="style_3" style="margin-top:12px;">
+          <colgroup>
+          <col width="20%" />
+          <col width="" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>자원명</th>
+              <th>용량</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>폐물질A</td>
+              <td>100 kg</td>
+            </tr>
+            <tr>
+              <td>폐물질B</td>
+              <td>50 kg</td>
+            </tr>
+            <tr>
+              <td>폐물질K</td>
+              <td>300 kg</td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="style_3">
+          <thead>
+            <tr>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>잘부탁드립니다.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- 자원관리팝업2 -->
+      <div id="dialog2" title="자원물질등록" >
+        <table class="style_1">
+          <colgroup>
+          <col width="20%" />
+          <col width="" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th>자원물질명</th>
+              <td><input type="text" id="" name="" class="input_1" /></td>
+            </tr>
+            <tr>
+              <th>자원아이콘 선택</th>
+              <td class="label_type"><label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_1"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_2"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_3"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_4"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_5"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_6"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_7"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_8"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_9"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_10"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_11"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_12"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_13"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_14"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_15"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_16"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_17"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_18"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_19"></span></label>
+                <label>
+                  <input type="radio" id="" name="" />
+                  <span class="res_20"></span></label></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="btn_bottom">
+          <div class="r_btn"> <span class="bt_all"> <span>
+            <input type="button" value="등록" onclick="" class="btall">
+            </span> </span> </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/lib/js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="/lib/js/jquery-ui-1.10.3.custom.min.js"></script> 
+<script>
+$("input.date").datepicker({
+		showOn: "button",      
+		buttonImage: "/images/admin/contents/calendar.png",
+});
+
+$( "#tabs" ).tabs();
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#dialog2" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link2" ).click(function( event ) {
+	$( "#dialog2" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+</script>
+</body>
+</html>

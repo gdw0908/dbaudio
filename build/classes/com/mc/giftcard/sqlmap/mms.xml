@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mms">
+	
+	<select id="nextval" resultType="String">
+		SELECT EM_TRAN_PR.nextval FROM DUAL
+	</select>
+
+	<insert id="mms_insert" parameterType="Map">
+		INSERT INTO EM_TRAN_MMS (
+			MMS_SEQ
+			,FILE_CNT
+			,MMS_BODY
+			,MMS_SUBJECT
+		) VALUES (
+			${em_tran_seq}
+			,0
+			,#{tran_msg}
+			,#{subject}
+		)
+	</insert>
+	
+	<insert id="sms_insert" parameterType="Map">
+		INSERT INTO EM_TRAN (
+			TRAN_PR
+			,TRAN_PHONE
+			,TRAN_CALLBACK
+			,TRAN_STATUS
+			,TRAN_DATE
+			,TRAN_MSG
+			,TRAN_TYPE
+			,TRAN_ETC1
+			<if test="(tran_type eq '6'.toString())">
+			,TRAN_ETC4
+			</if>
+		) VALUES (
+			${em_tran_seq}
+			,#{tran_phone}
+			,#{tran_callback}
+			,'1'
+			,sysdate
+			,#{tran_msg}
+			,${tran_type}
+			,'PartsMOA'
+			<if test="(tran_type eq '6'.toString())">
+			,${em_tran_seq}
+			</if>
+		)
+	</insert>
+	
+	
+	
+	<select id="list" parameterType="Map" resultType="mcmap" >
+	<![CDATA[
+		SELECT PT1.* FROM (
+		SELECT 
+			TRAN_PHONE
+			,TRAN_CALLBACK
+			,CASE TRAN_STATUS
+				WHEN '1' THEN '전송요구'
+				WHEN '2' THEN '결과 대기중'
+				WHEN '3' THEN '완료'
+			END TRAN_STATUS
+			,TO_CHAR(TRAN_DATE,'YYYY/MM/DD HH24:mm:ss') TRAN_DATE
+			,TRAN_NET
+			,TRAN_MSG
+			,CASE TRAN_TYPE
+				WHEN 4 THEN 'SMS'
+				WHEN 5 THEN 'URL'
+				WHEN 6 THEN 'MMS'
+			END TRAN_TYPE
+			,CASE TRAN_RSLT
+				WHEN '0' THEN '전송 성공'
+				WHEN '1' THEN 'TIME OUT'
+				WHEN 'A' THEN '처리중'
+				WHEN 'B' THEN '음영지역'
+				WHEN 'C' THEN '전원꺼짐'
+				WHEN 'D' THEN '메세지 저장개수 초과'
+				WHEN '2' THEN '잘못된 번호'
+				WHEN 'a' THEN '일시 정지'
+				WHEN 'b' THEN '단말기 문제'
+				WHEN 'c' THEN '착신 거절'
+				WHEN 'f' THEN 'SK네트웍스 오류'
+				WHEN 'g' THEN 'MMS 불가 단말기'
+				WHEN 'k' THEN '이통사 스팸 처리'
+				WHEN 'l' THEN 'www.nospam.go.kr의 스팸 처리'
+				WHEN 'm' THEN 'SK네트웍스 스팸 처리'
+				WHEN 'o' THEN '제안된 메세지 길이 넘음'
+				WHEN 'p' THEN '전화번호 형식 오류'
+				WHEN 'x' THEN 'MMS콘텐츠 정보 참조 오류'
+				ELSE '기타'
+			END TRAN_RSLT
+			, ROW_NUMBER() OVER(ORDER BY TRAN_DATE DESC) RN
+		FROM EM_LOG_${select_date}
+		WHERE TRAN_ETC1 = 'PartsMOA'
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows, jdbcType=INTEGER},10))=NVL(#{cpage, jdbcType=INTEGER},1)  ORDER BY RN ASC
+		]]>
+	</select>
+	
+	<select id="page_info" parameterType="Map" resultType="mcmap" >
+	<![CDATA[
+		SELECT 
+		CEIL(COUNT(1)/NVL(#{rows, jdbcType=INTEGER},10)) TOTALPAGE,
+		COUNT(1) TOTALCOUNT
+		FROM EM_LOG_${select_date} T1
+		WHERE TRAN_ETC1 = 'PartsMOA'
+	]]>
+	</select>
+
+</mapper>

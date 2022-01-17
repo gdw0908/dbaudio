@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_6_3.gif" alt="회원탈퇴"></h3>
+        </div>
+
+        <div class="secession_con">
+
+          <div class="t_box2">
+            <p class="last">파츠모아 <strong>회원탈퇴 시 비밀번호 인증</strong>이 필요합니다. 가입하신 비밀번호를 다시한번 입력하시기 바랍니다.</p>
+          </div>
+
+          <div class="secession_input"><input type="password" id="" name="" placeholder="비밀번호를 입력해주세요."></div>
+
+          <div class="secession_btn"><a href="/html/mobile/sub_2/m06/m06_03_02.html"><img class="btn" src="/images/sub_2/btn_secession_1_off.gif" alt="확인"></a></div>
+
+        </div>
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

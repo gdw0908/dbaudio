@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_5_2_3.gif" alt="취소신청"></h3>
+        </div>
+
+        <div class="address_pop">
+
+          <div class="cancel_img">취소 환불처리가 완료되었습니다.</div>
+
+          <ul class="last">
+            <li>※ 환불관련 정보는 <span>나의쇼핑정보&gt;주문내역</span>에서 확인가능합니다.</li>
+            <li>※ 결제수단이 <span>현금입금/온라인 이체인경우 고객센터</span>로 문의하시기 바랍니다.</li>
+            <li>※ 결제수단이 신용카드인 경우 카드승인 취소 여부는 <span>카드사를 통해 3~5일(영업일 기준)후 확인 가능</span>합니다.</li>
+          </ul>
+
+          <div class="btn_bottom"><a href="/html/mobile/sub_2/m05/m05_02_05.html"><img src="/images/sub_2/btn_cancel_3.gif" alt="닫기"></a></div>
+
+        </div>
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

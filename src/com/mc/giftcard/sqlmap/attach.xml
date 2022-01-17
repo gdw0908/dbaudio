@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="attach">
+	
+	<insert id="insert" parameterType="Map">
+		INSERT
+		INTO
+		  NSH_ATTACH
+		  (
+		    UUID,
+		    ATTACH_NM,
+		    REG_SEQ,
+		    REG_NM,
+		    YYYY,
+		    MM,
+		    TABLE_NM,
+		    TABLE_SEQ,
+		    ORDER_SEQ
+		  )
+		  VALUES
+		  (
+		    #{uuid},
+		    #{attach_nm},
+		    #{session_member_seq},
+			#{session_member_nm},
+			#{yyyy},
+			#{mm},
+			#{table_nm},
+		    #{table_seq},
+		    NVL(#{order_seq}, (SELECT COUNT(1) + 1 FROM NSH_ATTACH WHERE TABLE_NM=#{table_nm} AND TABLE_SEQ=#{table_seq}))
+		  )
+	</insert>
+	
+	<select id="article" parameterType="Map" resultType="mcmap">
+		SELECT
+		  ATTACH_NM,
+		  YYYY,
+		  MM
+		FROM
+		  NSH_ATTACH
+		WHERE UUID=#{uuid}
+		AND DEL_YN='N'
+	</select>
+	
+	<select id="list" parameterType="Map" resultType="mcmap">
+		SELECT ATTACH_NM, UUID, YYYY, MM, ORDER_SEQ FROM
+			NSH_ATTACH
+		WHERE TABLE_NM=#{table_nm} AND TABLE_SEQ=#{table_seq}
+		ORDER BY ORDER_SEQ ASC
+	</select>
+	
+	<select id="listMore" parameterType="Map" resultType="mcmap">
+		SELECT ATTACH_NM, UUID FROM
+			NSH_ATTACH
+		WHERE TABLE_NM=#{table_nm} AND TABLE_SEQ in (${table_seq})
+		ORDER BY ORDER_SEQ ASC
+	</select>
+	
+	<delete id="delete" parameterType="Map">
+		DELETE FROM NSH_ATTACH WHERE UUID=#{uuid}
+	</delete>
+	
+	<delete id="delete_all" parameterType="Map">
+		DELETE FROM NSH_ATTACH WHERE TABLE_NM=#{table_nm} AND TABLE_SEQ=#{table_seq}
+	</delete>
+	
+	<select id="pre_article" parameterType="Map" resultType="mcmap">
+		SELECT
+		  ATTACH_NM,
+		  YYYY
+		FROM
+		  NSH_ATTACH
+		WHERE UUID like '%-0000000000000000000000000'||#{uuid}
+		AND DEL_YN='N'
+	</select>
+    
+</mapper>

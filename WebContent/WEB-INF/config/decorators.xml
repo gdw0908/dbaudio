@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/inc">
+	<!-- 제외 항목 시작-->
+    <excludes>
+        <pattern>*.htm</pattern>
+        <pattern>*.html</pattern>
+        <pattern>/admin/*</pattern><!-- 관리자 -->
+        <pattern>/addr/*</pattern><!-- 주소 -->
+        <pattern>/smarteditor/*</pattern><!-- 에디터 -->
+        <pattern>/popup/*</pattern><!-- 팝업 -->
+        <pattern>/nositemesh/*</pattern><!-- 사용안함 -->
+        <pattern>/agspay/*</pattern><!-- 결제 -->
+        <pattern>/AGSMobile/*</pattern><!-- 결제 -->
+    </excludes>
+	<!-- 제외 항목 끝-->
+	
+	<!-- 공통 -->
+    <decorator name="gnb" page="/giftcard/inc/gnb.do"/>
+    <decorator name="header" page="/giftcard/inc/header.do"/>
+    <decorator name="footer" page="/giftcard/inc/footer.do"/>
+	<!--//공통  -->
+	
+	<!-- 메인 화면 시작 -->
+    <decorator name="main" page="/layout/main.do">
+        <pattern>/index.*</pattern>
+        <pattern>/giftcard/index.*</pattern>
+    </decorator>
+	<!-- 메인 화면 끝 -->
+	
+	<!-- 서브 시작 -->
+    <decorator name="sub" page="/layout/sub.do">
+        <pattern>/giftcard/join/*</pattern>
+        <pattern>/giftcard/login/*</pattern>
+        <pattern>/giftcard/mypage/shopping/cart/non_member.do</pattern>
+        <pattern>/giftcard/mypage/shopping/state/non_member.do</pattern>
+    </decorator>
+	<!-- 서브 끝 -->
+	
+	<!-- 서브2 -->
+    <decorator name="sub2.left" page="/giftcard/inc/left.do"/>
+    <decorator name="sub2" page="/layout/sub2.do">
+        <pattern>/giftcard/mypage/*</pattern>
+        <pattern>/giftcard/company.do</pattern>
+        <pattern>/giftcard/event.do</pattern>
+    </decorator>
+	<!-- //서브2 -->
+	
+	<!-- 서브3 -->
+    <decorator name="sub3" page="/layout/sub3.do">
+        <pattern>/giftcard/goods/*</pattern>
+        <pattern>/giftcard/cooperation/*</pattern>
+    </decorator>
+	<!--// 서브3 -->
+	
+	
+	
+	
+	
+	<!-- 모바일 공통 -->
+    <decorator name="mobile.header" page="/inc/mobile_header.do"/>
+    <decorator name="mobile.footer" page="/inc/mobile_footer.do"/>
+    <decorator name="mobile.mymenu" page="/inc/mobile_mymenu.do"/>
+    <decorator name="mobile.gnb" page="/inc/mobile_gnb.do"/>
+	<!--//모바일 공통  -->
+	
+	<!-- 모바일 메인 화면 시작 -->
+	<decorator name="mobile.main" page="/layout/mobile_main.do">
+        <pattern>/mobile/index.*</pattern>
+    </decorator>
+	<!-- 모바일 메인 화면 끝 -->
+	
+	<!-- 모바일 서브 화면 시작 -->
+	<decorator name="mobile.gnb2" page="/inc/mobile_gnb2.do"/>
+	<decorator name="mobile.sub" page="/layout/mobile_sub.do">
+        <pattern>/mobile/mypage/*</pattern>
+    </decorator>
+	<!-- 모바일 서브 화면 끝 -->
+	
+	<!-- 모바일 서브 화면 시작 -->
+	<decorator name="mobile.sub2" page="/layout/mobile_sub2.do">
+        <pattern>/mobile/goods/*</pattern>
+        <pattern>/mobile/cooperation/*</pattern>
+        <pattern>/mobile/seller/*</pattern>
+        <pattern>/mobile/login/*</pattern>
+        <pattern>/mobile/join/*</pattern>
+    </decorator>
+	<!-- 모바일 서브 화면 끝 -->
+	
+	        
+	<!-- 카올바로 어플리케이션 화면 시작 -->
+	<decorator name="application.mymenu" page="/inc/application_mymenu.do"/>
+	<decorator name="application.main" page="/layout/application_main.do">
+        <pattern>/m/mypage/*</pattern>
+    </decorator>
+	<!-- 카올바로 어플리케이션 화면 끝 -->
+	
+</decorators>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_5_2_4.gif" alt="처리현황보기"></h3>
+        </div>
+
+        <div class="address_pop">
+
+          <p class="type_2">※ 반품,교환절차는 판매자와 협의 후 진행하시기 바라며 온라인입금환불 및 기타 문의사항은 고객센터로 전화주시기 바랍니다.</p>
+
+          <h4 class="hs_1">처리현황 <span class="cut_1"><strong>주문번호</strong> 123456789</span></h4>
+
+          <table class="cart_style_1 t_top_style_1">
+          <colgroup>
+          <col width="18%">
+          <col width="">
+          <col width="25%">
+          <col width="25%">
+          </colgroup>
+
+          <thead>
+          <tr>
+            <th scope="col">신청종류</th>
+            <th scope="col">접수일</th>
+            <th scope="col">처리상태</th>
+            <th scope="col">환불상태</th>
+          </tr>
+          </thead>
+
+          <tbody>
+
+          <tr>
+            <td>취소</td>
+            <td>2015-06-06<br>14:20:00</td>
+            <td>주문취소</td>
+            <td class="b_none">승인취소</td>
+          </tr>
+
+          </tbody>
+
+          </table>
+
+          <h4 class="hs_1">취소신청정보</h4>
+
+          <table class="cart_style_1 t_top_style_1">
+          <colgroup>
+          <col width="50%">
+          <col width="">
+          </colgroup>
+
+          <thead>
+          <tr>
+            <th scope="col">취소상품명</th>
+            <th scope="col">취소사유</th>
+          </tr>
+          </thead>
+
+          <tbody>
+
+          <tr>
+            <td>컴비네이션램프 후미등 / 제네시스쿠페 (2012) / A급</td>
+            <td class="b_none">취소사유 입력내용</td>
+          </tr>
+
+          </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="btn_bottom"><a href="#"><img src="/images/sub_2/btn_cancel_3.gif" alt="닫기"></a></div>
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

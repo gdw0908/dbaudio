@@ -1,0 +1,41 @@
+<div data-ng-controller="categoryCtrl" title="배송지등록">
+  <!-- 부품 검색모달팝업 -->
+  <form id="cFrm" name="categoryFrm" method="post" novalidate="novalidate">
+   <div id="dialog" title="QA카테고리등록"> 
+     <table class="style_1">
+       <colgroup>
+          <col width="*" />
+          <col width="15%" />
+          <col width="15%" />
+          <col width="20%" />
+       </colgroup>
+       <tr>
+         <th class="center"><label>QA분류명</label></th>
+         <th class="center"><label>사용여부</label></th>
+         <th class="center"><label>순서</label></th>
+         <th class="center"><label>선택</label></th>
+       </tr>
+       <tr data-ng-if="data.length==0"><td colspan="4">결과가 없습니다.</td></tr>
+       <tr data-ng-repeat="categoryFrm in data">
+         <td><input type="text" class="input_1" style="width: 92%;" data-ng-model="categoryFrm.subject" required/></td>
+         <td style="text-align:center; padding:16px 0 14px 0px;">
+         	사용 <input type="radio" data-ng-model="categoryFrm.use_yn" value="Y" />
+         	미사용<input type="radio" data-ng-model="categoryFrm.use_yn" value="N" />
+         </td>
+         <td style="text-align:center; padding:16px 0 14px 0px;">
+         	<input type="text" class="input_1" style="width: 15%;" data-ng-model="categoryFrm.orderby" data-ng-pattern="/[0-9]/" required/>
+         </td>
+         <td style="text-align:center; padding:16px 0 14px 0px;">
+         	<span class="bt_all"><span><input type="button" value="수정" class="btall" data-ng-click="categoryUpdate($index)"/></span></span>
+       		<span class="bt_all"><span><input type="button" value="삭제" class="btall" data-ng-click="categoryDel($index)"/></span></span>
+         </td>
+       </tr>
+     </table>
+     <div class="btn_bottom">
+     <div class="r_btn">
+		<span class="bt_all"><span><input type="button" value="닫기" class="btall" data-ng-click="dialogClose()"/></span></span>
+     </div>
+     </div>
+   </div>
+ </form>
+</div>

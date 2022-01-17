@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+
+<div class="wrap">
+  <? include "/mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "/mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_6_1.gif" alt="회원정보변경"></h3>
+        </div>
+
+        <h4 class="hs_1">회원정보 <span>[ <span class="s_icon_2">표시된 항목은 필수사항입니다. ]</span></span></h4>
+
+        <div class="user_info_box">
+          <table class="user_table_1">
+            <colgroup>
+            <col width="25%">
+            <col width="">
+            </colgroup>
+            <tbody>
+
+            <tr>
+              <th scope="row"><span>아이디</span></th>
+              <td class="fs_style_1">${userData.member_id}</td>
+            </tr>
+
+            <tr>
+              <th scope="row"><span>기존<br>비밀번호</span></th>
+              <td><input type="password" id="member_pw_df" name="member_pw_df" class="input_m2 ws_1" placeholder="현재 비밀번호를 입력해 주세요"></td>
+            </tr>
+
+            <tr>
+              <th scope="row">새<br>비밀번호</th>
+              <td><input type="password" id="member_pw" name="member_pw" class="input_m2 ws_1" placeholder="새 비밀번호를 입력해 주세요"> <span class="c1">※ 6~15글자 이내, 영문 대/소문자,  숫자 및 특수문자 사용가능</span></td>
+            </tr>
+
+            <tr>
+              <th scope="row">새 비밀번호확인</th>
+              <td><input type="password" id="member_pw_check" name="member_pw_check" class="input_m2 ws_1" placeholder="새 비밀번호를 다시한번 입력해 주세요"></td>
+            </tr>
+            <tr>
+              <th scope="row">업체명</th>
+              <td class="fs_style_1"><input type="text" id="busi_nm" name="busi_nm" class="input_m2 ws_1" value = "${userData.busi_nm}"></td>
+            </tr>
+            <tr>
+              <th scope="row">사업자번호</th>
+              <td>
+                <input type="text" id="busi_no" name="busi_no" class="input_m2 ws_2" maxlength = "3" value = "${busi_no}"> 
+                - <input type="text" id="busi_no1" name="busi_no1" class="input_m2 ws_2" maxlength = "2" value = "${busi_no1}"> - <input type="text" id="busi_no2" name="busi_no2" class="input_m2 ws_2" maxlength = "5" value = "${busi_no2}">
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">업태</th>
+              <td class="fs_style_1"><input type="text" id="comptyp1" name="comptyp1" class="input_m2 ws_1" value = "${userData.comptyp1}"></td>
+            </tr>
+            <tr>
+              <th scope="row">종목</th>
+              <td class="fs_style_1"><input type="text" id="comptyp2" name="comptyp2" class="input_m2 ws_1" value = "${userData.comptyp2}"></td>
+            </tr>
+            <tr>
+              <th scope="row">대표자명<br>(실명)</th>
+              <td class="fs_style_1">${userData.ceo_nm}</td>
+            </tr>
+            <tr>
+              <th scope="row">담당자명</th>
+              <td class="fs_style_1"><input type="text" id="staff_nm" name="staff_nm" class="input_m2 ws_1" value = "${userData.staff_nm}"></td>
+            </tr>
+            <tr>
+              <th scope="row">전화번호</th>
+              <td>
+               <input type="text" id="tel" name="tel" class="input_m2 ws_2" value = "${tel}" maxlength = "3">
+                - <input type="text" id="tel1" name="tel1" class="input_m2 ws_2" value = "${tel1}" maxlength = "4"> - <input type="text" id="tel2" name="tel2" class="input_m2 ws_2" value = "${tel2}" maxlength = "4">
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row"><span>담당자<br>전화번호</span></th>
+              <td>
+			  <input type="text" id="staff_tel" name="staff_tel" class="input_m2 ws_2" value = "${staff_tel}" maxlength = "3">
+                - <input type="text" id="staff_tel1" name="staff_tel1" class="input_m2 ws_2" value = "${staff_tel1}" maxlength = "4"> - <input type="text" id="staff_tel2" name="staff_tel2" class="input_m2 ws_2" value = "${staff_tel2}" maxlength = "4">
+			  </td>
+            </tr>
+
+            <tr>
+              <th scope="row" class="fs_1">알림 설정</th>
+              <td><label><input type="checkbox" id="sms_yn" name="sms_yn" class="check" value = "Y" > 휴대폰 알림문자를 받겠습니다.</label></td>
+            </tr>
+
+            <tr>
+              <th scope="row"><span>이메일</span></th>
+              <td>
+                 <input type="text" id="email1" name="email1" class="input_m2 ws_4" value = "${email }"> @ <input type="text" id="email2" name="email2" class="input_m2 ws_4" value = "${email1 }" readonly>
+                <select id="choice_email" name="choice_email" class="select_j2" onchange = "inputEmail2(this.value);" style="margin-top:10px;">
+		          <option value="hanmail.net" >hanmail.net</option>
+		          <option value="naver.com" >naver.com</option>
+		          <option value="daum.net" >daum.net</option>
+		          <option value="nate.com" >nate.com</option>
+		          <option value="gmail.com" >gmail.com</option>
+		          <option value="korea.com" >korea.com</option>
+		          <option value="dreamwiz.com" >dreamwiz.com</option>
+		          <option value="hotmail.com" >hotmail.com</option>
+		          <option value="yahoo.co.kr" >yahoo.co.kr</option>
+		          <option value="sportal.or.kr" >sportal.or.kr</option>
+		          <option value = "" >직접입력</option>
+		        </select>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row" class="fs_1">광고성<br>메일 수신</th>
+              <td><label><input type="checkbox" id="email_yn" name="email_yn" class="check" value = "Y"> 수신함</label> <label style="margin-left:15px;"><input type="checkbox" id="email_yn" name="email_yn" class="check" value = "N" > 수신안함</label> <span class="c2">※ 주요 공지사항 및 알림 등은 설정에 관계 없이 발송됩니다.</span></td>
+            </tr>
+
+            <tr>
+              <th scope="row"><span>주소</span></th>
+              <td class="adress">
+                <p><input type="text" id="zip_cd1" name="zip_cd1" class="input_m2 ws_2" value = "${zip_code1}" readonly> - <input type="text" id="zip_cd2" name="zip_cd2" class="input_m2 ws_2" value = "${zip_code2}" readonly>
+                 <a href="javascript:open_zipcode();"><img src="/images/mobile/sub_2/address_btn_m1.gif" alt="주소검색"></a> </p>
+                <p><input type="text" id="addr1" name="addr1" class="input_m2 ws_3" readonly value = "${userData.addr1}"></p>
+                <p class="last"><input type="text" id="addr2" name="addr2" class="input_m2 ws_3" readonly value = "${userData.addr2}"></p>
+              </td>
+            </tr>
+
+            </tbody>
+            </table>
+        </div>
+
+        <div class="btn_bottom">
+          <a href="#"><img src="/images/sub_2/btn_mod.gif" alt="정보수정"></a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <? include "/mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "/mobile/include/my_menu.html"; ?>
+</body>
+</html>

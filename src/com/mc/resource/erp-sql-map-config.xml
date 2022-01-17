@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="defaultStatementTimeout" value="25000"/>
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+	<typeAliases>
+		<typeAlias alias="mcmap" type="com.mc.web.MCMap"/>
+		<package name="com.mc.web"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/mc/giftcard/sqlmap/erp.xml" />
+		
+		<!-- TODO 데이터이관용 나중에 삭제해주기 -->
+		<mapper resource="com/mc/giftcard/sqlmap/transfer.xml" />
+	</mappers>
+</configuration>

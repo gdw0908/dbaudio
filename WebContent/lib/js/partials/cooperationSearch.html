@@ -1,0 +1,32 @@
+<div data-ng-controller="cooperationSearchCtrl" data-ng-init="board.go(1)" data-ng-cloak title="매장 검색">
+<!-- 매장 검색모달팝업 -->
+  <form name="searchFrm" method="post" data-ng-submit="board.go(1)">
+  <table class="style_1">
+    <colgroup>
+      <col width="15%" />
+      <col width="*" />
+      </colgroup>
+    <tr>
+      <th>매장업체명</th>
+      <td>
+         <label>
+           <input type="text" class="input_1" data-ng-model="param.keyword"/>
+         </label>
+         <span><a data-ng-click="board.go(1)"><img src="/images/admin/contents/s_btn_search.gif" alt="검색" /></a></span> 
+      </td>
+    </tr>
+  </table>
+  </form>
+  <table class="style_3">
+    <tr>
+      <th>매장업체명</th>
+      <th>사업자번호</th>
+    </tr>
+  	<tr data-ng-if="board.list.length==0"><td colspan="2">결과가 없습니다.</td></tr>
+    <tr data-ng-repeat="item in board.list" data-ng-click="send(item)">
+      <td>{{item.com_nm}}</td>
+      <td>{{item.busi_no}}</td>
+    </tr>
+  </table>
+  <pagination total-page="board.totalPage" current-page="board.currentPage" on-select-page="board.go(page)"></pagination>
+</div>

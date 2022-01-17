@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>파츠모아 통합관리 시스템</title>
+<link href="/lib/css/cmsbase.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/cmsadmin.css" rel="stylesheet" type="text/css" />
+<link href="/lib/css/redmond/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div class="titlebar">
+    <h2>자원관리</h2>
+    <div> <span>통합관리</span> &gt; <span>자원관리</span> &gt; <span class="bar_tx">자원관리리스트</span> </div>
+  </div>
+  <div class="container">
+    <div class="contents">
+      <table class="style_1">
+        <colgroup>
+        <col width="15%" />
+        <col width="" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th>반출희망날짜</th>
+            <td><input type="text" class="input_1 date" id="" name="" /></td>
+          </tr>
+          <tr>
+            <th>폐자원물질</th>
+            <td class="plus_type"><p>
+                <select>
+                  <option>폐물질A</option>
+                </select>
+                <input type="text" id="" name="" class="input_1" />
+                <span class="bt_alls"><span>
+                <input type="button" value="추가" onclick="" class="btalls">
+                </span></span> </p>
+              <p>
+                <select>
+                  <option>폐물질A</option>
+                </select>
+                <input type="text" id="" name="" class="input_1" />
+                <span class="bt_alls"><span>
+                <input type="button" value="추가" onclick="" class="btalls">
+                </span></span> </p></td>
+          </tr>
+          <tr>
+            <th>비고</th>
+            <td style="padding:11px 23px 9px 10px;"><textarea id="" name="" class="textarea_1"></textarea></td>
+          </tr>
+          <tr>
+            <th>상태</th>
+            <td><select>
+                <option>반출대기</option>
+                <option>반출진행</option>
+                <option>반출완료</option>
+              </select>
+              <input type="text" class="input_1 date" id="" name="" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn_bottom">
+        <div class="r_btn"> 
+        <span class="bt_all"> 
+        <span>
+          <input type="button" value="등록" onclick="" class="btall"/>
+          </span> 
+          </span> 
+          <span class="bt_all"> 
+        <span>
+          <input type="button" value="목록" onclick="" class="btall"/>
+          </span> 
+          </span> 
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/lib/js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="/lib/js/jquery-ui-1.10.3.custom.min.js"></script> 
+<script>
+$("input.date").datepicker({
+		showOn: "button",      
+		buttonImage: "/images/admin/contents/calendar.png",
+});
+
+$( "#tabs" ).tabs();
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#dialog2" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link2" ).click(function( event ) {
+	$( "#dialog2" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+</script>
+</body>
+</html>

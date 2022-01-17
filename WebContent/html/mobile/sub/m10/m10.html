@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//#allmenu
+$("#submenu_open").toggle(function(){
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_close.gif";
+}, function() {
+$("#sub_menu").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "/mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "/mobile/include/gnb.html"; ?>
+    <div class="sub">
+      <div class="sm_wrap">
+        <div class="sm_top">
+          <span class="select_box s_menu_type">
+          <select id="" name="" class="select_sm">
+          <option>메뉴를 선택해 주세요</option>
+          <option>알터네이터</option>
+          <option>A/C 콤프레서</option>
+          <option>스타트모터</option>
+          </select>
+          </span>
+          <span class="sm_btn"><a href="#"><img src="/images/mobile/sub_2/sub_menu_a.gif" alt="메뉴이동"></a></span>
+          
+        </div>
+      </div>
+
+      <div class="sub_wrap">
+
+        <div class="sub_line">
+          <h3><img src="/images/mobile/sub/sub_title_10_1.gif" alt="알터네이터"></h3>
+          <p><a href="#"><img src="/images/mobile/sub/counsel.gif" alt=""></a></p>
+        </div>
+        
+        <div class="sub_contents_img">
+      		<p><img src="/images/sub/contents_img_01.gif" alt="알터네이터 문의"></p>
+      	</div>
+      	
+      	
+
+        <? include "/article/paging/paging.html"; ?>
+
+      </div>
+	  <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "/mobile/include/footer.html"; ?>
+<div class="left_back"></div>
+</div>
+<? include "/mobile/include/my_menu.html"; ?>
+</body>
+</html>

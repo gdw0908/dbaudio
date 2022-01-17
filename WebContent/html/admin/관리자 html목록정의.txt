@@ -1,0 +1,24 @@
+관리자 html 목록정의
+
+
+
+goods - 상품관리
+
+ inventory - 상품목록
+ 
+ register - 상품등록
+ 
+ sales - 매출관리
+ 
+ spell - 주문관리 
+
+
+member - 회원관리
+
+supply - 협력업체관리
+
+  apply - 업체신청
+ 
+  status - 업체현황
+
+system - 시스템관리 

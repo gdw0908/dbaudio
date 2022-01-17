@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>파츠모아 통합관리 시스템</title>
+<link href="//lib/css/cmsbase.css" rel="stylesheet" type="text/css" />
+<link href="//lib/css/cmsadmin.css" rel="stylesheet" type="text/css" />
+<link href="//lib/css/redmond/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div class="titlebar">
+    <h2>협력업체신청</h2>
+    <div> <span>통합관리</span> &gt; <span>협력업체관리</span> &gt; <span>협력업체신청</span> &gt;<span class="bar_tx">협력업체신청</span> </div>
+  </div>
+  <div class="container"> 
+    <!-- <div class="tab_menu">
+      <ul class="tab">
+        <li><a href="#">이달의 우수상점</a></li>
+        <li class="on"><a href="#">상점소개</a></li>
+      </ul>
+    </div>  -->
+    <div class="contents">
+      <table class="style_1" style="table-layout:fixed;">
+        <colgroup>
+        <col width="15%" />
+        <col width="*" />
+        <col width="15%" />
+        <col width="*" />
+        </colgroup>
+        <tr>
+          <th>거래처종류</th>
+          <td>
+               <select title="거래처종류">
+                 <option>개인사업자</option>
+                 <option>법인사업자</option>
+               </select>
+          </td>
+          <th>수수료율</th>
+          <td>
+            <input type="text" class="input_1" id="" name=""  style="width:80px"/>%
+          </td>
+        </tr>
+        <tr>
+          <th>업체명</th>
+          <td>
+              <input type="text" class="input_1" id="" name="" />
+          </td>
+          <th>사업자번호</th>
+          <td>
+            <input type="text" class="input_1" id="" name="" style="width:60px"/> - <input type="text" class="input_1" id="" name="" style="width:60px"/> - <input type="text" class="input_1" id="" name="" style="width:60px"/>
+          </td>
+        </tr>
+        <tr>
+          <th>업태</th>
+          <td>
+             <input type="text" class="input_1" id="" name="" />
+          </td>
+          <th>종목</th>
+          <td>
+            <input type="text" class="input_1" id="" name="" />
+          </td>
+        </tr>
+        <tr>
+          <th>대표자명</th>
+          <td><input type="text" class="input_1" id="" name="" /></td>
+          <th>담당자명</th>
+          <td><input type="text" class="input_1" id="" name="" /></td>
+        </tr>
+        <tr>
+          <th>담당자 전화번호</th>
+          <td colspan="3">
+            <select title="전화번호 앞자리 선택">
+                 <option>010</option>
+                 <option>016</option>
+                 <option>017</option>
+                 <option>018</option>
+                 <option>02</option>
+            </select>
+            <input type="text" class="input_1" id="" name="" style="width:60px" /> - <input type="text" class="input_1" id="" name=""  style="width:60px" />
+          </td>
+        </tr>
+        <tr>
+          <th>담당자 이메일</th>
+          <td colspan="3">
+           <input type="text" class="input_1" id="" name="" />@<input type="text" class="input_1" id="" name="" style="width:80px" />
+           <select title="이메일선택">
+                 <option>직접입력</option>
+                 <option>naver.com</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>예금주</th>
+          <td><input type="text" class="input_1" id="" name="" /></td>
+          <th>거래은행</th>
+          <td><select title="거래은행 선택">
+                 <option>국민은행</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>계좌번호</th>
+          <td colspan="3"><input type="text" class="input_1" id="" name="" /> <span>(숫자만입력)</span></td>
+        </tr>
+        <tr>
+          <th>지역설정</th>
+          <td colspan="3">
+            <select title="시도 선택">
+                 <option>시도선택</option>
+            </select>
+            <select title="시군구 선택">
+                 <option>시군구선택</option>
+            </select>
+             <select title="읍면동 선택">
+                 <option>읍면동선택</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>관리번호</th>
+          <td><input type="text" class="input_1" id="" name="" style="width:80px"/></td>
+          <th>상태</th>
+          <td>
+            <select title="상점상태 변경 선택">
+              <option>정상</option>
+              <option>중지</option>
+              <option>퇴점</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>주소</th>
+          <td colspan="3">
+            <input type="text" class="input_1" id="" name="" style="width:80px"/>-<input type="text" class="input_1" id="" name="" style="width:80px"/>
+            <span class="bt_alls"><span><input type="button" value="주소검색" onclick="" class="btalls"/></span></span> 
+            <input type="text" class="input_1" id="" name=""  style="width:85%; margin-top:3px;"/>
+            <div class="mapnaver">
+               네이버 지도 
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>상세내용</th>
+          <td colspan="3">
+            에디터
+          </td>
+        </tr>
+      </table>
+      <!-- 아이디 추가 --> 
+      <div class="btn_bottom">
+        <div class="r_btn">
+          <span class="bt_alls"><span><input type="button" value="아이디추가" onclick="" class="btalls"/></span></span> 
+          <span class="bt_alls"><span><input type="button" value="선택삭제" onclick="" class="btalls"/></span></span> 
+          <span class="bt_alls"><span><input type="button" value="선택취소" onclick="" class="btalls"/></span></span> 
+        </div>
+      </div>  
+      <table class="style_1" style="margin-top:15px;">
+         <colgroup>
+        <col width="10%" />
+        <col width="*" />
+        </colgroup>
+        <tr>
+          <th class="center"><input type="checkbox" id="" name="" /></th>
+          <td style="padding-right:15px;">
+            <table class="style_4" style="margin-top:0px;">
+              <tr>
+                <th>아이디</th>
+                <td colspan="3" class="left">
+                  <input type="password" id="" name=""  class="input_1" />
+                  <span class="bt_alls"><span><input type="button" value="중복확인" onclick="" class="btalls"/></span></span> 
+                </td>
+              </tr>
+              <tr>
+                <th>비밀번호</th>
+                <td class="left"><input type="password" id="" name=""  class="input_1" /></td>
+                <th>비밀번호확인</th>
+                <td class="left"><input type="password" id="" name="" class="input_1" /></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      
+      <div class="btn_bottom">
+        <div class="r_btn">
+          <span class="bt_all"><span>
+          <input type="button" value="저장" onclick="" class="btall"/>
+          </span></span> 
+          <span class="bt_all"><span>
+          <input type="button" value="취소" onclick="" class="btall"/>
+          </span></span>
+          <span class="bt_all"><span>
+          <input type="button" value="목록" onclick="" class="btall"/>
+          </span></span> 
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="//lib/js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="//lib/js/jquery-ui-1.10.3.custom.min.js"></script> 
+<script>
+$("input.date").datepicker({
+		showOn: "button",      
+		buttonImage: "//images/admin/contents/calendar.png",
+});
+
+$( "#tabs" ).tabs();
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#dialog2" ).dialog({
+	autoOpen: false,
+	width: 650,
+});
+
+// Link to open the dialog
+$( "#dialog-link2" ).click(function( event ) {
+	$( "#dialog2" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+</script>
+</body>
+</html>

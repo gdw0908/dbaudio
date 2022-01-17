@@ -1,0 +1,627 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상품검색</title>
+<link rel="shortcut icon" href="/images/favicon/favicon.ico">
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/lib/js/jcarousellite_1.0.1.js"></script>
+<script type="text/javascript" src="/lib/js/article.js"></script>
+<script type="text/javascript" src="/lib/js/mc.js"></script>
+<script type="text/javascript" src="/lib/js/gnb.js"></script>
+<script type="text/javascript" src="/lib/js/roll.js"></script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div id="header">
+    <div class="h_top">
+      <h1><a href="/mobile"><img src="/images/logo/logo.gif" alt="국내최대 자동차 중고부품 쇼핑몰 PARTSMOA"></a></h1>
+      <div class="search_box">
+        <form action="/mobile/goods/list.do" method="post" id="frmall" name="frmall">
+          <fieldset>
+            <legend>Parts MOA 통합검색</legend>
+            <div class="search_top"> <span class="search">
+              <input type="text" id="search_all_text" name="search_all_text" value="" class="main_search" title="Parts MOA 통합검색">
+              </span> <span class="btn_search"><a href="javascript:document.frmall.submit();"><img src="/images/header/search.gif" alt="검색"></a></span> </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <div class="total_product"> <span class="total_t">총 부품수량 : </span> <span class="total_n"><b>116,460</b> 개</span> </div>
+  </div>
+  <div id="container"> 
+    
+    <!-- gnb메뉴 --> 
+    
+    <script type="text/javascript">
+$(function(){
+	if('menu1' != ''){
+		$.each($(".gnb > ul > li"),function(){
+			if($(this).find("a").attr("href").indexOf('menu1') > -1){
+				$(this).find("a > img").attr("src", $(this).find("img").attr("src").replace("off","on"));
+				$(this).attr("class","on");
+			}
+		});
+	}
+});
+</script>
+    <div class="gnb">
+      <ul>
+        <li><a href="/mobile/goods/list.do?menu=menu1"><img src="/images/mobile/gnb/menu_1_off.gif" alt="바디"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu2"><img src="/images/mobile/gnb/menu_2_off.gif" alt="의장"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu3"><img src="/images/mobile/gnb/menu_3_off.gif" alt="엔진"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu4"><img src="/images/mobile/gnb/menu_4_off.gif" alt="샤시"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu5"><img src="/images/mobile/gnb/menu_5_off.gif" alt="국산차"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu6"><img src="/images/mobile/gnb/menu_6_off.gif" alt="수입차"></a></li>
+        <!-- <li ><a href="/mobile/cooperation/list.do?menu=menu7"><img src="/images/mobile/gnb/menu_7_off.gif" alt="지역별"></a></li> -->
+        <li ><a href="/mobile/goods/contents_list.do?menu=menu9&amp;part2=050901006003"><img src="/images/mobile/gnb/menu_9_off.gif" alt="재제조"></a></li>
+        <li class="last"><a href="/mobile/seller/seller_list.do?menu=menu8"><img src="/images/mobile/gnb/menu_8_off.gif" alt="상품관리"></a></li>
+      </ul>
+    </div>
+    <!-- //gnb메뉴 -->
+    
+    <div class="sub">
+      <form action="list.do" method="post" id="frm" name="frm">
+        
+        <!-- Start -->
+        <div class="sm_wrap">
+          <div class="sm_top"> <span class="select_box">
+            <select id="menu_id" name="menu" class="select_sm" onchange="changeMenu();">
+              <option value="">부품을 선택해 주세요.</option>
+              <option value="menu1" selected="selected">바디</option>
+              <option value="menu2" >의장</option>
+              <option value="menu3" >엔진</option>
+              <option value="menu4" >샤시</option>
+            </select>
+            </span> <span class="sm_btn"><img id="submenu_open" src="/images/mobile/sub/sub_menu_open.gif" alt="상세조건 검색버튼" style="cursor:pointer;"></span>
+            <div class="sm_con" id="sub_menu" style="display:none;">
+              <div class="con_1">
+                <h3><img src="/images/mobile/sub/details_title.gif" alt="부품 상세검색"></h3>
+                <p class="c1">※검색조건과 함께 찾으시는 부품을 선택해 주세요</p>
+                <table class="sm_style_1">
+                  <colgroup>
+                  <col width="20%">
+                  <col width="">
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th scope="row">제조사</th>
+                      <td><select id="carmakerseq" name="carmakerseq" class="select_sm" onchange="changeCarmaker()">
+                          <option value="">전체</option>
+                          <option value="4" >GM대우(쉐보레)</option>
+                          <option value="2" >기아</option>
+                          <option value="59" >대우버스(기타)</option>
+                          <option value="3" >삼성</option>
+                          <option value="6" >쌍용</option>
+                          <option value="1" >현대</option>
+                          <option value="7" >BMW</option>
+                          <option value="10" >GM</option>
+                          <option value="55" >jeep</option>
+                          <option value="54" >기타</option>
+                          <option value="60" >내비스타 인터내셔널</option>
+                          <option value="11" >닛산</option>
+                          <option value="12" >다이하쓰</option>
+                          <option value="13" >닷지</option>
+                          <option value="14" >도요타</option>
+                          <option value="15" >람보르기니</option>
+                          <option value="16" >랙서스</option>
+                          <option value="56" >랜드로버</option>
+                          <option value="17" >로버</option>
+                          <option value="18" >로터스</option>
+                          <option value="19" >롤스로이스</option>
+                          <option value="20" >르노</option>
+                          <option value="21" >링컨</option>
+                          <option value="22" >마세라티</option>
+                          <option value="27" >미쓰비시</option>
+                          <option value="8" >벤츠</option>
+                          <option value="28" >벤틀리</option>
+                          <option value="29" >볼보</option>
+                          <option value="31" >뷰익</option>
+                          <option value="32" >사브</option>
+                          <option value="5" >쉐보레</option>
+                          <option value="34" >스바루</option>
+                          <option value="38" >시트로엥</option>
+                          <option value="9" >아우디</option>
+                          <option value="39" >에스턴마틴</option>
+                          <option value="40" >오펠</option>
+                          <option value="41" >인피니티</option>
+                          <option value="42" >재규어</option>
+                          <option value="43" >캐딜락</option>
+                          <option value="44" >크라이슬러</option>
+                          <option value="45" >페라리</option>
+                          <option value="46" >포드</option>
+                          <option value="47" >포르쉐</option>
+                          <option value="48" >폭스바겐</option>
+                          <option value="50" >푸조</option>
+                          <option value="53" >혼다</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">차량명</th>
+                      <td><select id="carmodelseq" name="carmodelseq" class="select_sm" onchange="changeCarmodel()">
+                          <option value="">전체</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">모델명</th>
+                      <td><select id="cargradeseq" name="cargradeseq" class="select_sm" >
+                          <option value="">전체</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">연식</th>
+                      <td><select id="caryyyy" name="caryyyy" class="select_sm">
+                          <option value="">전체</option>
+                          <option value="1995" >1995년</option>
+                          <option value="1996" >1996년</option>
+                          <option value="1997" >1997년</option>
+                          <option value="1998" >1998년</option>
+                          <option value="1999" >1999년</option>
+                          <option value="2000" >2000년</option>
+                          <option value="2001" >2001년</option>
+                          <option value="2002" >2002년</option>
+                          <option value="2003" >2003년</option>
+                          <option value="2004" >2004년</option>
+                          <option value="2005" >2005년</option>
+                          <option value="2006" >2006년</option>
+                          <option value="2007" >2007년</option>
+                          <option value="2008" >2008년</option>
+                          <option value="2009" >2009년</option>
+                          <option value="2010" >2010년</option>
+                          <option value="2011" >2011년</option>
+                          <option value="2012" >2012년</option>
+                          <option value="2013" >2013년</option>
+                          <option value="2014" >2014년</option>
+                          <option value="2015" >2015년</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">세부부품</th>
+                      <td><select id="part2_1" name="part2_1" class="select_sm">
+                          <option value="">전체</option>
+                          <option value="050901001025" >라지에이터 그릴</option>
+                          <option value="050901001013" >본닛</option>
+                          <option value="050901001029" >바디 기타</option>
+                          <option value="050901001002" >리어 범퍼</option>
+                          <option value="050901001001" >프런트 범퍼</option>
+                          <option value="050901001021" >백도어</option>
+                          <option value="050901001024" >썬루프</option>
+                          <option value="050901001018" >트렁크</option>
+                          <option value="050901001010" >콤비네이션 램프(우)</option>
+                          <option value="050901001004" >헤드 램프(우)</option>
+                          <option value="050901001009" >콤비네이션 램프(좌)</option>
+                          <option value="050901001014" >프런트 도어(좌)</option>
+                          <option value="050901001017" >리어 도어(우)</option>
+                          <option value="050901001022" >펜더(좌)</option>
+                          <option value="050901001019" >슬라이딩 도어(좌)</option>
+                          <option value="050901001012" >사이드 미러(우)</option>
+                          <option value="050901001020" >슬라이딩 도어(우)</option>
+                          <option value="050901001006" >포그 램프(우)</option>
+                          <option value="050901001026" >프런트 바디</option>
+                          <option value="050901001003" >헤드 램프(좌)</option>
+                          <option value="050901001005" >포그 램프(좌)</option>
+                          <option value="050901001023" >펜더(우)</option>
+                          <option value="050901001016" >리어 도어(좌)</option>
+                          <option value="050901001015" >프런트 도어(우)</option>
+                          <option value="050901001008" >턴시그널 램프(우)</option>
+                          <option value="050901001027" >리어 바디</option>
+                          <option value="050901001007" >턴시그널 램프(좌)</option>
+                          <option value="050901001011" >사이드 미러(좌)</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">등급</th>
+                      <td><select id="grade" name="grade" class="select_sm">
+                          <option value="">전체</option>
+                          <option value="A" >A등급</option>
+                          <option value="B" >B등급</option>
+                          <option value="C" >C등급</option>
+                        </select></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="con_2">
+                <table class="sm_style_1">
+                  <colgroup>
+                  <col width="20%">
+                  <col width="">
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th scope="row">지역별</th>
+                      <td class="s_type_2"><span>
+                        <select id="sido" name="sido" class="select_sm" onchange="changeSido()">
+                          <option value="">시/도</option>
+                          <option value="11" >서울특별시</option>
+                          <option value="26" >부산광역시</option>
+                          <option value="27" >대구광역시</option>
+                          <option value="28" >인천광역시</option>
+                          <option value="29" >광주광역시</option>
+                          <option value="30" >대전광역시</option>
+                          <option value="31" >울산광역시</option>
+                          <option value="36" >세종특별자치시</option>
+                          <option value="41" >경기도</option>
+                          <option value="42" >강원도</option>
+                          <option value="43" >충청북도</option>
+                          <option value="44" >충청남도</option>
+                          <option value="45" >전라북도</option>
+                          <option value="46" >전라남도</option>
+                          <option value="47" >경상북도</option>
+                          <option value="48" >경상남도</option>
+                          <option value="50" >제주특별자치도</option>
+                        </select>
+                        </span> <span>
+                        <select id="sigungu" name="sigungu" class="select_sm" onchange="changeSigungu()">
+                          <option value="">시/군/구</option>
+                        </select>
+                        </span> <span class="last">
+                        <select id="dong" name="dong" class="select_sm">
+                          <option value="">읍/면/동</option>
+                        </select>
+                        </span></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">조건 내 검색</th>
+                      <td class="i_type_2"><input type="hidden" name="search_all_text" class="input_1" value="">
+                        <p> <span class="input_t">
+                          <input type="text" name="keyword" class="input_1" value="">
+                          </span> <span class="btn"> <a href="javascript:;" onclick="frmreset();"><img src="/images/mobile/common/btn_reset.gif" alt="초기화"></a> <a href="javascript:goSubmit();"><img src="/images/mobile/common/btn_search.gif" alt="검색"></a> </span> </p></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End -->
+        
+        <div class="sub_wrap">
+          <div class="sub_line">
+            <h3><img src="/images/mobile/sub_2/sub_2_title_4.gif" alt="카올바로"></h3>
+            <p><a href="tel:1544-6444"><img src="/images/mobile/sub/counsel.gif" alt="파츠모아 고객상담센터 1544-6444"></a></p>
+          </div>
+          <div class="sc_top">
+            <ul class="sc_tab">
+              <li class="first"><a class="on" href="#">견적내기</a></li>
+              <li><a href="#">BEST</a></li>
+              <li><a href="#">수입차</a></li>
+              <li class="last"><a href="#">국산차</a></li>
+            </ul>
+            <!-- <span><strong>총 부품 : <b>11,239</b> 개</strong></span> -->
+          </div>
+          
+          <!-- start -->
+          <div class="sub_list">
+            <ul>
+              <li> 
+              	<a href="view.do?menu=menu2&seq=56877"> 
+	              <span class="img"><img src="/upload/board/2015/07/0dfbe0d7-0957-4d10-b626-8f839cc160a9_thumb" alt="본닛 ASSY"></span> 
+	              <span class="info"> 
+		              <span class="first"><strong>제조사</strong> : 기아</span> 
+		              <span class="title"><span class="t_l"><strong>제목</strong> :</span> <span class="t_r">제목글입니다. 제목글입니다.제목글입니다. 제목글입니다.. 제목글입니다.</span></span> 
+		              <span><strong>날짜</strong> : 2015-07-23</span> 
+	              </span>
+              	</a>
+              </li>
+              <li> 
+              	<a href="view.do?menu=menu2&seq=56877"> 
+	              <span class="img"><img src="/upload/board/2015/07/0dfbe0d7-0957-4d10-b626-8f839cc160a9_thumb" alt="본닛 ASSY"></span> 
+	              <span class="info"> 
+		              <span class="first"><strong>제조사</strong> : 기아</span> 
+		              <span class="title"><span class="t_l"><strong>제목</strong> :</span> <span class="t_r">제목글입니다. 제목글입니다.제목글입니다. 제목글입니다.. 제목글입니다.</span></span> 
+		              <span><strong>날짜</strong> : 2015-07-23</span> 
+	              </span>
+              	</a>
+              </li>
+              <li> 
+              	<a href="view.do?menu=menu2&seq=56877"> 
+	              <span class="img"><img src="/upload/board/2015/07/0dfbe0d7-0957-4d10-b626-8f839cc160a9_thumb" alt="본닛 ASSY"></span> 
+	              <span class="info"> 
+		              <span class="first"><strong>제조사</strong> : 기아</span> 
+		              <span class="title"><span class="t_l"><strong>제목</strong> :</span> <span class="t_r">제목글입니다. 제목글입니다.제목글입니다. 제목글입니다.. 제목글입니다.</span></span> 
+		              <span><strong>날짜</strong> : 2015-07-23</span> 
+	              </span>
+              	</a>
+              </li>
+
+            </ul>
+          </div>
+          
+          <!-- 파라미터 --> 
+          
+          <!-- //파라미터 -->
+          
+          <div class="paging"> <span id="pagingWrap"> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=1">처음</a> <b><a href="javascript:void(0);">1</a></b> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=2">2</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=3">3</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=4">4</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=5">5</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=6">6</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=7">7</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=8">8</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=9">9</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=10">10</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=11">다음</a> <a href="/mobile/goods/list.do?menu=menu1&rows=10&cpage=1124">끝</a> </span> </div>
+          <!-- end --> 
+          
+        </div>
+      </form>
+      
+      <!-- fixed_btn --> 
+      
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span> <span class="btn_regi"><a href="/mobile/seller/seller_insert.do"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span> <span class="btn_regi_2"><a href="/mobile/seller/resources_insert.do"><img src="/images/mobile/common/btn_resources.png" alt="자원등록"></a></span> 
+      
+      <!-- //fixed_btn --> 
+    </div>
+  </div>
+  <div id="footer">
+    <div class="f_top"><a href="#"><img src="/images/mobile/footer/f_top.gif" alt="top"></a></div>
+    <div class="f_util">
+      <ul>
+        <li class="first"><a href="/mobile/mypage/company/company.do">회사소개</a></li>
+        <li><a href="/mobile/mypage/annc/annc1.do">이용약관</a></li>
+        <li><a href="/mobile/mypage/annc/annc2.do">전자금융거래약관</a></li>
+        <li><a href="/mobile/mypage/annc/annc3.do">개인정보 취급방침</a></li>
+        <li><a href="/mobile/mypage/annc/annc4.do">E-mail 무단수집거부</a></li>
+        <!-- <li><a href="/mobile/mypage/mantoman/index.do">1:1문의</a></li> -->
+      </ul>
+      <p><strong>대표자</strong> : 박정호 ㅣ <strong>상호</strong> : 파츠모아 주식회사 ㅣ <strong>개인정보 관리책임자</strong> : 조성환 ㅣ <strong>사업자등록번호</strong> : 128-87-19389 ㅣ <strong>사업자주소</strong> : (410-821) 경기도 고양시 일산동구 동국로 286(식사동) ㅣ <strong>통신판매 신고번호</strong> : 제 2015-고양일산동-0394호</p>
+    </div>
+    <div class="copy">
+      <p><strong>TEL</strong> : 1544-6444 ㅣ <strong>FAX</strong> : 031-961-4699 ㅣ <strong>E-mail</strong> : partsmoa@insun.com</p>
+      <p>CopyrightⓒPARTSMOA.All Rights Reserved.</p>
+    </div>
+  </div>
+  <div class="left_back"></div>
+</div>
+<script type="text/javascript">
+function mymenu_changeMenu(){
+	if($("#mymenu_menu_id").val() == ""){
+		$("#mymenu_part2_1").empty();
+		$("#mymenu_part2_1").append("<option value=''>전체</option>");
+	}else{
+		$.getJSON("/json/list/old_code.codeList.do", {upcodeno : "05090100"+$("#mymenu_menu").val().replace("menu","")}, function(data){
+			$("#mymenu_part2_1").empty();
+			$("#mymenu_part2_1").append("<option value=''>전체</option>");
+			$.each(data, function(i, o){
+				$("#mymenu_part2_1").append("<option value='"+o.code+"'>"+o.code_nm+"</option>");
+			});
+		});
+	}
+}
+
+function mymenu_reset(){
+	$("#mymenu_carmodelseq").empty();
+	$("#mymenu_carmodelseq").append("<option value=''>전체</option>");
+	$("#mymenu_cargradeseq").empty();
+	$("#mymenu_cargradeseq").append("<option value=''>전체</option>");
+	$("#mymenu_part2_1").empty();
+	$("#mymenu_part2_1").append("<option value=''>전체</option>");
+	document.mymenu_frm.carmakerseq.options[0].selected = "selected";
+	document.mymenu_frm.menu.options[0].selected = "selected";
+	document.mymenu_frm.caryyyy.options[0].selected = "selected";
+	document.mymenu_frm.grade.options[0].selected = "selected";
+	document.mymenu_frm.search_all_text.value = "";	
+}
+
+function mymenu_changeCarmaker(){
+	if($("#mymenu_carmakerseq").val() == ""){
+		$("#mymenu_carmodelseq").empty();
+		$("#mymenu_carmodelseq").append("<option value=''>전체</option>");
+		$("#mymenu_cargradeseq").empty();
+		$("#mymenu_cargradeseq").append("<option value=''>전체</option>");
+	}else{
+		$("#mymenu_cargradeseq").empty();
+		$("#mymenu_cargradeseq").append("<option value=''>전체</option>");
+		$.getJSON("/json/list/old_code.carmodel.do", {carmakerseq : $("#mymenu_carmakerseq").val()}, function(data){
+			$("#mymenu_carmodelseq").empty();
+			$("#mymenu_carmodelseq").append("<option value=''>전체</option>");
+			$.each(data, function(i, o){
+				$("#mymenu_carmodelseq").append("<option value='"+o.carmodelseq+"'>"+o.carmodelnm+"</option>");
+			});
+		});
+	}
+}
+
+function mymenu_changeCarmodel(){
+	$.getJSON("/json/list/old_code.cargrade.do", {carmakerseq: $("#mymenu_carmakerseq").val(),  carmodelseq: $("#mymenu_carmodelseq").val()}, function(data){
+		$("#mymenu_cargradeseq").empty();
+		$("#mymenu_cargradeseq").append("<option value=''>전체</option>");
+		$.each(data, function(i, o){
+			$("#mymenu_cargradeseq").append("<option value='"+o.cargradeseq+"'>"+o.cargradenm+"</option>");
+		});
+	});
+}
+
+</script> 
+<!-- all_menu -->
+<div class="hide_menu" style="display:none;">
+  <div class="scrollOver overthrow">
+    <div class="sl_top">
+      <p class="my_menu">MY MENU</p>
+      <p class="text"><strong>인선모터스</strong> 님 께서 로그인 하셨습니다.</p>
+      <span class="btn_log"><a href="/mobile/login/login.do?mode=mlogout"><img src="/images/mobile/common/btn_logout.png" alt="로그아웃"></a></span> 
+      
+      <!-- <span><a href="/html/mobile/login/login.html"><img src="/images/mobile/common/btn_login.png" alt="로그인"></a></span> --> 
+    </div>
+    <div class="sl_wrap">
+      <div class="sc_box">
+        <h3><img src="/images/mobile/common/sl_title1.gif" alt="바로가기 서비스"></h3>
+        <ul>
+          <li><a href="/mobile/mypage/mantoman/index.do?menu=menu2"><img src="/images/mobile/common/sc_link1.gif" alt="중고부품정비견적"><span class="coPush">8</span> </a> </li>
+          <li><a href="/mobile/mypage/application/index.do?menu=menu1"><img src="/images/mobile/common/sc_link2.gif" alt="이런 부품이 있나요?"></a></li>
+          <li><a href="/mobile/mypage/shopping/cart/list.do?menu=menu3&amp;mode=m_add_cart_list"><img src="/images/mobile/common/sc_link3.gif" alt="장바구니"><!-- <span class="coPush">0</span> --></a></li>
+          <li><a href="/mobile/mypage/shopping/state/list.do?menu=menu3&amp;mode=m_list1"><img src="/images/mobile/common/sc_link4.gif" alt="주문조회"></a></li>
+        </ul>
+      </div>
+      <form action="/mobile/goods/list.do" method="post" id="mymenu_frm" name="mymenu_frm">
+        <div class="details_search">
+          <h3><img src="/images/mobile/common/sl_title2.gif" alt="부품 상세검색"></h3>
+          <div class="sl_search_box">
+            <p> <span class="input_t">
+              <input type="text" name="search_all_text" class="input_m1" value="">
+              </span> <span class="btn"> <a href="javascript:mymenu_reset();"><img src="/images/mobile/common/btn_reset.gif" alt="초기화"></a> <a href="javascript:document.mymenu_frm.submit();"><img src="/images/mobile/common/btn_search.gif" alt="검색"></a> </span> </p>
+            <table class="sl_style_1">
+              <colgroup>
+              <col width="25%">
+              <col width="">
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>부품분류</th>
+                  <td><select id="mymenu_menu" name="menu" class="select_sm" onchange="mymenu_changeMenu();">
+                      <option value="">부품을 선택해 주세요.</option>
+                      <option value="menu1" selected="selected">바디</option>
+                      <option value="menu2" >의장</option>
+                      <option value="menu3" >엔진</option>
+                      <option value="menu4" >샤시</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th>제조사</th>
+                  <td><select id="mymenu_carmakerseq" name="carmakerseq" class="select_sm" onchange="mymenu_changeCarmaker()">
+                      <option value="">전체</option>
+                      <option value="4" >GM대우(쉐보레)</option>
+                      <option value="2" >기아</option>
+                      <option value="59" >대우버스(기타)</option>
+                      <option value="3" >삼성</option>
+                      <option value="6" >쌍용</option>
+                      <option value="1" >현대</option>
+                      <option value="7" >BMW</option>
+                      <option value="10" >GM</option>
+                      <option value="55" >jeep</option>
+                      <option value="54" >기타</option>
+                      <option value="60" >내비스타 인터내셔널</option>
+                      <option value="11" >닛산</option>
+                      <option value="12" >다이하쓰</option>
+                      <option value="13" >닷지</option>
+                      <option value="14" >도요타</option>
+                      <option value="15" >람보르기니</option>
+                      <option value="16" >랙서스</option>
+                      <option value="56" >랜드로버</option>
+                      <option value="17" >로버</option>
+                      <option value="18" >로터스</option>
+                      <option value="19" >롤스로이스</option>
+                      <option value="20" >르노</option>
+                      <option value="21" >링컨</option>
+                      <option value="22" >마세라티</option>
+                      <option value="27" >미쓰비시</option>
+                      <option value="8" >벤츠</option>
+                      <option value="28" >벤틀리</option>
+                      <option value="29" >볼보</option>
+                      <option value="31" >뷰익</option>
+                      <option value="32" >사브</option>
+                      <option value="5" >쉐보레</option>
+                      <option value="34" >스바루</option>
+                      <option value="38" >시트로엥</option>
+                      <option value="9" >아우디</option>
+                      <option value="39" >에스턴마틴</option>
+                      <option value="40" >오펠</option>
+                      <option value="41" >인피니티</option>
+                      <option value="42" >재규어</option>
+                      <option value="43" >캐딜락</option>
+                      <option value="44" >크라이슬러</option>
+                      <option value="45" >페라리</option>
+                      <option value="46" >포드</option>
+                      <option value="47" >포르쉐</option>
+                      <option value="48" >폭스바겐</option>
+                      <option value="50" >푸조</option>
+                      <option value="53" >혼다</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th>차량명</th>
+                  <td><select id="mymenu_carmodelseq" name="carmodelseq" class="select_sm" onchange="mymenu_changeCarmodel()">
+                      <option value="">전체</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th>모델명</th>
+                  <td><select id="mymenu_cargradeseq" name="cargradeseq" class="select_sm" >
+                      <option value="">전체</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th>연식</th>
+                  <td><select id="mymenu_caryyyy" name="caryyyy" class="select_sm">
+                      <option value="">전체</option>
+                      <option value="1995" >1995년</option>
+                      <option value="1996" >1996년</option>
+                      <option value="1997" >1997년</option>
+                      <option value="1998" >1998년</option>
+                      <option value="1999" >1999년</option>
+                      <option value="2000" >2000년</option>
+                      <option value="2001" >2001년</option>
+                      <option value="2002" >2002년</option>
+                      <option value="2003" >2003년</option>
+                      <option value="2004" >2004년</option>
+                      <option value="2005" >2005년</option>
+                      <option value="2006" >2006년</option>
+                      <option value="2007" >2007년</option>
+                      <option value="2008" >2008년</option>
+                      <option value="2009" >2009년</option>
+                      <option value="2010" >2010년</option>
+                      <option value="2011" >2011년</option>
+                      <option value="2012" >2012년</option>
+                      <option value="2013" >2013년</option>
+                      <option value="2014" >2014년</option>
+                      <option value="2015" >2015년</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th>세부부품</th>
+                  <td><select id="mymenu_part2_1" name="part2_1" class="select_sm">
+                      <option value="">전체</option>
+                      <option value="050901001025" >라지에이터 그릴</option>
+                      <option value="050901001013" >본닛</option>
+                      <option value="050901001029" >바디 기타</option>
+                      <option value="050901001002" >리어 범퍼</option>
+                      <option value="050901001001" >프런트 범퍼</option>
+                      <option value="050901001021" >백도어</option>
+                      <option value="050901001024" >썬루프</option>
+                      <option value="050901001018" >트렁크</option>
+                      <option value="050901001010" >콤비네이션 램프(우)</option>
+                      <option value="050901001004" >헤드 램프(우)</option>
+                      <option value="050901001009" >콤비네이션 램프(좌)</option>
+                      <option value="050901001014" >프런트 도어(좌)</option>
+                      <option value="050901001017" >리어 도어(우)</option>
+                      <option value="050901001022" >펜더(좌)</option>
+                      <option value="050901001019" >슬라이딩 도어(좌)</option>
+                      <option value="050901001012" >사이드 미러(우)</option>
+                      <option value="050901001020" >슬라이딩 도어(우)</option>
+                      <option value="050901001006" >포그 램프(우)</option>
+                      <option value="050901001026" >프런트 바디</option>
+                      <option value="050901001003" >헤드 램프(좌)</option>
+                      <option value="050901001005" >포그 램프(좌)</option>
+                      <option value="050901001023" >펜더(우)</option>
+                      <option value="050901001016" >리어 도어(좌)</option>
+                      <option value="050901001015" >프런트 도어(우)</option>
+                      <option value="050901001008" >턴시그널 램프(우)</option>
+                      <option value="050901001027" >리어 바디</option>
+                      <option value="050901001007" >턴시그널 램프(좌)</option>
+                      <option value="050901001011" >사이드 미러(좌)</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th>등급</th>
+                  <td><select id="mymenu_grade" name="grade" class="select_sm">
+                      <option value="">전체</option>
+                      <option value="A" >A등급</option>
+                      <option value="B" >B등급</option>
+                      <option value="C" >C등급</option>
+                    </select></td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <!-- END --> 
+          </div>
+        </div>
+      </form>
+      <div class="visual"><a href="tel:1544-6444"><img src="/images/mobile/common/sl_visual.png" alt="PARTS MOA 고객센터 평일 08:30 ~ 19:00 토,일,공휴일 휴무 1544-6444, FAX / 031.961.4699 help@Insun.com"></a></div>
+    </div>
+  </div>
+  <span class="sl_close"><a href="#"><img src="/images/mobile/common/sl_close.png" alt="닫기"></a></span> </div>
+<script type="text/javascript" src="/lib/js/mobile_menu.js"></script> 
+<!-- //all_menu -->
+
+</body>
+</html>

@@ -1,0 +1,1269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="article">
+
+
+	<select id="info" parameterType="Map" resultType="mcmap">
+		SELECT T1.BOARD_SEQ,
+          T1.BOARD_NM,
+          T1.BOARD_TYPE,
+          T1.ADMIN_YN,
+          T1.FILE_YN ,
+          T1.COMM_YN,
+          T1.SEARCH_YN,
+          T1.USE_YN
+        FROM NSH_BOARD T1
+        WHERE T1.DEL_YN ='N'
+        AND T1.BOARD_SEQ=#{board_seq}
+	</select>
+	
+	<select id="list" parameterType="Map" resultType="mcmap" >
+		SELECT PT1.* 
+		<if test="board_type eq 'E'.toString()">
+		,FN_BLOG_CONTS(PT1.CONTS2) CONTS
+		</if>
+		FROM (
+		SELECT T1.ARTICLE_SEQ, BOARD_SEQ, TITLE,VIEW_CNT,REPLY_CNT,COMM_CNT,REPLY_DEPTH,STATUS,
+		B.MEMBER_ID,
+		<if test="(board_seq == 5 or board_seq == 6 or board_seq == 8)">
+		T2.CODENM AS GROUPCODENM,
+		T3.CODENM AS CODENM,
+		</if>
+		PUBLIC_YN,TO_CHAR(REG_DT,'YYYY-MM-DD') REG_DT,REG_SEQ, REG_NM,NOTICE_YN, MOVIE_PATH, THUMB,PARENT_SEQ,
+		<if test="board_type eq 'D'.toString()">
+		(SELECT SUBSTR(XMLAGG(XMLELEMENT (A,'|'||ATTACH_NM,','||UUID)).EXTRACT('//text()'),2)
+		FROM NSH_ATTACH
+		WHERE TABLE_NM=#{table_nm}
+		AND TABLE_SEQ=T1.ARTICLE_SEQ
+		GROUP BY TABLE_SEQ) ATTACH_INFO,
+		</if>
+		<if test="board_type eq 'C'.toString()">
+		CONTS,
+		</if>
+		<if test="board_type eq 'H'.toString()">
+		CONTS,
+		</if>
+		<if test="board_type eq 'I'.toString()">
+		CONTS,
+		</if>
+		<if test="board_type eq 'E'.toString()">
+		CONTS CONTS2,
+		</if>
+		<if test="board_type eq 'B'.toString()">
+            (SELECT REG_NM FROM NSH_ARTICLE WHERE BOARD_SEQ ='221' AND REPLY_ORDER = '1' AND REPLY_DEPTH = '1' AND PARENT_SEQ = T1.ARTICLE_SEQ) AS STAFF_NM,
+            (SELECT CORP_TEL FROM NSH_MEMBER WHERE GROUP_SEQ = '2' AND MEMBER_NM = ( 
+            	SELECT REG_NM FROM NSH_ARTICLE WHERE BOARD_SEQ ='221' AND REPLY_ORDER = '1' AND REPLY_DEPTH = '1' AND PARENT_SEQ = T1.ARTICLE_SEQ) 
+            ) AS STAFF_TEL,
+            CHARGE_POS, CHARGE_TEL,
+            (SELECT CORP_POS FROM NSH_MEMBER WHERE MEMBER_SEQ = T1.CHARGE_POS) AS CHARGE1,
+            (SELECT MEMBER_NM FROM NSH_MEMBER WHERE MEMBER_SEQ = T1.CHARGE_POS) AS CHARGE2,
+            (SELECT CORP_TEL FROM NSH_MEMBER WHERE MEMBER_SEQ = T1.CHARGE_POS) AS CHARGE3, 
+		</if>
+		<if test="board_type eq 'I'.toString()">
+            (SELECT UUID FROM  WHERE TABLE_SEQ = T1.ARTICLE_SEQ AND ORDER_SEQ = '2') AS UUID,
+		</if>
+		X.FILE_THUMB,
+		CASE WHEN REG_DT >= SYSDATE-3 THEN 'Y' ELSE 'N' END NEW_YN,
+		ROW_NUMBER() 		OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) RN
+		FROM NSH_ARTICLE T1
+		<if test="(board_seq == 5 or board_seq == 6 or board_seq == 8)">
+		LEFT OUTER JOIN V_IS_CODEMST T2 ON T2.UPCODENO = 050901 AND T2.CODENO = T1.UPCODENO
+		LEFT OUTER JOIN V_IS_CODEMST T3 ON T3.CODENO = T1.CODENO
+		</if>
+		LEFT OUTER JOIN (
+		SELECT
+            C.*
+        FROM (
+            SELECT
+              MEMBER_SEQ, MEMBER_ID, MEMBER_PW, MEMBER_NM, GROUP_SEQ, 
+              0 AS COM_SEQ, '' AS COM_NM
+            FROM MC_MEMBER
+            WHERE DEL_YN='N'
+            UNION ALL            
+            SELECT
+                a.PARENT_SEQ AS MEMBER_SEQ, a.MEMBER_ID, a.MEMBER_PW, b.COM_NM AS MEMBER_NM, 3 AS GROUP_SEQ,
+                b.SEQ AS COM_SEQ, b.COM_NM
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+        ) C) B ON B.MEMBER_SEQ = T1.REG_SEQ AND B.GROUP_SEQ = T1.REG_GROUP_SEQ
+        
+        LEFT OUTER JOIN (
+        	SELECT TABLE_SEQ, '/upload/board/' || YYYY ||'/'|| MM ||'/'|| UUID || '_thumb' AS FILE_THUMB FROM NSH_ATTACH WHERE TABLE_NM='NSH_ARTICLE' AND ORDER_SEQ = 1
+        ) X ON X.TABLE_SEQ = T1.ARTICLE_SEQ
+		<where>
+		<choose>
+		<when test="board_seq == null">
+		BOARD_SEQ=#{board_seq}
+		</when>
+		<otherwise>
+		BOARD_SEQ in (${board_seq})
+		</otherwise>
+		</choose>
+		<if test="(status != null and status eq 'N'.toString())">
+		AND STATUS &lt;&gt; '3'
+		</if>
+		AND T1.DEL_YN='N' AND NOTICE_YN = 'N'
+		<if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%${keyword}%' 
+        </if>
+        <if test="!(parent_seq == null or parent_seq == '')">
+        AND PARENT_SEQ = #{parent_seq} and REPLY_DEPTH > 0
+        </if>
+       
+        <if test="board_type eq 'E'.toString() and !(month == null or month == '')">
+        AND TO_CHAR(T1.REG_DT, 'MM') = #{month}
+        </if>
+        <if test="board_type eq 'B'.toString()">
+		AND T1.PARENT_SEQ=T1.ARTICLE_SEQ
+		</if>
+		
+		</where>
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows, jdbcType=INTEGER},10))=NVL(#{cpage, jdbcType=INTEGER},1)  ORDER BY RN ASC
+	</select>
+	
+	<select id="page_info" parameterType="Map" resultType="mcmap" >
+		SELECT 
+		CEIL(COUNT(1)/NVL(#{rows, jdbcType=INTEGER},10)) TOTALPAGE,
+		COUNT(1) TOTALCOUNT
+		FROM NSH_ARTICLE T1
+		<where>
+		<choose>
+		<when test="board_seq == null">
+		BOARD_SEQ=#{board_seq}
+		</when>
+		<otherwise>
+		BOARD_SEQ in (${board_seq})
+		</otherwise>
+		</choose>
+		<if test="(status != null and status eq 'N'.toString())">
+		AND STATUS &lt;&gt; '3'
+		</if>
+		AND T1.DEL_YN='N' AND NOTICE_YN = 'N'
+		<if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%${keyword}%' 
+        </if>
+        <if test="!(parent_seq == null or parent_seq == '')">
+        AND PARENT_SEQ = #{parent_seq} and REPLY_DEPTH > 0
+        </if>
+
+        <if test="board_type eq 'E'.toString() and !(month == null or month == '')">
+        AND TO_CHAR(T1.REG_DT, 'MM') = #{month}
+        </if>
+		<if test="board_type eq 'B'.toString()">
+		AND T1.PARENT_SEQ=T1.ARTICLE_SEQ
+		</if>
+		</where>
+	</select>
+	
+	<select id="article" parameterType="Map" resultType="mcmap">
+		SELECT * FROM (
+		SELECT ARTICLE_SEQ, BOARD_SEQ, TITLE, CONTS, PARENT_SEQ, REPLY_ORDER, VIEW_CNT, CATE_GROUP_CODE, CATE_CODE,
+		  REPLY_DEPTH, PUBLIC_YN, CHARGE_POS, CHARGE_TEL, TO_CHAR(REG_DT,'YYYY-MM-DD') REG_DT, TO_CHAR(REG_DT,'YYYY-MM-DD HH24:MI') REG_DTT,
+		  REG_SEQ, REG_NM, NOTICE_YN, MOVIE_PATH, MOVIE_CONTS, THUMB, DEL_YN, STATUS,
+		  B.MEMBER_ID, PASS, ATC.CODENO, ATC.UPCODENO,
+		  <if test="(board_seq == 5 or board_seq == 6 or board_seq == 8)">
+		  T2.CODENM AS GROUPCODENM,
+		  T3.CODENM AS CODENM,
+		  </if>
+		  LEAD(ARTICLE_SEQ, 1) OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) NEXT_ARTICLE_SEQ,
+		  LEAD(TITLE, 1) OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) NEXT_ARTICLE_TITLE,
+		  LEAD(PUBLIC_YN, 1) OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) NEXT_ARTICLE_PUBLIC_YN,
+    	  LAG(ARTICLE_SEQ, 1)  OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) PRE_ARTICLE_SEQ,
+    	  LAG(TITLE, 1)  OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) PRE_ARTICLE_TITLE,
+    	  LAG(PUBLIC_YN, 1)  OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) PRE_ARTICLE_PUBLIC_YN
+		FROM NSH_ARTICLE ATC 
+		<if test="(board_seq == 5 or board_seq == 6 or board_seq == 8)">
+		LEFT OUTER JOIN V_IS_CODEMST T2 ON T2.UPCODENO = 050901 AND T2.CODENO = ATC.UPCODENO
+		LEFT OUTER JOIN V_IS_CODEMST T3 ON T3.CODENO = ATC.CODENO
+		</if>
+		LEFT OUTER JOIN (
+		SELECT
+            C.*
+        FROM (
+            SELECT
+              MEMBER_SEQ, MEMBER_ID, MEMBER_PW, MEMBER_NM, GROUP_SEQ, 
+              0 AS COM_SEQ, '' AS COM_NM
+            FROM MC_MEMBER
+            WHERE DEL_YN='N'
+            UNION ALL            
+            SELECT
+                a.PARENT_SEQ AS MEMBER_SEQ, a.MEMBER_ID, a.MEMBER_PW, b.COM_NM AS MEMBER_NM, 3 AS GROUP_SEQ,
+                b.SEQ AS COM_SEQ, b.COM_NM
+            FROM NSH_COOPERATION_MEMBER a  JOIN NSH_COOPERATION b
+            ON B.DEL_YN='N'
+                AND a.PARENT_SEQ = b.SEQ
+        ) C) B ON B.MEMBER_SEQ = ATC.REG_SEQ AND B.GROUP_SEQ = ATC.REG_GROUP_SEQ
+		WHERE BOARD_SEQ= #{board_seq} AND DEL_YN='N' 
+		<if test="(status != null and status eq 'N'.toString())">
+		AND STATUS &lt;&gt; '3'
+		</if>
+		<if test="!(group_code == null or group_code == '')">
+		AND CATE_GROUP_CODE = #{group_code}
+		</if>
+		<if test="!(cate_seq == null or cate_seq == '')">
+		AND CATE_CODE = #{cate_seq}
+		</if>
+		) WHERE ARTICLE_SEQ=#{article_seq}
+	</select>
+	
+	<select id="nextval" resultType="String">
+		select SEQ_NSH_ARTICLE.nextval from dual
+	</select>
+	
+	<insert id="insert" parameterType="Map">
+		INSERT INTO NSH_ARTICLE (
+			ARTICLE_SEQ,
+			BOARD_SEQ,
+			TITLE,
+			CONTS,
+			IP,
+			PARENT_SEQ,
+			<if test="public_yn != null">
+			PUBLIC_YN,
+			</if>
+			CHARGE_POS,
+			CHARGE_TEL,
+			REG_GROUP_SEQ,
+			REG_SEQ,
+			REG_NM,
+			<if test="notice_yn != null">
+			NOTICE_YN,
+			</if>
+			<if test="reply_order != null">
+			REPLY_ORDER,
+			</if>
+			<if test="reply_depth != null">
+			REPLY_DEPTH,
+			</if>
+			
+			<if test="cate_group_code != null">
+			CATE_GROUP_CODE,
+			</if>
+			<if test="cate_code != null">
+			CATE_CODE,
+			</if>
+			<if test="status != null">
+			STATUS,
+			</if>
+			<if test="pass != null">
+			PASS,
+			</if>
+			
+			<if test="codeno != null">
+			CODENO,
+			</if>
+			<if test="upcodeno != null">
+			UPCODENO,
+			</if>
+			<if test="sdate != null">
+			SDATE,
+			</if>
+			<if test="edate != null">
+			EDATE,
+			</if>
+			THUMB,
+			MOVIE_PATH,
+			MOVIE_CONTS			
+		) VALUES (
+			#{article_seq},
+			#{board_seq},
+			#{title},
+			#{conts},
+			#{ip},
+			#{parent_seq},
+			<if test="public_yn != null">
+			#{public_yn},
+			</if>
+			#{charge_pos, jdbcType=VARCHAR},
+			#{charge_tel, jdbcType=VARCHAR},
+			#{session_member_group_seq},
+			#{session_member_seq},
+			#{session_member_nm},
+			<if test="notice_yn != null">
+			#{notice_yn},
+			</if>
+			<if test="reply_order != null">
+			#{reply_order} + 1,
+			</if>
+			<if test="reply_depth != null">
+			#{reply_depth} + 1,
+			</if>
+			<if test="cate_group_code != null">
+			#{cate_group_code},
+			</if>
+			<if test="cate_code != null">
+			#{cate_code},
+			</if>
+			<if test="status != null">
+			#{status},
+			</if>
+			<if test="pass != null">
+			#{pass},
+			</if>
+			
+			<if test="codeno != null">
+			#{codeno},
+			</if>
+			<if test="upcodeno != null">
+			#{upcodeno},
+			</if>
+			<if test="sdate != null">
+			TO_DATE(#{sdate}, 'YYYY-MM-DD'),
+			</if>
+			<if test="edate != null">
+			TO_DATE(#{edate}, 'YYYY-MM-DD'),
+			</if>
+			
+			#{thumb, jdbcType=VARCHAR},
+			#{movie_path, jdbcType=VARCHAR},
+			#{movie_conts, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="Map">
+		UPDATE NSH_ARTICLE
+		SET TITLE=#{title}
+		,CONTS=#{conts}
+		,CHARGE_POS=#{charge_pos, jdbcType=VARCHAR}
+		,CHARGE_TEL=#{charge_tel, jdbcType=VARCHAR}
+		,MOD_DT=sysdate
+		,MOD_GROUP_SEQ=#{session_member_group_seq}
+		,MOD_SEQ=#{session_member_seq}
+		,MOD_NM=#{session_member_nm}
+		<if test="public_yn != null">
+		,PUBLIC_YN=#{public_yn}
+		</if>
+		<if test="notice_yn != null">
+		,NOTICE_YN=#{notice_yn}
+		</if>
+		<if test="cate_group_code != null">
+		,CATE_GROUP_CODE=#{cate_group_code}
+		</if>
+		<if test="cate_code != null">
+		,CATE_CODE=#{cate_code}
+		</if>
+		<if test="thumb != null and thumb != ''">
+		,THUMB=#{thumb}
+		</if>
+		<if test="status != null">
+		,STATUS=#{status}
+		</if>
+		<if test="movie_path != null">
+		,MOVIE_PATH=#{movie_path}
+		</if>
+		<if test="codeno != null">
+		,CODENO=#{codeno}
+		</if>
+		<if test="upcodeno != null">
+		,UPCODENO=#{upcodeno}
+		</if>
+
+		<if test="sdate != null">
+		,SDATE=TO_DATE(#{sdate}, 'YYYY-MM-DD')
+		</if>
+		<if test="edate != null">
+		,EDATE=TO_DATE(#{edate}, 'YYYY-MM-DD')
+		</if>
+		
+		<if test="movie_conts != null">
+		,MOVIE_CONTS=#{movie_conts}
+		</if>
+		WHERE ARTICLE_SEQ = #{article_seq}
+	</update>
+	
+	<update id="remove" parameterType="Map">
+		update NSH_ARTICLE set 
+			DEL_YN='Y', 
+			DEL_DT=sysdate, 
+			DEL_GROUP_SEQ=#{session_member_group_seq}, 
+			DEL_SEQ=#{session_member_seq}, 
+			DEL_NM=#{session_member_nm}
+		WHERE ARTICLE_SEQ in (${article_seq})
+	</update>	
+	
+	
+	<select id="categoryList" parameterType="Map" resultType="mcmap" >
+		SELECT 
+			CATE_SEQ,
+			GROUP_CODE,
+			SUBJECT,
+			ORDERBY,
+			USE_YN
+		FROM NSH_ARTICLE_CATEGORY
+		WHERE 
+			GROUP_CODE = ${group_code} 
+			AND DEL_YN = 'N'
+			<if test="(use_yn == '' or use_yn == null)">
+			AND USE_YN = 'Y'
+			</if>
+		<choose>
+			<when test="order == 'Y'.toString()">ORDER BY TO_NUMBER(ORDERBY) ASC, CATE_SEQ ASC</when>
+			<otherwise>ORDER BY ORDERBY ASC, CATE_SEQ ASC</otherwise>
+		</choose> 
+	</select>
+	
+	<select id="list_category" parameterType="Map" resultType="mcmap" >
+		SELECT PT1.* 
+		FROM (
+		SELECT T1.ARTICLE_SEQ, BOARD_SEQ, TITLE, CONTS, VIEW_CNT,REPLY_CNT,COMM_CNT,REPLY_DEPTH,
+		T2.SUBJECT,
+		PUBLIC_YN,TO_CHAR(REG_DT,'YYYY-MM-DD') REG_DT,REG_SEQ, REG_NM,NOTICE_YN, MOVIE_PATH, THUMB,PARENT_SEQ,
+		(SELECT SUBSTR(XMLAGG(XMLELEMENT (A,'|'||ATTACH_NM,','||UUID)).EXTRACT('//text()'),2)
+		FROM NSH_ATTACH
+		WHERE TABLE_NM=#{table_nm}
+		AND TABLE_SEQ=T1.ARTICLE_SEQ
+		GROUP BY TABLE_SEQ) ATTACH_INFO,
+		CASE WHEN REG_DT >= SYSDATE-3 THEN 'Y' ELSE 'N' END NEW_YN,
+		ROW_NUMBER() 		OVER(ORDER BY REG_DT DESC, T2.ORDERBY ASC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) RN
+		FROM NSH_ARTICLE T1
+        RIGHT OUTER JOIN NSH_ARTICLE_CATEGORY T2 ON T2.GROUP_CODE = T1.CATE_GROUP_CODE AND T2.CATE_SEQ = T1.CATE_CODE AND T2.DEL_YN = 'N'
+		<where>
+		<choose>
+		<when test="board_seq == null">
+		BOARD_SEQ=#{board_seq}
+		</when>
+		<otherwise>
+		BOARD_SEQ in (${board_seq})
+		</otherwise>
+		</choose>
+		AND T1.DEL_YN='N' AND NOTICE_YN = 'N'
+		<if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%${keyword}%' 
+        </if>
+        <if test="!(parent_seq == null or parent_seq == '')">
+        AND PARENT_SEQ = #{parent_seq} and REPLY_DEPTH > 0
+        </if>
+       
+        <if test="board_type eq 'E'.toString() and !(month == null or month == '')">
+        AND TO_CHAR(T1.REG_DT, 'MM') = #{month}
+        </if>
+        <if test="board_type eq 'B'.toString()">
+		AND T1.PARENT_SEQ=T1.ARTICLE_SEQ
+		</if>
+		
+		<if test="!(group_code == null or group_code == '')" >
+        AND T2.GROUP_CODE = #{group_code} 
+        </if>
+		<if test="!(cate_seq == null or cate_seq == '' or cate_seq == 0)" >
+       	AND T2.CATE_SEQ = #{cate_seq}
+       	</if>
+		
+		</where>
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows, jdbcType=INTEGER},10))=NVL(#{cpage, jdbcType=INTEGER},1)  ORDER BY RN ASC
+	</select>
+	
+	<select id="page_info_category" parameterType="Map" resultType="mcmap" >
+		SELECT 
+		CEIL(COUNT(1)/NVL(#{rows, jdbcType=INTEGER},10)) TOTALPAGE,
+		COUNT(1) TOTALCOUNT
+		FROM NSH_ARTICLE T1
+		RIGHT OUTER JOIN NSH_ARTICLE_CATEGORY T2 ON T2.GROUP_CODE = T1.CATE_GROUP_CODE AND T2.CATE_SEQ = T1.CATE_CODE AND T2.DEL_YN = 'N'
+		<where>
+		<choose>
+		<when test="board_seq == null">
+		BOARD_SEQ=#{board_seq}
+		</when>
+		<otherwise>
+		BOARD_SEQ in (${board_seq})
+		</otherwise>
+		</choose>
+		AND T1.DEL_YN='N' AND NOTICE_YN = 'N'
+		<if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%${keyword}%' 
+        </if>
+        <if test="!(parent_seq == null or parent_seq == '')">
+        AND PARENT_SEQ = #{parent_seq} and REPLY_DEPTH > 0
+        </if>
+
+        <if test="board_type eq 'E'.toString() and !(month == null or month == '')">
+        AND TO_CHAR(T1.REG_DT, 'MM') = #{month}
+        </if>
+		<if test="board_type eq 'B'.toString()">
+		AND T1.PARENT_SEQ=T1.ARTICLE_SEQ
+		</if>
+		
+		<if test="!(group_code == null or group_code == '')" >
+        AND T2.GROUP_CODE = #{group_code} 
+        </if>
+		<if test="!(cate_seq == null or cate_seq == '' or cate_seq == 0)" >
+       	AND T2.CATE_SEQ = #{cate_seq}
+       	</if>
+       	
+		</where>
+	</select>
+	
+	
+	<insert id="category_insert" parameterType="Map">
+		INSERT INTO NSH_ARTICLE_CATEGORY (
+			CATE_SEQ,
+			GROUP_CODE,
+			SUBJECT,
+			USE_YN,
+			ORDERBY
+		) VALUES (
+			SEQ_NSH_ARTICLE_CATEGORY.nextval,
+			#{group_code},
+			#{subject},
+			#{use_yn},
+			#{orderby}
+		)
+	</insert>
+	
+	<update id="category_update" parameterType="Map">
+		UPDATE NSH_ARTICLE_CATEGORY SET
+			<if test="(del_yn == null or del_yn == '')" >
+			SUBJECT = #{subject}
+			,USE_YN = #{use_yn}
+			,ORDERBY = #{orderby}
+			</if>
+			<if test="!(del_yn == null or del_yn == '')" >
+			DEL_YN = 'Y'
+       		</if>
+		WHERE CATE_SEQ IN (#{cate_seq})
+	</update>
+	
+	<select id="list_notice" parameterType="Map" resultType="mcmap" >
+		SELECT PT1.* 
+		FROM (
+		SELECT T1.ARTICLE_SEQ, BOARD_SEQ, TITLE,VIEW_CNT,REPLY_CNT,COMM_CNT,REPLY_DEPTH,
+		PUBLIC_YN,TO_CHAR(REG_DT,'YYYY-MM-DD') REG_DT,REG_SEQ, REG_NM,NOTICE_YN, MOVIE_PATH, THUMB,PARENT_SEQ,	
+		CASE WHEN REG_DT >= SYSDATE-3 THEN 'Y' ELSE 'N' END NEW_YN,
+		ROW_NUMBER() 		OVER(ORDER BY REG_DT DESC, NOTICE_YN DESC, PARENT_SEQ DESC, REPLY_ORDER ASC) RN
+		FROM NSH_ARTICLE T1
+		<where>
+		<choose>
+			<when test="board_seq == null">
+			BOARD_SEQ=#{board_seq}
+			</when>
+			<otherwise>
+			BOARD_SEQ in (${board_seq})
+			</otherwise>
+		</choose>
+		AND T1.DEL_YN='N' AND NOTICE_YN = 'Y'
+		<if test="!(keyword == null or keyword == '')" >
+        AND ${condition} like '%${keyword}%' 
+        </if>
+		</where>
+		) PT1
+		ORDER BY REG_DT desc
+	</select>	
+	
+	
+	<select id="comment_list" parameterType="Map" resultType="mcmap">
+		SELECT 
+			COMMENT_SEQ,
+			CONTS,
+			TO_CHAR(REG_DT,'YYYY/MM/DD HH:mm:ss') REG_DT,
+			REG_GROUP_SEQ,
+			REG_SEQ,
+			REG_NM,
+			LVL,
+			REG_ID,
+			REPLY_ID,
+			PASSWORD,
+		    ROW_NUMBER() OVER(ORDER BY GRP DESC, SEQ ASC, LVL DESC) RN
+		FROM NSH_COMMENT
+		WHERE ARTICLE_SEQ=#{article_seq}
+		AND DEL_YN='N'
+	</select>
+	
+	<select id="comment_list_cooperation" parameterType="Map" resultType="mcmap">
+		SELECT 
+			A.COMMENT_SEQ,
+			A.CONTS,
+			TO_CHAR(A.REG_DT,'YYYY/MM/DD HH:mm:ss') REG_DT,
+			A.REG_GROUP_SEQ,
+			A.REG_SEQ,
+			A.REG_NM,
+			A.LVL,
+			A.REG_ID,
+			A.REPLY_ID,
+			A.PASSWORD,
+			ROW_NUMBER() OVER(ORDER BY A.GRP DESC, A.SEQ ASC, A.LVL DESC) RN,
+			C.*
+		FROM NSH_COMMENT A
+		LEFT OUTER JOIN NSH_COOPERATION_MEMBER B ON A.REG_ID = B.MEMBER_ID
+		LEFT OUTER JOIN NSH_COOPERATION C ON B.PARENT_SEQ = C.SEQ
+			WHERE A.ARTICLE_SEQ=#{article_seq}
+			AND A.DEL_YN='N'
+	</select>
+	
+	<insert id="comment_insert" parameterType="Map">
+		INSERT INTO NSH_COMMENT(
+		  COMMENT_SEQ,
+		  ARTICLE_SEQ,
+		  CONTS,
+		  IP,
+		  REG_GROUP_SEQ,
+		  REG_SEQ,
+		  REG_NM,
+		  GRP,
+		  SEQ,
+		  LVL,
+		  <if test="!(reply_id == null or reply_id == '')">
+		  REPLY_ID,
+		  </if>
+		  <if test="!(password == null or password == '')">
+		  PASSWORD,
+		  </if>
+		  REG_ID		  
+		)VALUES(
+		  SEQ_NSH_COMMENT.nextval,
+		  #{article_seq},
+		  #{conts},
+		  #{ip},
+		  #{session_member_group_seq},
+		  #{session_member_seq},
+		  #{session_member_nm},
+		  <if test="(grp == null or grp == '')">
+		  SEQ_NSH_COMMENT.currval,
+		  </if>
+		  <if test="!(grp == null or grp == '')">
+		  #{grp},
+		  </if>
+		  
+		  <if test="(seq == null or seq == '')">
+		  1,
+		  </if>
+		  <if test="!(seq == null or seq == '')">
+		  #{seq},
+		  </if>
+		  
+		  <if test="(lvl == null or lvl == '')">
+		  0,
+		  </if>
+		  <if test="!(lvl == null or lvl == '')">
+		  #{lvl},
+		  </if>
+		  
+		  <if test="!(reply_id == null or reply_id == '')">
+		  #{reply_id},
+		  </if>
+		  <if test="!(password == null or password == '')">
+		  #{password},
+		  </if>
+		  #{reg_id}
+		  )
+	</insert>
+	
+	<!-- commentReply -->
+	<select id="commentReplyInfo" parameterType="Map" resultType="mcmap">
+		SELECT
+			CONTS,
+			REG_ID,
+			REG_NM,
+			ARTICLE_SEQ, 
+			GRP,
+			SEQ,
+			LVL,
+			PASSWORD
+		FROM 
+			NSH_COMMENT 
+		WHERE COMMENT_SEQ=#{comment_seq} AND DEL_YN='N'
+	</select>
+	
+	<update id="commentReplyInfoUpdate" parameterType="Map">
+		UPDATE NSH_COMMENT SET SEQ=SEQ+1 WHERE GRP=${grp} AND SEQ > ${seq}
+	</update>
+	
+	
+	<update id="commentDelReply" parameterType="Map">
+		UPDATE NSH_COMMENT SET DEL_YN='Y' WHERE GRP=${grp} AND SEQ >= ${seq} AND LVL > ${lvl} 
+	</update>
+	
+	<update id="commentDel" parameterType="Map">
+		UPDATE NSH_COMMENT SET DEL_YN='Y' WHERE GRP=${grp} AND SEQ = ${seq} AND LVL = ${lvl}
+	</update>
+	
+	<update id="commentReplyUpdate" parameterType="Map">
+		UPDATE NSH_COMMENT SET
+			CONTS = #{conts}
+		WHERE
+			COMMENT_SEQ = ${comment_seq}
+	</update>	
+	
+	<update id="articleCommentCnt" parameterType="Map">
+		UPDATE NSH_ARTICLE A SET A.COMM_CNT = (SELECT COUNT(B.ARTICLE_SEQ) FROM NSH_COMMENT B WHERE B.ARTICLE_SEQ = #{article_seq} AND B.DEL_YN = 'N') WHERE A.ARTICLE_SEQ = #{article_seq}
+	</update>
+	
+	<select id="groupcodemst" parameterType="Map" resultType="mcmap">
+		SELECT * FROM V_IS_CODEMST WHERE CODENM IN ('바디','의장','엔진','샤시') AND USEYN = 'Y' AND UPCODENO = 050901
+	</select>
+	
+	<select id="codemst" parameterType="Map" resultType="mcmap">
+		SELECT * FROM V_IS_CODEMST WHERE USEYN = 'Y' AND UPCODENO = #{upcodeno}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<select id="reply_list" parameterType="Map" resultType="mcmap">
+		SELECT ARTICLE_SEQ, BOARD_SEQ, TITLE, CHARGE_POS, CHARGE_TEL
+			, TO_CHAR(REG_DT,'YYYY-MM-DD HH24:MI') REG_DT,
+		  REG_NM
+		  ,ROW_NUMBER() OVER(ORDER BY REPLY_ORDER ASC) RN
+		FROM NSH_ARTICLE 
+		WHERE DEL_YN='N'
+		AND PARENT_SEQ=#{article_seq}
+		AND PARENT_SEQ&lt;&gt;ARTICLE_SEQ
+	</select>
+	
+	
+	
+	<update id="update_reply_order" parameterType="Map">
+		UPDATE NSH_ARTICLE
+		SET REPLY_ORDER=REPLY_ORDER + 1
+		WHERE PARENT_SEQ = #{parent_seq}
+		AND REPLY_ORDER>#{reply_order}
+	</update>
+	
+	
+	
+	<update id="comment_remove" parameterType="Map">
+		update NSH_COMMENT set DEL_YN='Y', DEL_DT=sysdate, DEL_SEQ=#{session_member_seq}, DEL_NM=#{session_member_nm}
+		WHERE COMMENT_SEQ=#{comment_seq}
+	</update>
+	
+	<update id="update_view_count" parameterType="Map">
+		update NSH_ARTICLE set VIEW_CNT=VIEW_CNT+1
+		WHERE ARTICLE_SEQ=#{article_seq}
+	</update>
+	
+	<update id="update_comm_count" parameterType="Map">
+		update NSH_ARTICLE set COMM_CNT=COMM_CNT+#{count}
+		WHERE ARTICLE_SEQ=#{article_seq}
+	</update>
+	
+	<update id="update_reply_count" parameterType="Map">
+		update NSH_ARTICLE set REPLY_CNT=REPLY_CNT+#{count}
+		WHERE ARTICLE_SEQ=#{parent_seq}
+	</update>
+	
+	<update id="update_reply_count_for_remove" parameterType="Map">
+		UPDATE NSH_ARTICLE T1 SET REPLY_CNT=REPLY_CNT-(SELECT COUNT(1) FROM NSH_ARTICLE
+	      WHERE ARTICLE_SEQ IN (${article_seq})
+	  AND PARENT_SEQ=T1.ARTICLE_SEQ)
+			WHERE 0&lt;(
+	    SELECT COUNT(1) FROM NSH_ARTICLE
+	      WHERE ARTICLE_SEQ IN (${article_seq})
+	  AND PARENT_SEQ=T1.ARTICLE_SEQ
+	  GROUP BY PARENT_SEQ
+	    )
+	</update>
+	
+	<select id="alist" parameterType="Map" resultType="mcmap">
+        SELECT MEMBER_SEQ, MEMBER_NM, CORP_CD, T2.CODE_NM AS CORP_STR, CORP_TEL
+        FROM NSH_MEMBER T1 
+        LEFT OUTER JOIN NSH_COMMON_CODE T2 ON T1.CORP_CD = T2.CODE AND T2.CODE_GROUP_SEQ = 421 AND T2.USE_YN = 'Y' AND T2.DEL_YN = 'N'
+        WHERE GROUP_SEQ = '2' ORDER BY CORP_CD, CORP_POS
+	</select>
+	
+	<select id="getUserData" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			MC_MEMBER
+		WHERE
+			DEL_YN = 'N'
+		AND
+			MEMBER_SEQ = #{member_seq}
+	</select>
+	
+	
+	<update id="userDataUpdateStatus" parameterType="Map">
+		UPDATE
+			MC_MEMBER
+		SET
+		<if test="!(member_pw == null or member_pw == '')" >
+			MEMBER_PW = #{member_pw},
+		</if>
+			TEL = #{tel},
+			CELL = #{cell},
+			SMS_YN = NVL(#{sms_yn}, 'N'),
+			EMAIL = #{email},
+			EMAIL_YN = NVL(#{email_yn}, 'N'),
+			ZIP_CD = #{zip_cd},
+			ADDR1 = #{addr1},
+			ADDR2 = #{addr2},
+			MOD_SEQ = #{session_member_seq},
+			MOD_NM = #{session_member_nm},
+			MOD_IP = #{ip},
+			MOD_DT = SYSDATE
+		WHERE
+			MEMBER_SEQ = #{member_seq}
+		AND
+			MEMBER_PW = #{member_pw_df}
+	</update>
+	
+	
+	<select id="getUserData2" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			MC_MEMBER
+		WHERE
+			DEL_YN = 'N'
+		AND
+			MEMBER_SEQ = #{session_member_seq}
+		AND
+			MEMBER_PW = #{member_pw}
+		AND
+			MEMBER_ID = #{session_member_id}
+	</select>
+	
+	<update id="withDrawMemberUpdate" parameterType="Map">
+		UPDATE
+			MC_MEMBER
+		SET
+			DEL_YN = 'Y',
+			DEL_SEQ = #{session_member_seq},
+			DEL_DT = SYSDATE,
+			DEL_NM = #{session_member_id}
+		WHERE
+			MEMBER_SEQ = #{session_member_seq}
+		AND
+			MEMBER_ID = #{session_member_id}
+	</update>
+	
+	<select id="getSendAddressList" parameterType="Map" resultType="mcmap">
+		SELECT
+			A.SEQ AS SEQ,
+			A.MEMBER_SEQ AS MEMBER_SEQ,
+			A.RECEIVER_NM AS RECEIVER_NM,
+			A.RECEIVER_TITLE AS RECEIVER_TITLE,
+			A.TEL AS TEL,
+			A.CELL AS CELL,
+			A.ZIP_CD AS ZIP_CD,
+			A.ADDR1 AS ADDR1,
+			A.ADDR2 AS ADDR2,
+			A.DEFAULT_YN AS DEFAULT_YN,
+			A.ORDER_SEQ AS ORDER_SEQ,
+			A.REG_DT AS REG_DT,
+			A.REG_NM AS REG_NM,
+			A.REG_IP AS REG_IP
+		FROM
+			MC_BASONGJI A, MC_MEMBER B
+		WHERE
+			A.MEMBER_SEQ = B.MEMBER_SEQ
+		AND
+			A.MEMBER_SEQ = #{member_seq}
+	</select>
+	
+	<delete id="deleteMyadressData" parameterType="Map">
+		DELETE FROM
+			MC_BASONGJI
+		WHERE
+			SEQ = #{seq}
+	</delete>
+	
+	<update id="updateMyDefaultData" parameterType="Map">
+		UPDATE
+			MC_BASONGJI
+		SET
+			DEFAULT_YN = 'Y'
+		WHERE
+			SEQ = #{seq}
+	</update>
+	
+	<select id="getMyAddressView" parameterType="Map" resultType="mcmap">
+		SELECT
+			SEQ,
+	      	MEMBER_SEQ,
+	      	RECEIVER_NM,
+	      	RECEIVER_TITLE,
+	      	TEL,
+	      	CELL,
+	      	ZIP_CD,
+	      	ADDR1,
+	      	ADDR2,
+	      	DEFAULT_YN,
+	      	ORDER_SEQ,
+	      	REG_SEQ,
+	      	REG_DT,
+	      	REG_NM,
+	      	REG_IP,
+			(SELECT COUNT(*) FROM MC_BASONGJI WHERE SEQ = #{seq}) AS TOTAL
+		FROM
+			MC_BASONGJI
+		WHERE
+			SEQ = #{seq}
+	</select>
+	
+	<select id="getMyAddressTotal" parameterType="Map" resultType="mcmap">
+		SELECT 
+			COUNT(*) AS TOTAL
+		FROM 
+			MC_BASONGJI 
+		WHERE 
+			MEMBER_SEQ = #{session_member_seq}
+	</select>
+	
+	<update id="updateDefaultYnStatus" parameterType="Map">
+		UPDATE
+			MC_BASONGJI
+		SET
+			DEFAULT_YN = 'N'
+		WHERE
+			MEMBER_SEQ = #{session_member_seq}
+	</update>
+	
+	<insert id="insertMyAddressData" parameterType="Map">
+		INSERT INTO MC_BASONGJI
+		(
+			SEQ, MEMBER_SEQ, RECEIVER_NM, RECEIVER_TITLE, TEL,
+			CELL, ZIP_CD, ADDR1, ADDR2, DEFAULT_YN,
+			ORDER_SEQ, REG_DT, REG_IP
+		)
+		VALUES
+		(
+			SEQ_MC_BASONGJI.NEXTVAL, #{session_member_seq}, #{receiver_nm}, #{receiver_title}, #{tel},
+			#{cell}, #{zip_cd}, #{addr1}, #{addr2}, NVL(#{default_yn}, 'N'),
+			#{order_seq}, sysdate, #{ip}
+		)
+	</insert>
+	
+	<update id="updateMyAddressData" parameterType="Map">
+		UPDATE
+			MC_BASONGJI
+		SET
+			RECEIVER_NM = #{receiver_nm},
+			RECEIVER_TITLE = #{receiver_title},
+			TEL = #{tel},
+			CELL = #{cell},
+			ZIP_CD = #{zip_cd},
+			ADDR1 = #{addr1},
+			ADDR2 = #{addr2},
+			DEFAULT_YN = NVL(#{default_yn}, 'N')
+		WHERE
+			SEQ = #{seq}
+	</update>
+	
+	<select id="getMemberInfo" parameterType="Map" resultType="mcmap">
+		SELECT
+			*
+		FROM
+			MC_MEMBER
+		WHERE
+			MEMBER_SEQ = #{session_member_seq}
+	</select>
+	
+	<update id="busiDataUpdateStatus" parameterType="Map">
+		UPDATE
+			MC_MEMBER
+		SET
+		<if test="!(member_pw == null or member_pw == '')" >
+			MEMBER_PW = #{member_pw},
+		</if>
+			BUSI_NM = #{busi_nm},
+			BUSI_NO = #{busi_no},
+			COMPTYP1 = #{comptyp1},
+			COMPTYP2 = #{comptyp2},
+			STAFF_NM = #{staff_nm},
+			MEMBER_NM = #{staff_nm},
+			TEL = #{tel},
+			STAFF_TEL = #{staff_tel},
+			SMS_YN = NVL(#{sms_yn}, 'N'),
+			EMAIL = #{email},
+			EMAIL_YN = NVL(#{email_yn}, 'N'),
+			ZIP_CD = #{zip_cd},
+			ADDR1 = #{addr1},
+			ADDR2 = #{addr2},
+			MOD_SEQ = #{session_member_seq},
+			MOD_NM = #{session_member_nm},
+			MOD_IP = #{ip},
+			MOD_DT = SYSDATE
+		WHERE
+			MEMBER_SEQ = #{member_seq}
+		AND
+			MEMBER_PW = #{member_pw_df}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	<select id="list_resources" parameterType="Map" resultType="mcmap" >
+		SELECT 
+			PT1.* 
+		FROM (
+			SELECT 
+				PT1_SUB.*, 
+				ROW_NUMBER() OVER(ORDER BY PT1_SUB.ARTICLE_SEQ DESC) RN
+			FROM (
+			SELECT 
+				T1.ARTICLE_SEQ, 
+				T1.BOARD_SEQ, 
+				T1.TITLE, 
+				T1.CONTS, 
+				TO_CHAR(T1.REG_DT,'YYYY-MM-DD') REG_DT,
+				T1.REG_SEQ, 
+				T1.REG_NM,
+				TO_CHAR(T1.SDATE,'YYYY-MM-DD') AS SDATE,
+				TO_CHAR(T1.EDATE,'YYYY-MM-DD') AS EDATE,
+				T1.STATUS,
+				T2.*,
+				(SELECT DONG_NM FROM NSH_DONG WHERE T2.SIDO_CD = SIDO AND T2.SIGUNGU_CD = SIGUNGU AND T2.DONG_CD = DONG AND RI=00) DONG_NM,
+        		(SELECT SUBSTR(XMLAGG(XMLELEMENT (A,','||CATE_SEQ)).EXTRACT('//text()'),2) FROM (SELECT CATE_SEQ,TABLE_SEQ FROM NSH_ARTICLE_SUBITEM WHERE TABLE_GROUP_SEQ=${board_seq} AND DEL_YN = 'N' ORDER BY SEQ ASC) WHERE TABLE_SEQ = T1.ARTICLE_SEQ GROUP BY TABLE_SEQ) CATE_SEQ,
+				(SELECT SUBSTR(XMLAGG(XMLELEMENT (A,' |+|'||ITEM_NM,'|,|'||ITEM_CODE||'|,|'||SEQ||'|,|'||ITEM_WEIGHT)).EXTRACT('//text()'),2) FROM (SELECT ITEM_NM,ITEM_CODE,SEQ,ITEM_WEIGHT,CATE_SEQ,TABLE_SEQ FROM NSH_ARTICLE_SUBITEM WHERE TABLE_GROUP_SEQ=${board_seq} AND DEL_YN = 'N' ORDER BY SEQ ASC) WHERE TABLE_SEQ = T1.ARTICLE_SEQ GROUP BY TABLE_SEQ) ITEM_INFO
+			FROM NSH_ARTICLE T1
+			LEFT OUTER JOIN (
+	      		SELECT A.SEQ,B.SEQ AS PSEQ,B.COM_NM,B.STAFF_NM,B.STAFF_TEL,B.ZIP_CD,B.ADDR1,B.ADDR2,B.SIDO_CD,B.SIGUNGU_CD,B.DONG_CD FROM NSH_COOPERATION_MEMBER A, NSH_COOPERATION B WHERE A.PARENT_SEQ = B.SEQ
+	    	) T2 ON T2.PSEQ = T1.TITLE
+			WHERE
+			BOARD_SEQ=#{board_seq}
+			AND T1.DEL_YN='N' AND T1.NOTICE_YN = 'N'
+			<if test="!(keyword == null or keyword == '')" >
+	        AND T1.TITLE = #{keyword} 
+	        </if>
+	        <if test="!(sido_cd == null or sido_cd == '')" >
+	        AND T2.SIDO_CD = #{sido_cd} 
+	        </if>
+	        <if test="!(sigungu_cd == null or sigungu_cd == '')" >
+	        AND T2.SIGUNGU_CD = #{sigungu_cd} 
+	        </if>
+	        <if test="!(status == null or status == '')" >
+	        AND T1.STATUS = #{status} 
+	        </if>
+	        <if test="(status == '2'.toString())">
+	        	 <if test="!(sdate == null or sdate == '')" >
+	        	 	AND T1.EDATE >= #{sdate}
+	        	 </if>
+	        	 <if test="!(edate == null or edate == '')" >
+	        	 	AND T1.EDATE &lt;= #{edate}
+	        	 </if>
+	        </if>
+	        <if test="!(article_seq == null or article_seq == '')" >
+	        AND ARTICLE_SEQ = ${article_seq}
+	        </if>
+			) PT1_SUB
+			<if test="cate_seq_arr != null and cate_seq_arr != ''">
+			WHERE
+				INSTR(PT1_SUB.CATE_SEQ,'${cate_seq_arr[0]}') > 0
+				<foreach index="index" collection="cate_seq_arr">
+					<if test="index > 0">
+					OR INSTR(PT1_SUB.CATE_SEQ,'${cate_seq_arr[index]}') > 0
+					</if>
+				</foreach>
+			</if>
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows, jdbcType=INTEGER},10))=NVL(#{cpage, jdbcType=INTEGER},1)  ORDER BY RN ASC
+	</select>
+	
+	<select id="list_resources_excel" parameterType="Map" resultType="mcmap" >
+		SELECT 
+			PT1.* 
+		FROM (
+			SELECT 
+				PT1_SUB.*, 
+				ROW_NUMBER() OVER(ORDER BY PT1_SUB.ARTICLE_SEQ DESC) RN
+			FROM (
+			SELECT 
+				T1.ARTICLE_SEQ, 
+				T1.BOARD_SEQ, 
+				T1.TITLE, 
+				T1.CONTS, 
+				TO_CHAR(T1.REG_DT,'YYYY-MM-DD') REG_DT,
+				T1.REG_SEQ, 
+				T1.REG_NM,
+				TO_CHAR(T1.SDATE,'YYYY-MM-DD') AS SDATE,
+				TO_CHAR(T1.EDATE,'YYYY-MM-DD') AS EDATE,
+				CASE
+					WHEN T1.STATUS = '0' THEN '반출대기' 
+					WHEN T1.STATUS = '1' THEN '반출진행'
+					ELSE '반출완료'
+				END STATUS_KR,
+				T2.ZIP_CD ||' ' || T2.ADDR1 ||' ' || T2.ADDR2 AS FULL_ADDRESS,
+				T2.*,
+				(SELECT DONG_NM FROM NSH_DONG WHERE T2.SIDO_CD = SIDO AND T2.SIGUNGU_CD = SIGUNGU AND T2.DONG_CD = DONG AND RI=00) DONG_NM,
+        		(SELECT SUBSTR(XMLAGG(XMLELEMENT (A,','||CATE_SEQ)).EXTRACT('//text()'),2) FROM (SELECT CATE_SEQ,TABLE_SEQ FROM NSH_ARTICLE_SUBITEM WHERE TABLE_GROUP_SEQ=${board_seq} AND DEL_YN = 'N' ORDER BY SEQ ASC) WHERE TABLE_SEQ = T1.ARTICLE_SEQ GROUP BY TABLE_SEQ) CATE_SEQ,
+				(SELECT
+				<![CDATA[ 
+					SUBSTR(XMLAGG(XMLELEMENT (A,Chr(13)||ITEM_NM,' : '||ITEM_WEIGHT)).EXTRACT('//text()'),1)
+				]]> 
+				FROM (SELECT ITEM_NM,ITEM_CODE,SEQ,ITEM_WEIGHT,CATE_SEQ,TABLE_SEQ FROM NSH_ARTICLE_SUBITEM WHERE TABLE_GROUP_SEQ=${board_seq} AND DEL_YN = 'N' ORDER BY SEQ ASC) WHERE TABLE_SEQ = T1.ARTICLE_SEQ GROUP BY TABLE_SEQ) ITEM_INFO
+			FROM NSH_ARTICLE T1
+			LEFT OUTER JOIN (
+	      		SELECT A.SEQ,B.SEQ AS PSEQ,B.COM_NM,B.STAFF_NM,B.STAFF_TEL,B.ZIP_CD,B.ADDR1,B.ADDR2,B.SIDO_CD,B.SIGUNGU_CD,B.DONG_CD FROM NSH_COOPERATION_MEMBER A, NSH_COOPERATION B WHERE A.PARENT_SEQ = B.SEQ
+	    	) T2 ON T2.PSEQ = T1.TITLE
+			WHERE
+			BOARD_SEQ=#{board_seq}
+			AND T1.DEL_YN='N' AND T1.NOTICE_YN = 'N'
+			<if test="!(keyword == null or keyword == '')" >
+	        AND T1.TITLE = #{keyword} 
+	        </if>
+	        <if test="!(sido_cd == null or sido_cd == '')" >
+	        AND T2.SIDO_CD = #{sido_cd} 
+	        </if>
+	        <if test="!(sigungu_cd == null or sigungu_cd == '')" >
+	        AND T2.SIGUNGU_CD = #{sigungu_cd} 
+	        </if>
+	        <if test="!(status == null or status == '')" >
+	        AND T1.STATUS = #{status} 
+	        </if>
+	        <if test="(status == '2'.toString())">
+	        	 <if test="!(sdate == null or sdate == '')" >
+	        	 	AND T1.EDATE >= #{sdate}
+	        	 </if>
+	        	 <if test="!(edate == null or edate == '')" >
+	        	 	AND T1.EDATE &lt;= #{edate}
+	        	 </if>
+	        </if>
+	        <if test="!(article_seq == null or article_seq == '')" >
+	        AND ARTICLE_SEQ = ${article_seq}
+	        </if>
+			) PT1_SUB
+			<if test="cate_seq_arr != null and cate_seq_arr != ''">
+			WHERE
+				INSTR(PT1_SUB.CATE_SEQ,'${cate_seq_arr[0]}') > 0
+				<foreach index="index" collection="cate_seq_arr">
+					<if test="index > 0">
+					OR INSTR(PT1_SUB.CATE_SEQ,'${cate_seq_arr[index]}') > 0
+					</if>
+				</foreach>
+			</if>
+		) PT1 ORDER BY RN ASC
+	</select>
+	
+	<select id="page_info_resources" parameterType="Map" resultType="mcmap" >
+		SELECT 
+			CEIL(COUNT(1)/NVL(#{rows, jdbcType=INTEGER},10)) TOTALPAGE,
+			COUNT(1) TOTALCOUNT 
+		FROM (
+			SELECT 
+				PT1_SUB.*, 
+				ROW_NUMBER() OVER(ORDER BY PT1_SUB.ARTICLE_SEQ DESC) RN
+			FROM (
+			SELECT 
+				T1.ARTICLE_SEQ, 
+				T1.BOARD_SEQ, 
+				T1.TITLE, 
+				T1.CONTS, 
+				TO_CHAR(T1.REG_DT,'YYYY-MM-DD') REG_DT,
+				T1.REG_SEQ, 
+				T1.REG_NM,
+				TO_CHAR(T1.SDATE,'YYYY-MM-DD') AS SDATE,
+				TO_CHAR(T1.EDATE,'YYYY-MM-DD') AS EDATE,
+				T1.STATUS,
+				T2.*,
+				(SELECT DONG_NM FROM NSH_DONG WHERE T2.SIDO_CD = SIDO AND T2.SIGUNGU_CD = SIGUNGU AND T2.DONG_CD = DONG AND RI=00) DONG_NM,
+        		(SELECT SUBSTR(XMLAGG(XMLELEMENT (A,','||CATE_SEQ)).EXTRACT('//text()'),2) FROM (SELECT CATE_SEQ,TABLE_SEQ FROM NSH_ARTICLE_SUBITEM WHERE TABLE_GROUP_SEQ=${board_seq} AND DEL_YN = 'N' ORDER BY SEQ ASC) WHERE TABLE_SEQ = T1.ARTICLE_SEQ GROUP BY TABLE_SEQ) CATE_SEQ,
+				(SELECT SUBSTR(XMLAGG(XMLELEMENT (A,' |+|'||ITEM_NM,'|,|'||ITEM_CODE||'|,|'||SEQ||'|,|'||ITEM_WEIGHT)).EXTRACT('//text()'),2) FROM (SELECT ITEM_NM,ITEM_CODE,SEQ,ITEM_WEIGHT,CATE_SEQ,TABLE_SEQ FROM NSH_ARTICLE_SUBITEM WHERE TABLE_GROUP_SEQ=${board_seq} AND DEL_YN = 'N' ORDER BY SEQ ASC) WHERE TABLE_SEQ = T1.ARTICLE_SEQ GROUP BY TABLE_SEQ) ITEM_INFO
+			FROM NSH_ARTICLE T1
+			LEFT OUTER JOIN (
+	      		SELECT A.SEQ,B.SEQ AS PSEQ,B.COM_NM,B.STAFF_NM,B.STAFF_TEL,B.ZIP_CD,B.ADDR1,B.ADDR2,B.SIDO_CD,B.SIGUNGU_CD,B.DONG_CD FROM NSH_COOPERATION_MEMBER A, NSH_COOPERATION B WHERE A.PARENT_SEQ = B.SEQ
+	    	) T2 ON T2.PSEQ = T1.TITLE
+			WHERE
+			BOARD_SEQ=#{board_seq}
+			AND T1.DEL_YN='N' AND T1.NOTICE_YN = 'N'
+			<if test="!(keyword == null or keyword == '')" >
+	        AND T1.TITLE = #{keyword} 
+	        </if>
+	        <if test="!(sido_cd == null or sido_cd == '')" >
+	        AND T2.SIDO_CD = #{sido_cd} 
+	        </if>
+	        <if test="!(sigungu_cd == null or sigungu_cd == '')" >
+	        AND T2.SIGUNGU_CD = #{sigungu_cd} 
+	        </if>
+	        <if test="!(status == null or status == '')" >
+	        AND T1.STATUS = #{status} 
+	        </if>
+	        <if test="(status == '2'.toString())">
+	        	 <if test="!(sdate == null or sdate == '')" >
+	        	 	AND T1.EDATE >= #{sdate}
+	        	 </if>
+	        	 <if test="!(edate == null or edate == '')" >
+	        	 	AND T1.EDATE &lt;= #{edate}
+	        	 </if>
+	        </if>
+	        <if test="!(article_seq == null or article_seq == '')" >
+	        AND ARTICLE_SEQ = ${article_seq}
+	        </if>
+			) PT1_SUB
+			<if test="cate_seq_arr != null and cate_seq_arr != ''">
+			WHERE
+				INSTR(PT1_SUB.CATE_SEQ,'${cate_seq_arr[0]}') > 0
+				<foreach index="index" collection="cate_seq_arr">
+					<if test="index > 0">
+					OR INSTR(PT1_SUB.CATE_SEQ,'${cate_seq_arr[index]}') > 0
+					</if>
+				</foreach>
+			</if>
+		) PT1
+	</select>
+	
+	<select id="resources_cooperation" parameterType="Map" resultType="mcmap">
+	SELECT PT1.* FROM (
+		SELECT 
+		  T2.PSEQ AS SEQ,T2.COM_NM
+		FROM NSH_ARTICLE T1
+		LEFT OUTER JOIN (SELECT A.SEQ,B.SEQ AS PSEQ,B.COM_NM,B.STAFF_TEL,B.SIDO_CD,B.SIGUNGU_CD,B.DONG_CD FROM NSH_COOPERATION_MEMBER A, NSH_COOPERATION B WHERE A.PARENT_SEQ = B.SEQ AND B.DEL_YN='N') T2 ON T2.SEQ = T1.REG_SEQ
+		WHERE T1.BOARD_SEQ = 7 AND T1.DEL_YN = 'N'
+		GROUP BY T2.PSEQ, T2.COM_NM
+	) PT1
+	</select>
+	
+	<select id="cooperation_parentSeq" parameterType="Map" resultType="mcmap">
+		SELECT PARENT_SEQ FROM NSH_COOPERATION_MEMBER WHERE SEQ = ${session_member_seq}
+	</select>
+	
+	<insert id="resourcesItemInsert" parameterType="Map">
+		INSERT INTO NSH_ARTICLE_SUBITEM(
+			SEQ,
+			ITEM_NM,
+			ITEM_CODE,
+			TABLE_GROUP_SEQ,
+			TABLE_SEQ,
+			ITEM_WEIGHT,
+			CATE_SEQ
+		)
+		VALUES
+		(
+			SEQ_NSH_ARTICLE_SUBITEM.NEXTVAL,
+			(SELECT SUBJECT FROM NSH_ARTICLE_CATEGORY WHERE CATE_SEQ = #{cate_seq}),
+			(SELECT ORDERBY FROM NSH_ARTICLE_CATEGORY WHERE CATE_SEQ = #{cate_seq}),
+			7,
+			#{article_seq},
+			#{item_weight},
+			#{cate_seq}
+		)
+	</insert>
+	
+	<update id="resourcesItemUpdate" parameterType="Map">
+		UPDATE
+			NSH_ARTICLE_SUBITEM
+		SET
+			DEL_YN = #{del_yn},
+			ITEM_NM = (SELECT SUBJECT FROM NSH_ARTICLE_CATEGORY WHERE CATE_SEQ = #{cate_seq}),
+			ITEM_CODE = (SELECT ORDERBY FROM NSH_ARTICLE_CATEGORY WHERE CATE_SEQ = #{cate_seq}),
+			ITEM_WEIGHT = #{item_weight},
+			CATE_SEQ = #{cate_seq}
+		WHERE
+			SEQ = #{seq}
+	</update>
+	
+	<select id="resourcesList" parameterType="Map" resultType="mcmap">
+		SELECT * FROM NSH_ARTICLE_SUBITEM WHERE TABLE_SEQ = #{article_seq} AND DEL_YN = 'N' ORDER BY SEQ ASC
+	</select>
+	
+	
+	
+</mapper>

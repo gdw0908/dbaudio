@@ -1,0 +1,7 @@
+@charset "utf-8";
+
+.m_contents img {width:100%;}
+ p {position:fixed; bottom:0px;}
+ p img {width:60%;}
+p.btn_l {left:0px;}
+p.btn_r {right:0px; text-align:right;}

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spell">
+	
+	<sql id="listWhere">
+		WHERE 1=1
+		<if test="tab == 'all'.toString() and tot == 'Y'.toString() and (status == null or status == '')">
+			AND b.STATUS NOT IN ('2','3','4','5','9','11','19','10','12','20','21','22','99')
+		</if>
+        <if test="!(receiver == null or receiver == '')" >
+        	AND a.RECEIVER LIKE '%${receiver}%'
+        </if>
+        <if test="!(productnm == null or productnm == '')" >
+        	AND c.PRODUCTNM LIKE '%${productnm}%'
+        </if>
+        <if test="!(status == null or status == '')" >
+        	AND b.STATUS = #{status} 
+        </if>
+        <if test="!(orderno == null or orderno == '')" >
+        	AND a.ORDERNO LIKE '%${orderno}%' 
+        </if>
+        <if test="!(paytyp == null or paytyp == '')" >
+        	AND a.PAYTYP = #{paytyp} 
+        </if>
+        <if test="!(com_seq == null or com_seq == '' or com_seq == 0)" >
+        	AND c.COM_SEQ = #{com_seq} 
+        </if>
+        <if test="sdate != null and sdate != '' and edate != null and edate != ''" >
+        	AND a.ORDERDATE BETWEEN TO_DATE(#{sdate} || '000000', 'YYYY-MM-DDHH24MISS') AND TO_DATE(#{edate} || '235959', 'YYYY-MM-DDHH24MISS')
+        </if>
+	</sql>
+	
+	<select id="list" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+			SELECT
+			    ROW_NUMBER() OVER(ORDER BY nvl(b.MOD_DT, b.REG_DT) DESC) RN,
+			    a.ORDERNO, a.ORDERDATE, a.RECEIVER,
+                b.CART_NO, b.STATUS, b.AMT, b.FEE_AMT, b.COD_YN, DECODE(b.COD_YN, 'Y', (b.AMT+b.FEE_AMT), b.AMT) AS ACTUAL_PRICE, b.MOD_DT,
+                (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '45' AND b.STATUS=CODE) AS STATUS_NM,
+            	(SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '46' AND a.PAYTYP=CODE) AS PAYTYP_NM,
+			    c.PRODUCTNM, c.ITEM_SEQ, a.TRANS, a.TRANS_ID, 
+			    ('/upload/board/'||e.YYYY||'/'||e.MM||'/'||e.UUID||'_thumb') AS THUMB
+			FROM NSH_ORDERMST a JOIN NSH_CART b
+			ON a.ORDERNO=b.ORDERNO
+			    AND b.STATUS!='0'
+			JOIN GC_GOODS c
+			ON b.ITEM_SEQ = c.ITEM_SEQ
+			LEFT OUTER JOIN (
+			    SELECT
+			        bb.*
+			    FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH WHERE TABLE_NM='GC_GOODS' GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+			    ON aa.UUID = bb.UUID
+			) e
+			ON c.ITEM_SEQ = e.TABLE_SEQ
+			<include refid="listWhere"/>
+		) PT1
+		WHERE CEIL(RN/NVL(#{rows},10))=NVL(#{cpage},1)
+	</select>
+	
+	<select id="getAmount" parameterType="Map" resultType="mcmap">
+		SELECT PT1.* FROM (
+			SELECT
+			    nvl(SUM(DECODE(b.COD_YN, 'Y', (b.AMT+b.FEE_AMT), b.AMT)), 0) AS AMOUNT
+			FROM NSH_ORDERMST a JOIN NSH_CART b
+			ON a.ORDERNO=b.ORDERNO
+			    AND b.STATUS!='0'
+			JOIN GC_GOODS c
+			ON b.ITEM_SEQ = c.ITEM_SEQ
+			<include refid="listWhere"/>
+		) PT1
+	</select>
+	
+	<select id="pagination" parameterType="Map" resultType="mcmap">
+		SELECT
+			CEIL(COUNT(1)/NVL(#{rows}, 10)) TOTALPAGE,
+			COUNT(1) TOTALCOUNT
+        FROM NSH_ORDERMST a JOIN NSH_CART b
+		ON a.ORDERNO=b.ORDERNO
+		    AND b.STATUS!='0'
+		JOIN GC_GOODS c
+		ON b.ITEM_SEQ = c.ITEM_SEQ
+		LEFT OUTER JOIN (
+		    SELECT
+		        bb.*
+		    FROM (SELECT max(uuid) as uuid FROM NSH_ATTACH WHERE TABLE_NM='GC_GOODS' GROUP BY TABLE_NM, TABLE_SEQ) aa LEFT OUTER JOIN NSH_ATTACH bb
+		    ON aa.UUID = bb.UUID
+		) e
+		ON c.ITEM_SEQ = e.TABLE_SEQ
+		<include refid="listWhere"/>
+	</select>
+	
+	<select id="view" parameterType="Map" resultType="mcmap">
+        SELECT
+            ROW_NUMBER() OVER(ORDER BY c.ITEM_SEQ DESC) RN,
+            a.ORDERNO, a.ZIPCD, a.RECEIVER AS ORDER_NM, a.ADDR, a.ADDRDETAIL, a.REHP, a.ORDERDATE, a.RETEL, a.EMAIL,
+            DECODE(b.COD_YN, 'Y', (b.AMT+b.FEE_AMT), b.AMT) AS ACTUAL_PRICE,
+            b.CART_NO, b.QTY, b.STATUS, b.AMT, b.RECEIVER, B.CELL AS RE_CELL, b.TEL AS RE_TEL, b.ZIP_CD as RE_ZIP_CD, b.ADDR1 as RE_ADDR1, b.ADDR2 as RE_ADDR2, b.MESSAGE, b.COD_YN, 
+            b.CH_DT, b.CH_D_DT, b.CH_B_DT, b.CH_C_NO, b.BAN_DT, b.BAN_D_DT, b.BAN_B_DT, b.HAN_DT, b.HAN_D_DT, b.HAN_C_DT, b.PAY_C_DT, b.PAY_E_DT, b.ORDER_C_DT, b.SAYU, b.DELIVERY, b.MOD_DT, b.BA_DT, b.BAN_C_DT,
+            c.ITEM_SEQ, c.PRODUCTNM, c.USER_PRICE, c.ITEM_CODE, c.FEE_YN,
+            b.FEE_AMT, b.ACCOUNTNO, E.CODE_NM as BANK_NM,
+            (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '46' AND a.PAYTYP=CODE) AS PAYTYP_NM,
+            (SELECT CODE_NM FROM MC_COMMON_CODE WHERE CODE_GROUP_SEQ = '45' AND b.STATUS=CODE) AS STATUS_NM,
+            (SELECT MAKERNM FROM V_IS_CARMAKER WHERE c.CARMAKERSEQ=CARMAKERSEQ) AS MAKERNM,
+            (SELECT CARMODELNM FROM V_IS_CARMODEL WHERE c.CARMODELSEQ=CARMODELSEQ) AS CARMODELNM
+        FROM NSH_ORDERMST a JOIN NSH_CART b
+        ON a.ORDERNO=b.ORDERNO
+            AND b.STATUS!='0'
+        JOIN GC_GOODS c
+        ON b.ITEM_SEQ = c.ITEM_SEQ
+        LEFT OUTER JOIN MC_COMMON_CODE E ON E.DEL_YN='N' AND E.CODE_SEQ = b.BANK_SEQ AND USE_YN='Y'
+        WHERE b.CART_NO=#{cart_no}
+	</select>
+	
+	<update id="modify" parameterType="Map">
+		UPDATE NSH_CART SET
+			<if test="!(ch_dt == null or ch_dt == '')" >
+	        	CH_DT = TO_DATE(#{ch_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(ch_d_dt == null or ch_d_dt == '')" >
+	        	CH_D_DT = TO_DATE(#{ch_d_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(ch_b_dt == null or ch_b_dt == '')" >
+	        	CH_B_DT = TO_DATE(#{ch_b_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(ban_d_dt == null or ban_d_dt == '')" >
+	        	BAN_D_DT = TO_DATE(#{ban_d_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(ban_b_dt == null or ban_b_dt == '')" >
+	        	BAN_B_DT = TO_DATE(#{ban_b_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(han_dt == null or han_dt == '')" >
+	        	HAN_DT = TO_DATE(#{han_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(han_d_dt == null or han_d_dt == '')" >
+	        	HAN_D_DT = TO_DATE(#{han_d_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(han_c_dt == null or han_c_dt == '')" >
+	        	HAN_C_DT = TO_DATE(#{han_c_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(pay_c_dt == null or pay_c_dt == '')" >
+	        	PAY_C_DT = TO_DATE(#{pay_c_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(pay_e_dt == null or pay_e_dt == '')" >
+	        	PAY_E_DT = TO_DATE(#{pay_e_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(order_c_dt == null or order_c_dt == '')" >
+	        	ORDER_C_DT = TO_DATE(#{order_c_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(ba_dt == null or ba_dt == '')" >
+	        	BA_DT = TO_DATE(#{ba_dt}, 'yyyy-MM-dd'),
+	        </if>
+			<if test="!(ban_c_dt == null or ban_c_dt == '')" >
+	        	BAN_C_DT = TO_DATE(#{ban_c_dt}, 'yyyy-MM-dd'),
+	        </if>
+			STATUS = #{status},
+			DELIVERY = #{delivery},
+		    SAYU=#{sayu},
+		    CH_C_NO = #{ch_c_no},
+		    MOD_ID = #{session_member_id},
+		    MOD_DT = SYSDATE
+		WHERE CART_NO=#{cart_no}
+	</update>
+	
+	<select id="pay_info" parameterType="Map" resultType="mcmap">
+		SELECT
+			a.CART_NO, a.ITEM_SEQ, a.QTY, a.REG_DT, a.USER_ID, a.STATUS, a.SESSIONID, a.MESSAGE, a.ORDERNO, a.AMT, a.FEE_AMT, DECODE(a.COD_YN, 'Y', (a.AMT+a.FEE_AMT), a.AMT) AS CANCEL_AMT,
+			a.ZIP_CD, a.ADDR1, a.ADDR2, a.RECEIVER, a.CELL, a.TEL, a.CH_DT, a.CH_D_DT, a.CH_B_DT, a.CH_C_NO, a.BAN_DT, a.BAN_D_DT, a.BA_DT, 
+			a.BAN_B_DT, a.HAN_DT, a.HAN_D_DT, a.HAN_C_DT, a.PAY_C_DT, a.PAY_E_DT, a.ORDER_C_DT, a.SAYU, a.MOD_DT, a.DELIVERY, a.COD_YN, 
+		    b.PAYTYP, b.SUBTY, b.RAPPRNO, b.RAPPRTM, b.RDEALNO, b.RINSTMT
+		FROM NSH_CART a JOIN NSH_ORDERMST b
+		ON a.ORDERNO = b.ORDERNO
+		WHERE a.CART_NO=#{cart_no}
+	</select>
+	
+	<select id="specification_pop" parameterType="Map" resultType="mcmap">
+           SELECT
+            ROW_NUMBER() OVER(ORDER BY c.ITEM_SEQ DESC) RN,
+            a.ORDERNO, a.ZIPCD, a.RECEIVER AS ORDER_NM, a.ADDR, a.ADDRDETAIL, a.REHP, a.ORDERDATE, a.RETEL, a.EMAIL,
+            DECODE(b.COD_YN, 'Y', (b.AMT+b.FEE_AMT), b.AMT) AS ACTUAL_PRICE,
+            b.CART_NO, b.QTY, b.STATUS, b.AMT, b.RECEIVER, B.CELL AS RE_CELL, b.TEL AS RE_TEL, b.ZIP_CD as RE_ZIP_CD, b.ADDR1 as RE_ADDR1, b.ADDR2 as RE_ADDR2, b.MESSAGE, b.COD_YN, 
+            b.CH_DT, b.CH_D_DT, b.CH_B_DT, b.CH_C_NO, b.BAN_DT, b.BAN_D_DT, b.BAN_B_DT, b.HAN_DT, b.HAN_D_DT, b.HAN_C_DT, b.PAY_C_DT, b.PAY_E_DT, b.ORDER_C_DT, b.SAYU, b.DELIVERY, b.MOD_DT, b.BA_DT, b.BAN_C_DT,
+            c.ITEM_SEQ, c.PRODUCTNM, c.USER_PRICE, c.ERP_CODE, c.ITEM_CODE, c.FEE_YN,
+            d.COM_NM,c.COM_SEQ, b.FEE_AMT, b.ACCOUNTNO, E.CODE_NM as BANK_NM,
+            d.CEO_NM, d.TEL, d.ADDR1, d.ADDR2, d.COMPTYP1, d.COMPTYP2, d.ZIP_CD as COM_ZIPCD,
+            IS_LOCATION(f.CARPARTCODE) AS PART_LOCATION
+        FROM NSH_ORDERMST a JOIN NSH_CART b
+        ON a.ORDERNO=b.ORDERNO
+            AND b.STATUS!='0'
+        JOIN NSH_GOODS c
+        ON b.ITEM_SEQ = c.ITEM_SEQ
+        
+        JOIN NSH_GOODS f
+        ON b.ITEM_SEQ = f.ITEM_SEQ
+        LEFT OUTER JOIN NSH_COOPERATION d
+        ON c.COM_SEQ = d.SEQ
+        LEFT OUTER JOIN MC_COMMON_CODE E ON E.DEL_YN='N' AND E.CODE_SEQ = b.BANK_SEQ AND USE_YN='Y'
+        WHERE b.CART_NO=#{cart_no}
+	</select>
+	
+</mapper>

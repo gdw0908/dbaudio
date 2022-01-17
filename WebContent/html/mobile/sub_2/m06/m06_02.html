@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>partsmoa</title>
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+//submenu
+$("#submenu_a_open").toggle(function(){
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_close.gif";
+}, function() {
+$("#sub_menu_a").slideToggle(250);
+this.src = "/images/mobile/sub/sub_menu_a_open.gif";
+});
+
+});
+</script>
+<div class="wrap">
+  <? include "../../../mobile/include/header.html"; ?>
+  <div id="container">
+    <? include "../../../mobile/include/gnb_2.html"; ?>
+    <div class="sub">
+
+      <div class="sub_wrap">
+
+        <div class="sub_2_line line_2">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_6_2.gif" alt="나의 배송지관리"></h3>
+        </div>
+
+		<div class="del_top">
+		<span class="dt_l">배송지를 추가, 관리하세요.</span>
+		<span class="dt_r"><a href="/html/mobile/sub_2/m06/m06_02_02.html"><img src="/images/sub_2/address_btn2.gif" alt="주소록 추가하기"></a></span>
+		</div>
+
+        <div class="sub_table_1">
+          <p class="st_line">
+          <span class="st_l"><strong class="c1">기본배송지</strong> : 배송지명-1</span>
+          <span class="st_r"><a href="#"><img src="/images/mobile/sub_2/btn_type_d3.gif" alt=""></a></span>
+          </p>
+          <table>
+          <colgroup>
+          <col width="20%">
+          <col width="">
+          </colgroup>
+          <tbody>
+
+          <tr>
+            <th scope="row">수취인<br>이름</th>
+            <td>홍길동</td>
+          </tr>
+
+          <tr>
+            <th scope="row">배송지<br>주소</th>
+            <td>
+              [555-555]수원시 팔달구 인계동 나혜석거리 111-11
+              자이오피스텔 101동 101호
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">수취인<br>휴대폰</th>
+            <td>010-999-9999</td>
+          </tr>
+          <tr>
+            <th scope="row">수취인<br>연락처</th>
+            <td>010-999-9999</td>
+          </tr>
+
+          </tbody>
+          </table>
+        </div>
+
+		<div class="sub_table_1 del_style">
+          <p class="st_line">
+          <span class="st_l">배송지명-2</span>
+          <span class="st_r"><a href="#"><img src="/images/mobile/sub_2/btn_type_d5.gif" alt=""></a></span>
+          </p>
+          <table>
+          <colgroup>
+          <col width="20%">
+          <col width="">
+          </colgroup>
+          <tbody>
+
+          <tr>
+            <th scope="row">수취인<br>이름</th>
+            <td>홍길동</td>
+          </tr>
+
+          <tr>
+            <th scope="row">배송지<br>주소</th>
+            <td>
+              [555-555]수원시 팔달구 인계동 나혜석거리 111-11
+              자이오피스텔 101동 101호
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">수취인<br>휴대폰</th>
+            <td>010-999-9999</td>
+          </tr>
+          <tr>
+            <th scope="row">수취인<br>연락처</th>
+            <td>010-999-9999</td>
+          </tr>
+
+          </tbody>
+          </table>
+        </div>
+
+		<div class="btn_bottom_2">
+		<a href="#"><img src="/images/mobile/sub_2/btn_type_d4.gif" alt=""></a>
+		<a href="#"><img src="/images/mobile/sub_2/btn_type_d3.gif" alt=""></a>
+		</div>
+
+		<div class="sub_table_1 del_style">
+          <p class="st_line">
+          <span class="st_l">배송지명-3</span>
+          <span class="st_r"><a href="#"><img src="/images/mobile/sub_2/btn_type_d5.gif" alt=""></a></span>
+          </p>
+          <table>
+          <colgroup>
+          <col width="20%">
+          <col width="">
+          </colgroup>
+          <tbody>
+
+          <tr>
+            <th scope="row">수취인<br>이름</th>
+            <td>홍길동</td>
+          </tr>
+
+          <tr>
+            <th scope="row">배송지<br>주소</th>
+            <td>
+              [555-555]수원시 팔달구 인계동 나혜석거리 111-11
+              자이오피스텔 101동 101호
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">수취인<br>휴대폰</th>
+            <td>010-999-9999</td>
+          </tr>
+          <tr>
+            <th scope="row">수취인<br>연락처</th>
+            <td>010-999-9999</td>
+          </tr>
+
+          </tbody>
+          </table>
+        </div>
+
+		<div class="btn_bottom_2">
+		<a href="#"><img src="/images/mobile/sub_2/btn_type_d4.gif" alt=""></a>
+		<a href="#"><img src="/images/mobile/sub_2/btn_type_d3.gif" alt=""></a>
+		</div>
+
+		<? include "../../../article/paging/paging.html"; ?>
+
+      </div>
+      <!-- fixed_btn -->
+      <span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span>
+      <span class="btn_regi"><a href="/html/mobile/sub/m08/m08_03.html"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span>
+      <!-- //fixed_btn -->
+
+    </div>
+
+  </div>
+
+  <? include "../../../mobile/include/footer.html"; ?>
+  <div class="left_back"></div>
+</div>
+<? include "../../../mobile/include/my_menu.html"; ?>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="erp">
+	
+	<update id="erp_order" parameterType="Map" useGeneratedKeys="true" keyColumn="orderno" keyProperty="orderno">
+		INSERT INTO SH_ORDERMST(
+			ORDERNO, 
+			ZIPCD, RECEIVER, ADDR, ADDRDETAIL, REHP, MESSAGE, PAYTYP, PAYAMT, USERID, ORDERDATE, REGDATE, MODDATE, MODEMPNO, RETEL, EMAIL, ORDERYN, PARTSMOA_IF
+		)VALUES(
+			(SELECT 'OR'||TO_CHAR(SYSDATE, 'DDMMYY')||LPAD((NVL(MAX(TO_NUMBER(SUBSTR(ORDERNO, 9, 6))), 0) + 1), 6, '0')
+			FROM SH_ORDERMST
+			WHERE SUBSTR(ORDERNO, 3, 6) = TO_CHAR(SYSDATE, 'DDMMYY')),
+			#{zipcd}, #{receiver}, #{addr}, #{addrdetail}, #{rehp}, #{message}, #{paytyp}, #{payamt}, #{userid}, to_date(#{orderdate}, 'yyyy/MM/dd HH24:mi:ss'), to_date(#{regdate}, 'yyyy/MM/dd HH24:mi:ss'), to_date(#{moddate}, 'yyyy/MM/dd HH24:mi:ss'), #{modempno}, #{retel}, #{email}, #{orderyn}, 'Y'
+		)
+	</update>
+	
+	<update id="erp_order_upt" parameterType="Map">
+		UPDATE SH_ORDERMST SET
+			PAYTYP = #{paytyp}
+		WHERE ORDERNO = #{orderno}
+	</update>
+	
+	<update id="erp_orderdtl" parameterType="Map" useGeneratedKeys="true" keyColumn="orderno" keyProperty="orderno">
+		INSERT INTO SH_ORDERDTL(
+			ORDERDTLSEQ, CLIENTNO, ITEMSEQ, SELLAMT, FEETYP, SENDDATE, CNT, ORDERSTATUS, MODDATE, ORDERNO, 
+			REGDATE, USERID, FEEAMT, CHSAYU, ORDERENDDATE, CHGDATE, CHGGETDATE, CHGSENDDATE, REFUNDDATE, REFUNDENDDATE, 
+			ORDERCANCELDATE, SALEGAPAMT, FEESENDNUM, CHFEESENDNUM, PAYCLREQDATE, PAYCLENDDATE, REFUNDGETDATE, RETURNREQDATE, 
+			RETURNGETDATE, REFUNDFEEAMT, CHFEEAMT, RETURNFEEAMT, SESSIONID, PARTSMOA_IF, CART_NO
+		)VALUES(
+			SH_SEQ_ORDERDTL.nextval, '', #{itemseq}, #{sellamt}, #{feetyp}, #{senddate}, #{cnt}, '', #{moddate}, #{orderno}, 
+			to_date(#{regdate}, 'yyyy/MM/dd HH24:mi:ss'), #{userid}, #{feeamt}, #{chsayu}, #{orderenddate}, #{chgdate}, #{chggetdate}, #{chgsenddate}, #{refunddate}, #{refundenddate}, 
+			#{ordercanceldate}, #{salegapamt}, #{feesendnum}, #{chfeesendnum}, #{payclreqdate}, #{payclenddate}, #{refundgetdate}, #{returnreqdate}, 
+			#{returngetdate}, #{refundfeeamt}, #{chfeeamt}, #{returnfeeamt}, #{sessionid}, 'Y', #{cart_no}
+		)
+	</update>
+	
+	<select id="erp_orderno" resultType="String">
+		SELECT 'OR'||TO_CHAR(SYSDATE, 'DDMMYY')||LPAD((NVL(MAX(TO_NUMBER(SUBSTR(ORDERNO, 9, 6))), 0) + 1), 6, '0')
+		FROM SH_ORDERDTL
+		WHERE SUBSTR(ORDERNO, 3, 6) = TO_CHAR(SYSDATE, 'DDMMYY')
+	</select>
+	
+	<update id="erp_orderdtl_upt" parameterType="Map">
+		UPDATE SH_ORDERDTL SET
+			ORDERSTATUS = '02020202'
+		WHERE CART_NO = #{cart_no}
+	</update>
+	
+	
+	<!-- 결제취소완료 -->
+	<update id="erp_orderdtl_cancel" parameterType="Map">
+		UPDATE SH_ORDERDTL SET
+			ORDERSTATUS = '02020217'
+		WHERE CART_NO = #{cart_no}
+	</update>
+	
+	<!-- 반품완료 -->
+	<update id="erp_orderdtl_return" parameterType="Map">
+		UPDATE SH_ORDERDTL SET
+			ORDERSTATUS = '02020208'
+		WHERE CART_NO = #{cart_no}
+	</update>
+	
+	<!-- 환불완료 -->
+	<update id="erp_orderdtl_refund" parameterType="Map">
+		UPDATE SH_ORDERDTL SET
+			ORDERSTATUS = '02020214'
+		WHERE CART_NO = #{cart_no}
+	</update>
+	
+</mapper>

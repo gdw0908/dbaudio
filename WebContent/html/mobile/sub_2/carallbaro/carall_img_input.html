@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상품검색</title>
+<link rel="shortcut icon" href="/images/favicon/favicon.ico">
+<link rel="stylesheet" href="/lib/css/mobile.css" type="text/css">
+<script type="text/javascript" src="/lib/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/lib/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/lib/js/jcarousellite_1.0.1.js"></script>
+<script type="text/javascript" src="/lib/js/article.js"></script>
+<script type="text/javascript" src="/lib/js/mc.js"></script>
+<script type="text/javascript" src="/lib/js/gnb.js"></script>
+<script type="text/javascript" src="/lib/js/roll.js"></script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div id="header">
+    <div class="h_top">
+      <h1><a href="/mobile"><img src="/images/logo/logo.gif" alt="국내최대 자동차 중고부품 쇼핑몰 PARTSMOA"></a></h1>
+      <div class="search_box">
+        <form action="/mobile/goods/list.do" method="post" id="frmall" name="frmall">
+          <fieldset>
+            <legend>Parts MOA 통합검색</legend>
+            <div class="search_top"> <span class="search">
+              <input type="text" id="search_all_text" name="search_all_text" value="" class="main_search" title="Parts MOA 통합검색">
+              </span> <span class="btn_search"><a href="javascript:document.frmall.submit();"><img src="/images/header/search.gif" alt="검색"></a></span> </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <div class="total_product"> <span class="total_t">총 부품수량 : </span> <span class="total_n"><b>116,460</b> 개</span> </div>
+  </div>
+  <div id="container"> 
+    
+    <!-- gnb메뉴 --> 
+    
+    <script type="text/javascript">
+$(function(){
+	if('menu1' != ''){
+		$.each($(".gnb > ul > li"),function(){
+			if($(this).find("a").attr("href").indexOf('menu1') > -1){
+				$(this).find("a > img").attr("src", $(this).find("img").attr("src").replace("off","on"));
+				$(this).attr("class","on");
+			}
+		});
+	}
+});
+</script>
+    <div class="gnb">
+      <ul>
+        <li><a href="/mobile/goods/list.do?menu=menu1"><img src="/images/mobile/gnb/menu_1_off.gif" alt="바디"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu2"><img src="/images/mobile/gnb/menu_2_off.gif" alt="의장"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu3"><img src="/images/mobile/gnb/menu_3_off.gif" alt="엔진"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu4"><img src="/images/mobile/gnb/menu_4_off.gif" alt="샤시"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu5"><img src="/images/mobile/gnb/menu_5_off.gif" alt="국산차"></a></li>
+        <li><a href="/mobile/goods/list.do?menu=menu6"><img src="/images/mobile/gnb/menu_6_off.gif" alt="수입차"></a></li>
+        <!-- <li ><a href="/mobile/cooperation/list.do?menu=menu7"><img src="/images/mobile/gnb/menu_7_off.gif" alt="지역별"></a></li> -->
+        <li ><a href="/mobile/goods/contents_list.do?menu=menu9&amp;part2=050901006003"><img src="/images/mobile/gnb/menu_9_off.gif" alt="재제조"></a></li>
+        <li class="last"><a href="/mobile/seller/seller_list.do?menu=menu8"><img src="/images/mobile/gnb/menu_8_off.gif" alt="상품관리"></a></li>
+      </ul>
+    </div>
+    <!-- //gnb메뉴 -->
+    
+    <div class="sub"> 
+      
+      <!-- Start -->
+      <div class="sm_wrap">
+        <div class="sm_top"> <span class="select_box">
+          <select id="menu_id" name="menu" class="select_sm" onchange="changeMenu();">
+            <option value="">부품을 선택해 주세요.</option>
+            <option value="menu1" selected="selected">바디</option>
+            <option value="menu2" >의장</option>
+            <option value="menu3" >엔진</option>
+            <option value="menu4" >샤시</option>
+          </select>
+          </span> <span class="sm_btn"><img id="submenu_open" src="/images/mobile/sub/sub_menu_open.gif" alt="상세조건 검색버튼" style="cursor:pointer;"></span> </div>
+      </div>
+      <!-- End -->
+      
+      <div class="sub_wrap">
+        <div class="sub_line">
+          <h3><img src="/images/mobile/sub_2/sub_2_title_4.gif" alt="카올바로"></h3>
+          <p><a href="tel:1544-6444"><img src="/images/mobile/sub/counsel.gif" alt="파츠모아 고객상담센터 1544-6444"></a></p>
+        </div>
+
+          <div class="regi_wrap regi_wrap_2">
+            <div class="regi_img_box">
+              <h4>이미지등록</h4>
+              <p class="h4_text">※ 이미지는 <strong class="strong_c1">필수 1개 이상 최대 8개</strong>까지 등록가능합니다.</p>
+              <ul id="image_files">
+                <li>
+                  <div>
+                    <label id="img_1">
+                      <input type="hidden" name="fileNumber" value="1">
+                      <input type="hidden" name="virtual_file_yn" value="Y">
+                      <input type="checkbox" name="image_check" value="" onclick="return false;">
+                      <img src="/images/mobile/sub/sub_res_imgn.gif" alt="파일추가" onclick="fileadd('1')"> </label>
+                  </div>
+                </li>
+                <li class="right">
+                  <div>
+                    <label id="img_2">
+                      <input type="hidden" name="fileNumber" value="2">
+                      <input type="hidden" name="virtual_file_yn" value="Y">
+                      <input type="checkbox" name="image_check" value="" onclick="return false;">
+                      <img src="/images/mobile/sub/sub_res_imgn.gif" alt="파일추가" onclick="fileadd('2')"> </label>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <label id="img_3">
+                      <input type="hidden" name="fileNumber" value="3">
+                      <input type="hidden" name="virtual_file_yn" value="Y">
+                      <input type="checkbox" name="image_check" value="" onclick="return false;">
+                      <img src="/images/mobile/sub/sub_res_imgn.gif" alt="파일추가" onclick="fileadd('3')"> </label>
+                  </div>
+                </li>
+                <li class="right">
+                  <div>
+                    <label id="img_4">
+                      <input type="hidden" name="fileNumber" value="4">
+                      <input type="hidden" name="virtual_file_yn" value="Y">
+                      <input type="checkbox" name="image_check" value="" onclick="return false;">
+                      <img src="/images/mobile/sub/sub_res_imgn.gif" alt="파일추가" onclick="fileadd('4')"> </label>
+                  </div>
+                </li>
+                
+              </ul>
+              <!-- <p><strong class="strong_c2">※ 대표이미지를 선택하지 않을 시 첫번째 이미지로 자동등록됩니다.</strong></p> -->
+              
+              <div class="regi_img_btn"> <span class="btn_l"><!-- <a href="javascript:view_image();"><img src="/images/mobile/sub/res_btn_1.gif" alt="대표이미지 설정"></a> --></span> <span class="btn_r"> <a class="btn_delete" href="javascript:del_file();"><img src="/images/mobile/sub/res_btn_2.gif" alt="이미지삭제"></a> 
+                <!-- <a href="#"><img src="/images/mobile/sub/res_btn_3.gif" alt="이미지추가"></a> --> 
+                </span> </div>
+            </div>
+            
+            <table class="write_style_1" style="margin-top:30px;">
+              <colgroup>
+              <col width="20%">
+              <col width="">
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">문의제목</th>
+                  <td><input type="text" id="title" name="title" class="input_1"></td>
+                </tr>
+                <tr>
+                  <th scope="row">이름</th>
+                  <td><input type="text" id="member_nm" name="member_nm" class="input_1" style="width:100px;"></td>
+                </tr>
+                <tr>
+                  <th scope="row">비밀번호</th>
+                  <td><input type="password" id="pass" name="pass" class="input_1" style="width:100px;"></td>
+                </tr>
+                <tr>
+                  <th scope="row">전화번호</th>
+                  <td><p>
+                      <select id="charge_tel1" name="charge_tel1" class="select_u1">
+                      </select>
+                      -
+                      <input type="text" id="charge_tel2" name="charge_tel2" class="input_3 ws_2">
+                      -
+                      <input type="text" id="charge_tel3" name="charge_tel3" class="input_3 ws_2">
+                    </p>
+                    <p class="ph_text">※ 입력하신 개인정보는 별도 요청이 없을 경우 6개월 보관 후 삭제되며, 문의 사항 확인이나 답변의 전달을 위해 고객님께 연락을 취하는 용도 이외에는 사용되지 않습니다. 또한 항목에 체크하실 경우 이에 동의하는 것으로 간주하며, 동의하지 않을 경우, 게시가 이루어지지 않습니다.
+                      <label>
+                        <input type="checkbox" id="agree" name="agree" class="check">
+                        동의합니다</label>
+                    </p></td>
+                </tr>
+                <tr>
+                  <th>브랜드</th>
+                  <td><select class="select_u1">
+                      <option value="">브랜드</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th scope="row">차량명 / 연식</th>
+                  <td><input type="text" id="carinfo" name="carinfo" class="input_1"></td>
+                </tr>
+                <tr>
+                  <th>지역</th>
+                  <td><select class="select_u1">
+                      <option value="">시/도</option>
+                    </select>
+                    <select class="select_u1">
+                      <option value="">시/군/구</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="w_main">문의내용<br />
+                    <span>(2000자 입력가능)</span></th>
+                  <td><textarea cols="" rows="" name="conts" style="width:100%;" id="smarteditor"></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="vr_btn">
+              <input type="image" src="/images/article/board_btn6.gif" alt="견적등록" class="vr_regi_1" />
+              <a href="?mode=list&amp;cpage=&amp;rows=&amp;condition=&amp;keyword=" class="vr_regi_2"><img src="/images/article/board_btn5.gif" alt="입력취소"></a> 
+            </div>
+            
+            
+            
+          </div>
+
+        
+        <span class="btn_regi"><a href="/mobile"><img src="/images/mobile/common/btn_home.png" alt="home"></a></span> 
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- fixed_btn --> 
+
+<span class="my_menu"><a href="#"><img src="/images/mobile/common/btn_l.png" alt="my menu"></a></span> <span class="btn_regi"><a href="/mobile/seller/seller_insert.do"><img src="/images/mobile/common/btn_r.png" alt="상품등록"></a></span> <span class="btn_regi_2"><a href="/mobile/seller/resources_insert.do"><img src="/images/mobile/common/btn_resources.png" alt="자원등록"></a></span> 
+
+<!-- //fixed_btn -->
+
+<div id="footer">
+  <div class="f_top"><a href="#"><img src="/images/mobile/footer/f_top.gif" alt="top"></a></div>
+  <div class="f_util">
+    <ul>
+      <li class="first"><a href="/mobile/mypage/company/company.do">회사소개</a></li>
+      <li><a href="/mobile/mypage/annc/annc1.do">이용약관</a></li>
+      <li><a href="/mobile/mypage/annc/annc2.do">전자금융거래약관</a></li>
+      <li><a href="/mobile/mypage/annc/annc3.do">개인정보 취급방침</a></li>
+      <li><a href="/mobile/mypage/annc/annc4.do">E-mail 무단수집거부</a></li>
+      <!-- <li><a href="/mobile/mypage/mantoman/index.do">1:1문의</a></li> -->
+    </ul>
+    <p><strong>대표자</strong> : 박정호 ㅣ <strong>상호</strong> : 파츠모아 주식회사 ㅣ <strong>개인정보 관리책임자</strong> : 조성환 ㅣ <strong>사업자등록번호</strong> : 128-87-19389 ㅣ <strong>사업자주소</strong> : (410-821) 경기도 고양시 일산동구 동국로 286(식사동) ㅣ <strong>통신판매 신고번호</strong> : 제 2015-고양일산동-0394호</p>
+  </div>
+  <div class="copy">
+    <p><strong>TEL</strong> : 1544-6444 ㅣ <strong>FAX</strong> : 031-961-4699 ㅣ <strong>E-mail</strong> : partsmoa@insun.com</p>
+    <p>CopyrightⓒPARTSMOA.All Rights Reserved.</p>
+  </div>
+</div>
+</body>
+</html>

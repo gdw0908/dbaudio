@@ -1,0 +1,71 @@
+<div class="left_box">
+<p class="all_menu"><a href="#"><img src="/images/sub_2/left_all_menu.gif" alt="카테고리전체"></a></p>
+  <div id="left_menu">
+    <ul class="">
+      <li class="left_depth2"><a class="left_menu_a" href="/m01/m01.html" menu_level="2"><span>공지사항</span></a></li>
+      <li class="left_depth2 select">
+      <a href="/m02/m02.html" class="left_menu_a" menu_level="2"><span class="minus">자주묻는질문</span></a>
+      <ul class="left_menu_ul">
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">일반회원 관련</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">입점업체 관련</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">구매 관련</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">판매 관련</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">기타</a></li>
+      </ul>
+      </li>
+      <li class="left_depth2"><a class="left_menu_a" href="/m03/m03.html" menu_level="2"><span>1:1문의</span></a></li>
+      <li class="left_depth2">
+      <a href="#" class="left_menu_a" menu_level="2"><span class="plus">나의쇼핑</span></a>
+      <ul class="left_menu_ul" style="display:none">
+        <li class="left_depth3"><a href="/m04/m04.html" class="left_menu_b" menu_level="3">장바구니</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">주문/배송조회</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">취소/반품/교환 조회</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">환불/입금내역</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">증빙서류 발급</a></li>
+      </ul>
+      </li>
+      <li class="left_depth2">
+      <a href="#" class="left_menu_a" menu_level="2"><span class="plus">회원정보</span></a>
+      <ul class="left_menu_ul" style="display:none">
+        <li class="left_depth3"><a href="/m05/m05.html" class="left_menu_b" menu_level="3">회원정보 변경</a></li>
+        <li class="left_depth3"><a href="/m05/m05_02.html" class="left_menu_b" menu_level="3">나의 배송지관리</a></li>
+      </ul>
+      </li>
+      <li class="left_depth2"><a class="left_menu_a" href="#" menu_level="2"><span>구매후기</span></a></li>
+      <li class="left_depth2"><a class="left_menu_a" href="#" menu_level="2"><span>예약구매</span></a></li>
+      <li class="left_depth2"><a class="left_menu_a" href="#" menu_level="2"><span>부품문의</span></a></li>
+      <li class="left_depth2">
+      <a href="#" class="left_menu_a" menu_level="2"><span class="plus">이용약관</span></a>
+      <ul class="left_menu_ul" style="display:none">
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">쇼핑몰 이용약관</a></li>
+        <li class="left_depth3"><a href="#" class="left_menu_b" menu_level="3">전자금융거래 이용약관</a></li>
+      </ul>
+      </li>
+      <li class="left_depth2"><a class="left_menu_a" href="#" menu_level="2"><span>사이트맵</span></a></li>
+    </ul>
+  </div>
+  <p class="left_banner"><a href="#"><img src="/images/sub_2/left_banner.gif" alt="고객센터 1544-6444 FAX / 031.961.4699  평일 08:30 ~ 19:00 토,일,공휴일 휴무"></a></p>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+
+$('.left_menu_a').click(function(){
+var menu_level = $(this).attr('menu_level');
+$('.left_depth'+menu_level).children('.left_menu_ul').slideUp();
+$('.left_depth'+menu_level+':.select').removeClass('select');
+$('.minus').addClass('plus');
+$('.minus').removeClass('minus');
+$(this).find('span:.plus').addClass('minus');
+$(this).find('span:.plus').removeClass('plus');
+$(this).parent().addClass('select');
+$(this).parent().children('.left_menu_ul:eq(0)').slideDown();
+});
+
+$('.left_menu_b').click(function(){
+var menu_level = $(this).attr('menu_level');
+$('.left_depth'+menu_level+':.select').removeClass('select');
+$(this).parent().addClass('select');
+});
+
+});
+</script>
