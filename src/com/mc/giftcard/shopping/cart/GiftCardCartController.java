@@ -113,6 +113,19 @@ public class GiftCardCartController {
 			@RequestParam Map params) throws Exception {
 		String returnurl = "/giftcard/mypage/shopping/cart/step2";
 		MCMap member = (MCMap) session.getAttribute("member");
+		params.put("sessionid", session.getId());// 비회원용 세션아이디
+
+		Map rstMap = cartService.direct_order(params);
+		if ("-1".equals(rstMap.get("rst"))) {
+			request.setAttribute("message", "상품의 재고수량을 확인하시기 바랍니다.");
+			request.setAttribute("redirect", "/giftcard/mypage/shopping/cart/index.do");
+			return "message";
+		}
+		if ("-2".equals(rstMap.get("rst"))) {
+			request.setAttribute("message", rstMap.get("msg"));
+			return "message";
+		}
+		
 		if (params.containsKey("agree")) {
 			if (!("Y".equals(params.get("use_chk")) && "Y".equals(params.get("ps_chk")))) {
 				request.setAttribute("message", "약관에 동의해 주시기 바랍니다.");
@@ -131,18 +144,7 @@ public class GiftCardCartController {
 			params.put("session_group_seq", member.get("group_seq"));
 			params.put("member_seq", member.get("member_seq"));
 		}
-		params.put("sessionid", session.getId());// 비회원용 세션아이디
-
-		Map rstMap = cartService.direct_order(params);
-		if ("-1".equals(rstMap.get("rst"))) {
-			request.setAttribute("message", "상품의 재고수량을 확인하시기 바랍니다.");
-			request.setAttribute("redirect", "/giftcard/mypage/shopping/cart/index.do");
-			return "message";
-		}
-		if ("-2".equals(rstMap.get("rst"))) {
-			request.setAttribute("message", rstMap.get("msg"));
-			return "message";
-		}
+		
 		model.addAttribute("data", rstMap);
 		return returnurl;
 	}
