@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html lang="ko">
 <head>
 <link href="/danal/css/style.css" type="text/css" rel="stylesheet" media="all" />
@@ -30,8 +32,14 @@ function on_close(){
 		<div class="box">
 			<div class="boxTop">
 				<div class="boxBtm" style="height:136px;">
-					<p class="txt_info">[[${RETURNMSG}]]</p>
-					<p class="txt_info">귀하의 결제가 취소되었습니다.</p>
+					<c:choose>
+						<c:when test="${not empty RETURNMSG}">
+							<p class="txt_info">[[${RETURNMSG}]]</p>
+						</c:when>
+						<c:otherwise>
+							<p class="txt_info">귀하의 결제가 취소되었습니다.</p>
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 		</div>

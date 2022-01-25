@@ -448,7 +448,7 @@ function fn_checkByte(obj){
     document.getElementById("titleByte").innerText = totalByte;
   }
 }
-var resdat = "";
+
 function goStep3() {
 	if(Check_Common(frm) == true){
 		goDanalPayPop();
@@ -458,6 +458,7 @@ function goStep3() {
 function goDanalPayPop(){
 	//window.open('/danal/Ready.do?orderid=PT130122000039&amount=70000&itemname=페어링마이크&useragent=PC&dt=20220113&username=구매자&userid=admin&useremail=gdw0908@nate.com&SERVICETYPE=DANALCARD','player','width=550, height=515, scrollbars=yes, resizable=no, top=1, left=1');
 	var pop_title="다날카드결제시스템";
+	$("#AuthTy").val("danal"); //인증결제
 	
 	if($("#username").val() == ""){
 		$("#username").val($("#m_member_nm").val());	
@@ -485,8 +486,21 @@ function goDanalPayPop(){
 	var dt = year+month+day;
 	console.log("dt==="+dt);
 	$("#dt").val(dt);
+	
+	var mobile='${memberInfo.cell }';
+	if(mobile == ""){
+		mobile = $("#m_cell1").val()+"-"+$("#m_cell2").val()+"-"+$("#m_cell3").val();
+	}
+	
+	var actionUrl ="";
+	if($("input[name='cardPayGubun']:checked").val() == "1"){
+		$("#AuthTy").val("danal"); //인증결제
+		actionUrl ='/danal/Ready.do?orderid='+$("#orderid").val()+'&amount='+$("#amount").val()+'&itemname='+$("#itemname").val()+'&useragent='+$("#useragent").val()+'&dt='+$("#dt").val()+'&username='+$("#username").val()+'&userid='+$("#userid").val()+'&useremail='+$("#useremail").val()+'&SERVICETYPE='+$("#SERVICETYPE").val();
+	}else{
+		$("#AuthTy").val("danalDr"); //수기결제
+		actionUrl ='/danal/ManualPay.do?orderid='+$("#orderid").val()+'&amount='+$("#amount").val()+'&itemname='+$("#itemname").val()+'&useragent='+$("#useragent").val()+'&dt='+$("#dt").val()+'&username='+$("#username").val()+'&userid='+$("#userid").val()+'&useremail='+$("#useremail").val()+'&SERVICETYPE='+$("#SERVICETYPE").val()+'&mobile='+mobile;		
+	}
 	//get 방식 
-	var actionUrl ='/danal/Ready.do?orderid='+$("#orderid").val()+'&amount='+$("#amount").val()+'&itemname='+$("#itemname").val()+'&useragent='+$("#useragent").val()+'&dt='+$("#dt").val()+'&username='+$("#username").val()+'&userid='+$("#userid").val()+'&useremail='+$("#useremail").val()+'&SERVICETYPE='+$("#SERVICETYPE").val();
 	window.open(actionUrl,'player','width=550, height=515, scrollbars=yes, resizable=no, top=1, left=1');
 	//post 방식 
 	//window.open('',pop_title,'width=550, height=515, scrollbars=yes, resizable=no, top=1, left=1');	
@@ -502,10 +516,10 @@ window.addEventListener('message', function(e) {
 		  console.log(result.data.payment_info.returncode);		  	  
 		  
 		  if(result.data.payment_info.returncode== "0000"){
-				$("#rapprno").val(result.data.payment_info.tid);
-				$("#rdealno").val(result.data.payment_info.tid);
-				$("#rapprtm").val(result.data.payment_info.trandate+result.data.payment_info.trantime);
-				$("#AuthTy").val("danal");
+				$("#rapprno").val(result.data.card_info.cardauthno); //승인번호
+				$("#rinstmt").val(result.data.card_info.quota); //할부개월
+				$("#rdealno").val(result.data.payment_info.tid); //거래번호
+				$("#rapprtm").val(result.data.payment_info.trandate+result.data.payment_info.trantime); //승인시간				
 			  	$("#frm").submit();
 		  }
 	  }catch{		  
@@ -842,6 +856,31 @@ window.addEventListener('message', function(e) {
 						</div>
 					</div>
 				</div>
+				
+				<div class="sub_table_1">
+					<table>
+						<colgroup>
+							<col width="20%">
+							<col width="">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th scope="row" rowspan="2"><span>결제 방식 선택</span></th>
+								<td>
+									<span>
+										<label>
+											<input type="radio" name="cardPayGubun" class="radio" value="1" checked="checked"><strong>카드인증결제</strong> 
+										</label>
+										<label>
+											<input type="radio" name="cardPayGubun" class="radio" value="2"><strong>카드수기결제(카드정보 수기입력)</strong>
+										</label>									
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
 				<div class="pay_btn">
 				<a href="/giftcard/mypage/shopping/cart/index.do" class="clear_btn">장바구니</a>
 				<a href="javascript:goStep3()">결제하기</a>
@@ -1121,7 +1160,7 @@ window.addEventListener('message', function(e) {
 		<input type="hidden" name="rapprno"  id="rapprno" 	value="" />
 		<input type="hidden" name="rdealno"  id="rdealno" 	value="" />
 		<input type="hidden" name="rapprtm"  id="rapprtm" 	value="" />
-		
+		<input type="hidden" name="rinstmt"  id="rinstmt" 	value="" />
 	</form>
 	<form name="danalFrm"  id="danalFrm" method="post" action="/danal/Ready.do" >
 		<!-- 다날결제관련 form Start -->

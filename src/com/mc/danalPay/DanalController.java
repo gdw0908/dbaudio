@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import com.mc.web.Globals;
 @Controller
 @RequestMapping(value = "/danal")
 public class DanalController {
+	
+	Logger log = Logger.getLogger(this.getClass());
 	
 	@Autowired
 	private Globals globals;
@@ -268,5 +271,98 @@ public class DanalController {
 		return "/giftcard/danalPay/Cancel";
 	}
 	
+	@RequestMapping("/ManualPay.do")
+	public String ManualPay(@RequestParam Map<String, String> params, HttpServletRequest request) throws Exception{
+		request.setAttribute("params", params);
+		return "/giftcard/danalPay/ManualPay";
+	}
+	
+	
+	@RequestMapping("/PayExcute.do")
+	public String PayExcute(@RequestParam Map<String, String> params, HttpServletRequest request, HttpSession session) throws Exception{
+		
+		String ord_nm = (String) params.get("ord_nm");
+		String goods_nm = (String) params.get("goods_nm");
+		
+		String mobile = (String) params.get("mobile");
+		String email = (String) params.get("email");
+		String cert_num = (String) params.get("cert_num");
+		String amt = (String) params.get("amt");
+		
+		String card_no = (String) params.get("card_no");
+		String card_valid_mm = (String) params.get("card_valid_mm");
+		String card_valid_yy = (String) params.get("card_valid_yy");
+		String card_inst = (String) params.get("card_inst");
+		
+		if(card_inst.equals("1"))
+		   card_inst = "00";
+		else
+		   card_inst = StringUtil.lpad(card_inst, 2, "0");
+		
+		params.put("card_inst", card_inst);
+		
+		String card_birth_dt = (String) params.get("card_birth_dt");
+		String buyerAuthNum = card_birth_dt;
+		String card_pw = (String) params.get("card_pw");
+		
+		String user_id = StringUtil.nvl((String) params.get("userid"),session.getId()); // 사용자 ID
+		
+		Map<String, Object> sendParam = new HashMap<String, Object>();
+		
+		/**************************************************
+		 * 결제 정보
+		 **************************************************/
+		sendParam.put("AMOUNT", amt.replaceAll(",", ""));
+		sendParam.put("CURRENCY", "410");
+		sendParam.put("ITEMNAME", goods_nm);
+		sendParam.put("ORDERID", cert_num);
+		
+		/**************************************************
+		 * 고객 정보
+		 **************************************************/
+		sendParam.put("USERNAME", ord_nm);
+		sendParam.put("USERPHONE", mobile);
+		sendParam.put("USERID", user_id);
+		sendParam.put("USERAGENT", "ONLINE"); //고정값
+		sendParam.put("USEREMAIL", email); //고정값
+		
+		
+		/**************************************************
+		 * 카드 정보
+		 **************************************************/
+		sendParam.put("QUOTA", card_inst); //할부개월수. 일시불:00, 2개월:02...
+		sendParam.put("ISREBILL", "N"); //고정값
+		sendParam.put("BILLINFO", card_no); //카드번호
+		sendParam.put("EXPIREPERIOD", card_valid_yy + card_valid_mm); //유효기간 YYMM
+		sendParam.put("CARDPWD", card_pw); //비밀번호 앞 2자리
+		sendParam.put("CARDAUTH", buyerAuthNum); //생년월일 YYMMDD
+		sendParam.put("PAYTYP", "danalDr"); //고정값(페이구분(수기 직접결제))
+		//sendParam.put("CPID", pg_mid);
+		
+		/**************************************************
+		 * 기본 정보
+		 **************************************************/
+		sendParam.put("TXTYPE", "OTBILL");
+		sendParam.put("SERVICETYPE", "KEYIN");
+		
+		log.error("danal_payment_proc:" + cert_num+" / sendParam:"+sendParam.toString());
+		Map<String, Object> RES_DATA = DanalFunction.CallCredit(sendParam, true);
+		log.error("danal_payment_proc:" + cert_num+" / RES_DATA:"+RES_DATA.toString());
+		
+		String RETURNCODE = (String) RES_DATA.get("RETURNCODE");
+		String RETURNMSG = (String) RES_DATA.get("RETURNMSG");
+		String transactionNo = (String)RES_DATA.get("TID");      //다날 거래키
+		params.put("top_tid", transactionNo);
+		
+		if(RETURNCODE.equals("0000")) {
+			request.setAttribute("RES_DATA", RES_DATA);
+		} else {
+		   	request.setAttribute("RETURNCODE", RETURNCODE);
+			request.setAttribute("RETURNMSG", RETURNMSG);
+			return "/giftcard/danalPay/Error";
+		}		    	  
+		
+		return "/giftcard/danalPay/Success";
+	}
 	
 }

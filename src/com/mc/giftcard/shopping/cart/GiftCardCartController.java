@@ -577,7 +577,7 @@ public class GiftCardCartController {
 			 */			
 			params.put("rapprno", params.get("rapprno"));//승인번호
 			params.put("rdealno", params.get("rdealno"));//거래번호
-			//params.put("rinstmt", "12");//할부개월
+			params.put("rinstmt",	StringUtil.nvl((String)params.get("rInstmt"),""));//할부개월
 			params.put("rapprtm", params.get("rapprtm"));//승인시각
 			
 			params.put("cart_no_arr", cart_no);
