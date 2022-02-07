@@ -34,7 +34,7 @@
 	  </div>
       <div class="c_bottom">
 	  	<p><strong>대표자</strong> : 이상민 ㅣ <strong>상호</strong> : (주)주식회사 페어링 ㅣ  <br>
-	  		<strong>사업자등록번호</strong> : 240-87-01710 <strong>사업자주소</strong> : 경기도 성남시 분당구 장미로 42, 3층 303호 ㅣ <br>
+	  		<strong>사업자등록번호</strong> : 240-87-01710 <strong>사업자주소</strong> : 경기도 성남시 분당구 서현동251-3 엘지분당에클라트 1109호 ㅣ <br>
 	  	<p><strong>TEL</strong> : 1522-7622 ㅣ <strong>E-mail</strong> : pairingpayments@gmail.com<br><span>Copyrightⓒpairingpayments.All Rights Reserved.</span></p>
 	  </div>
     </div>
