@@ -24,8 +24,8 @@
 	content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=yes"
 	name="viewport" />
 <meta name="author" content="31system" />
-<meta name="description" content="안녕하세요  페어링사운드입니다." />
-<meta name="Keywords" content="페어링사운드, 상품권, 백화점 상품권, 롯데 백화점, 롯데 상품권, 갤러리아 백화점, 갤러리아 상품권, 신세계 백화점, 신세계 상품권" />
+<meta name="description" content="안녕하세요  페어링입니다." />
+<meta name="Keywords" content="페어링, 상품권, 백화점 상품권, 롯데 백화점, 롯데 상품권, 갤러리아 백화점, 갤러리아 상품권, 신세계 백화점, 신세계 상품권" />
 <title>나의쇼핑</title>
 
 <!-- <script language=javascript
@@ -657,8 +657,8 @@ window.addEventListener('message', function(e) {
 					</tbody>
 				</table>
 				<ul class="sub_list_1">
-					<li><strong>페어링사운드</strong>는 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서
-						<strong>페어링사운드</strong>는 상품ㆍ거래정보 및 거래에 대하여 책임을 지지 않습니다.</li>
+					<li><strong>페어링</strong>은 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서
+						<strong>페어링</strong>은 상품ㆍ거래정보 및 거래에 대하여 책임을 지지 않습니다.</li>
 				</ul>
 				<p class="pay_type">2. 주문회원 정보</p>
 				<div class="sub_table_1">
